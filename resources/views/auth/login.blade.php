@@ -1,69 +1,78 @@
-@extends('layouts.app')
+@extends('partials.layout_min')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+@push('title')
+管理后台登录
+@endpush
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="email" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+@section('body')
+    <div class="middle-box text-center loginscreen">
+        <div>
+            <div>
+               <img src="/images/logo.jpeg">
             </div>
+            <h3>后台登录</h3>
+            @if (session()->exists('well_done'))
+                <div class="errors p-a-30">
+                    <div class="alert alert-success" role="alert">
+                        <strong>{{ trans('signup.well_done') }}</strong> {{ trans('signup.successful_activate') }}
+                    </div>
+                </div>
+            @endif
+            @if (session()->exists('invalid_token'))
+                <div class="errors p-a-30">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Oops!</strong> {{ trans('signup.invalid_token') }}
+                    </div>
+                </div>
+            @endif
+            @if (session()->exists('error'))
+                <div class="errors p-a-30">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Oops!</strong> {{ trans('signup.error') }}
+                    </div>
+                </div>
+            @endif
+            @if (session()->exists('logout'))
+                <div class="errors p-a-30">
+                    <div class="alert alert-success" role="alert">
+                        {!! Session::pull('logout') !!}
+                    </div>
+                </div>
+            @endif
+            @if(!session()->exists('invalid_token') && ($errors->has('email') || $errors->has('inactive')))
+                <div class="alert alert-danger">
+                    @if($errors->has('email'))
+                            <p> <strong>诶呀!</strong> {{ $errors->first('email') }}</p>
+                    @endif
+                    @if ($errors->has('inactive'))
+                            <a href="{{url('activate_password/email/'.$errors->first('inactive'))}}">{{ trans('auth.inactive') }}</a>
+                    @endif
+                </div>
+            @endif
+
+            {{ Form::open(['method'=>'POST', 'url'=>url('login'), 'class'=>'m-t']) }}
+
+                <div class="form-group{{ !session()->exists('invalid_token') && $errors->has('email') ? " has-danger" : "" }}">
+                    <input type="email" name="email" class="form-control{{ !session()->exists('invalid_token') && $errors->has('email') ? " form-control-danger" : "" }}" placeholder="邮箱地址" required="" value="{{ old('email') }}">
+                </div>
+
+                <div class="form-group{{ $errors->has('password') ? " has-danger" : "" }}">
+                    <input type="password" name="password" class="form-control{{ $errors->has('email') ? " form-control-danger" : "" }}" placeholder="密码" required="">
+                    @include('partials.errors', ['err_type' => 'field','field' => 'password'])
+                </div>
+
+                <div class="form-check">
+                        <div class="form-check-label"><label><input name="remember" type="checkbox" class="form-check-input"><i></i> 记住我</label></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary block full-width m-b">登录</button>
+            {{ Form::close() }}
+
+                <a href="{{ url('/password/reset') }}"><small>忘记密码?</small></a>
+                <!--<p class="text-muted text-center"><small>Don't have an account?</small></p>
+                <a class="btn btn-normal btn-m register" href="{{ url('signup') }}">Create an account</a>-->
+
+            <p class="m-t"> <small>© 2018 6D. 版权所有.</small> </p>
         </div>
     </div>
-</div>
-@endsection
+@stop
