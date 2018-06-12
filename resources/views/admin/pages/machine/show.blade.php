@@ -13,6 +13,25 @@
                 <a href="{{ route('admin.machine.index') }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
                 <div class="title">{{ __('admin/machine.detail') }}</div>
             </div>
+            @if($machine->hasAlarms())
+            <div class="alert alert-detail alert-danger" role="alert">
+                @if($machine->alarm->filter_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                @endif
+                @if($machine->alarm->position_change_alarm)
+                    <strong>•</strong> {{ $machine->alarm->position_change_alarm }}</br>
+                @endif
+                @if($machine->alarm->service_alarm_status)
+                    <strong>•</strong> {{ $machine->alarm->service_alarm_status }}</br>
+                @endif
+                @if($machine->alarm->sterilization_alarm)
+                    <strong>•</strong> {{ $machine->alarm->sterilization_alarm }}</br>
+                @endif
+                @if($machine->alarm->malfunction_code)
+                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="#">「故障代码表」</a>
+                @endif
+            </div>
+            @endif
             <form method="get" class="form-horizontal">
                 <div class="ibox">
                     <div class="ibox-title title-with-button">

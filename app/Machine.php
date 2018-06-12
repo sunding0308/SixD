@@ -50,4 +50,30 @@ class Machine extends Model
     {
         return $this->hasMany(WaterQualityStatistics::class);
     }
+
+    public function alarm()
+    {
+        return $this->hasOne(Alarm::class);
+    }
+
+    public function hasAlarms()
+    {
+        if(optional($this->alarm)->filter_alarm){
+            return true;
+        }
+        if(optional($this->alarm)->position_change_alarm){
+            return true;
+        }
+        if(optional($this->alarm)->service_alarm_status){
+            return true;
+        }
+        if(optional($this->alarm)->sterilization_alarm){
+            return true;
+        }
+        if(optional($this->alarm)->malfunction_code){
+            return true;
+        }
+
+        return false;
+    }
 }

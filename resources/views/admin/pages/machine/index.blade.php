@@ -43,7 +43,13 @@
                                     <td>0h</td>
                                     <td>0h</td>
                                     <td>0h</td>
-                                    <td>当前定位为广东省，安装位置为上海市</td>
+                                    <td>
+                                        @if($machine->hasAlarms())
+                                            <i class="fa fa-exclamation-triangle fa-2x"></i>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td class="playlist-actions hp">
                                         <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" onclick="refresh({{ $machine->id }})">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>

@@ -27,7 +27,7 @@ class MachineController extends Controller
 
     public function waterQualityStatistics(Request $request, Machine $machine)
     {
-        return view('admin.pages.machine.water_uality_statistics', compact('machine'));
+        return view('admin.pages.machine.water_quality_statistics', compact('machine'));
     }
 
     public function bluetoothRecords(Request $request, Machine $machine)
