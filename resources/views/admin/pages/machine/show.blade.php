@@ -77,6 +77,37 @@
 
                 <div class="ibox">
                     <div class="ibox-title">
+                        <h5>{{ __('admin/machine.water_quality') }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="playlist-list">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.raw_water') }}</label>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->raw_water_tds }}</div>
+                                    </td>
+                                    <td>
+                                        <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.pure_water') }}</label>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->pure_water_tds }}</div>
+                                    </td>
+                                    <td>
+                                        <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.salt_rejection_rate') }}</label>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->salt_rejection_rate }}</div>
+                                    </td>
+                                    <td class="playlist-actions pl">
+                                        <a href="{{ route('admin.machine.water_quality_statistics', ['machine' => $machine->id]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.water_quality_statistics') }}</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
                         <h5>{{ __('admin/machine.records') }}</h5>
                     </div>
                     <div class="ibox-content">

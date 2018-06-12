@@ -45,4 +45,9 @@ class Machine extends Model
     {
         return $this->hasMany(HumidityRecord::class);
     }
+
+    public function waterQualityStatistics()
+    {
+        return $this->hasMany(WaterQualityStatistics::class);
+    }
 }

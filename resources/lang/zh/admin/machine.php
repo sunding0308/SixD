@@ -72,4 +72,9 @@ return [
     'showing_from_to_humidity_records' => '共:total个记录，当前:from-:to',
     'type' => '种类',
     'humidity_time' => '开启时长',
+    'water_quality' => '水质变化',
+    'raw_water' => '当前原水TDS值',
+    'pure_water' => '当前纯水TDS值',
+    'salt_rejection_rate' => '脱盐率监测',
+    'water_quality_statistics' => '水质变化统计',
 ];

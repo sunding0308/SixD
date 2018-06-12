@@ -21,8 +21,13 @@ class MachineController extends Controller
 
     public function show(Machine $machine)
     {
-        $machine->load('bluetoothRecords', 'sterilization', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
+        $machine->load('bluetoothRecords', 'sterilization', 'waterQualityStatistics', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
         return view('admin.pages.machine.show', compact('machine'));
+    }
+
+    public function waterQualityStatistics(Request $request, Machine $machine)
+    {
+        return view('admin.pages.machine.water_uality_statistics', compact('machine'));
     }
 
     public function bluetoothRecords(Request $request, Machine $machine)
