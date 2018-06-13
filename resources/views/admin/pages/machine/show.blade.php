@@ -28,7 +28,7 @@
                     <strong>•</strong> {{ $machine->alarm->sterilization_alarm }}</br>
                 @endif
                 @if($machine->alarm->malfunction_code)
-                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="#">「故障代码表」</a>
+                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="javacript:;" id="malfunction_code">「故障代码表」</a>
                 @endif
             </div>
             @endif
@@ -227,6 +227,13 @@
         </div>
         </div>
     </div>
+    <div class="show">
+        <div class="overlay"></div>
+        <div class="img-show">
+            <span><i class="fa fa-close"></i></span>
+            <img src="/images/superadmin/code.jpeg">
+        </div>
+    </div>
 </div>
 @stop
 
@@ -238,5 +245,14 @@
     function refreshed(id) {
         $("#"+id).html("<i class='fa fa-refresh' aria-hidden='true'></i>");
     }
+
+
+    $("#malfunction_code").click(function () {
+        $(".show").fadeIn();
+    });
+    
+    $("span, .overlay").click(function () {
+        $(".show").fadeOut();
+    });
 </script>
 @endpush

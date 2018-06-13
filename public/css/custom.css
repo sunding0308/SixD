@@ -438,3 +438,38 @@ label.btn-file-input div {
     white-space: nowrap;
     text-overflow: ellipsis!important;
 }
+
+.show{
+    z-index: 999;
+    display: none;
+}
+.show .overlay{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.66);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.show .img-show{
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.img-show span{
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    z-index: 99;
+    cursor: pointer;
+}
+.img-show img{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
