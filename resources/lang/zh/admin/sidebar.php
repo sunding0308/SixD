@@ -9,6 +9,7 @@
 return [
     'welcome' => '欢迎您!',
     'machines' => '设备列表',
+    'users' => '管理员列表',
     'app_menu_analytics' => 'APP菜单分析',
     'api_analytics' => '接口分析',
 ];

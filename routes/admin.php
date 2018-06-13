@@ -1,12 +1,15 @@
 <?php
 
 Route::get('/', function () {
-    return view('admin.home');
+    return redirect()->route('admin.machine.index');
 })->name('home');
 Route::resource('/machine', 'Admin\MachineController')->only('index', 'show');
-Route::get('/machine/{machine}/water_quality_statistics', 'Admin\MachineController@waterQualityStatistics')->name('machine.water_quality_statistics');
-Route::get('/machine/{machine}/bluetooth_records', 'Admin\MachineController@bluetoothRecords')->name('machine.bluetooth.records');
-Route::get('/machine/{machine}/water_records', 'Admin\MachineController@waterRecords')->name('machine.water.records');
-Route::get('/machine/{machine}/air_records', 'Admin\MachineController@airRecords')->name('machine.air.records');
-Route::get('/machine/{machine}/oxygen_records', 'Admin\MachineController@oxygenRecords')->name('machine.oxygen.records');
-Route::get('/machine/{machine}/humidity_records', 'Admin\MachineController@humidityRecords')->name('machine.humidity.records');
+Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'], function () {
+    Route::get('/{machine}/water_quality_statistics', 'MachineController@waterQualityStatistics')->name('water_quality_statistics');
+    Route::get('/{machine}/bluetooth_records', 'MachineController@bluetoothRecords')->name('bluetooth.records');
+    Route::get('/{machine}/water_records', 'MachineController@waterRecords')->name('water.records');
+    Route::get('/{machine}/air_records', 'MachineController@airRecords')->name('air.records');
+    Route::get('/{machine}/oxygen_records', 'MachineController@oxygenRecords')->name('oxygen.records');
+    Route::get('/{machine}/humidity_records', 'MachineController@humidityRecords')->name('humidity.records');
+});
+Route::resource('/user', 'Admin\UserController')->except('show');

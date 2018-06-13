@@ -11,20 +11,6 @@
                <img src="/images/logo.jpeg">
             </div>
             <h3>后台登录</h3>
-            @if (session()->exists('well_done'))
-                <div class="errors p-a-30">
-                    <div class="alert alert-success" role="alert">
-                        <strong>{{ trans('signup.well_done') }}</strong> {{ trans('signup.successful_activate') }}
-                    </div>
-                </div>
-            @endif
-            @if (session()->exists('invalid_token'))
-                <div class="errors p-a-30">
-                    <div class="alert alert-danger" role="alert">
-                        <strong>Oops!</strong> {{ trans('signup.invalid_token') }}
-                    </div>
-                </div>
-            @endif
             @if (session()->exists('error'))
                 <div class="errors p-a-30">
                     <div class="alert alert-danger" role="alert">
@@ -37,16 +23,6 @@
                     <div class="alert alert-success" role="alert">
                         {!! Session::pull('logout') !!}
                     </div>
-                </div>
-            @endif
-            @if(!session()->exists('invalid_token') && ($errors->has('email') || $errors->has('inactive')))
-                <div class="alert alert-danger">
-                    @if($errors->has('email'))
-                            <p> <strong>诶呀!</strong> {{ $errors->first('email') }}</p>
-                    @endif
-                    @if ($errors->has('inactive'))
-                            <a href="{{url('activate_password/email/'.$errors->first('inactive'))}}">{{ trans('auth.inactive') }}</a>
-                    @endif
                 </div>
             @endif
 
@@ -68,7 +44,7 @@
                 <button type="submit" class="btn btn-primary block full-width m-b">登录</button>
             {{ Form::close() }}
 
-                <a href="{{ url('/password/reset') }}"><small>忘记密码?</small></a>
+                {{-- <a href="{{ url('/password/reset') }}"><small>忘记密码?</small></a> --}}
                 <!--<p class="text-muted text-center"><small>Don't have an account?</small></p>
                 <a class="btn btn-normal btn-m register" href="{{ url('signup') }}">Create an account</a>-->
 
