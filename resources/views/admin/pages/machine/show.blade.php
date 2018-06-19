@@ -15,9 +15,6 @@
             </div>
             @if($machine->hasAlarms())
             <div class="alert alert-detail alert-danger" role="alert">
-                @if($machine->alarm->filter_alarm)
-                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
-                @endif
                 @if($machine->alarm->position_change_alarm)
                     <strong>•</strong> {{ $machine->alarm->position_change_alarm }}</br>
                 @endif
@@ -26,6 +23,21 @@
                 @endif
                 @if($machine->alarm->sterilization_alarm)
                     <strong>•</strong> {{ $machine->alarm->sterilization_alarm }}</br>
+                @endif
+                @if($machine->alarm->filter_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                @endif
+                @if($machine->alarm->water_shortage_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                @endif
+                @if($machine->alarm->filter_anti_counterfeiting_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                @endif
+                @if($machine->alarm->slave_mobile_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                @endif
+                @if($machine->alarm->dehumidification_tank_full_water_alarm)
+                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
                 @endif
                 @if($machine->alarm->malfunction_code)
                     <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="javacript:;" id="malfunction_code">「故障代码表」</a>

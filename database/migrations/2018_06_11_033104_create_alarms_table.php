@@ -20,6 +20,11 @@ class CreateAlarmsTable extends Migration
             $table->string('position_change_alarm');
             $table->string('service_alarm_status');
             $table->string('sterilization_alarm');
+            $table->string('filter_alarm');
+            $table->string('water_shortage_alarm');
+            $table->string('filter_anti_counterfeiting_alarm');
+            $table->string('slave_mobile_alarm');
+            $table->string('dehumidification_tank_full_water_alarm');
             $table->string('malfunction_code');
             $table->timestamps();
         });
