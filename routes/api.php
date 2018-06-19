@@ -18,6 +18,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('/get_statistics_data', 'Api\ApiController@getStatisticsData');
 
+//push signal
+Route::get('/push_topup_signal', 'Api\PushController@pushTopupSignal');
+Route::get('/push_alarms_signal', 'Api\PushController@pushAlarmsSignal');
+Route::get('/push_overage_signal', 'Api\PushController@pushOverageSignal');
+Route::get('/push_hardware_status_signal', 'Api\PushController@pushHardwareStatusSignal');
+Route::get('/push_records_signal', 'Api\PushController@pushRecordsSignal');
+Route::get('/push_environment_signal', 'Api\PushController@pushEnvironmentSignal');
+Route::get('/push_water_quality_statistics_signal', 'Api\PushController@pushWaterQualityStatisticsSignal');
+Route::get('/push_app_menu_analysis_signal', 'Api\PushController@pushAppMenuAnalysisSignal');
+Route::get('/push_api_analysis_signal', 'Api\PushController@pushApiAnalysisSignal');
 
 Route::post('/topup', 'Api\TopupController@topup');
 Route::post('/online', 'Api\OnlineController@online');

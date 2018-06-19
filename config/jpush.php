@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'app_key' => env('APP_KEY'),
-    'master_secret' => env('MASTER_SECRET'),
+    'app_key' => env('JPush_APP_KEY'),
+    'master_secret' => env('JPush_MASTER_SECRET'),
 ];

@@ -52,7 +52,7 @@ function getStatisticsData(recent) {
             }
         },
         error: function(errmsg) {
-            alert("Ajax获取服务器数据出错了！"+ errmsg);
+            console.log("Ajax获取服务器数据出错了！"+ errmsg);
         }
     });
 }

@@ -48,7 +48,7 @@
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
                         <div class="title-button-header"><h5>{{ __('admin/machine.status') }}{{ __('admin/machine.explanation') }}</h5></div>
-                        <a href="javascript:;" id="status" class="btn btn-normal btn-m" onclick="refresh('status')">
+                        <a href="javascript:;" id="status" class="btn btn-normal btn-m" onclick="refresh('status', '{{ $machine->registration_id }}')">
                             <i class="fa fa-refresh" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -88,7 +88,7 @@
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
                         <div class="title-button-header"><h5>{{ __('admin/machine.environment') }}{{ __('admin/machine.explanation') }}</h5></div>
-                        <a href="javascript:;" id="environment" class="btn btn-normal btn-m" onclick="refresh('environment')">
+                        <a href="javascript:;" id="environment" class="btn btn-normal btn-m" onclick="refresh('environment', '{{ $machine->registration_id }}')">
                             <i class="fa fa-refresh" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -251,8 +251,30 @@
 
 @push('js')
 <script>
-    function refresh(id) {
+    function refresh(id, registrationId) {
         $("#"+id).html("<i class='fa fa-refresh fa-spin'></i>");
+        if (id == 'status') {
+            var url = "/api/push_hardware_status_signal";
+        } else {
+            var url = "/api/push_environment_signal";
+        }
+        $.ajax({
+            type: "get",
+            async : true,
+            url: url,
+            data: {
+                'registrationId' : registrationId
+            },
+            dataType: "json",
+            success: function(result){
+                if (result.http_code == 200) {
+                    refreshed(id);
+                }
+            },
+            error: function(errmsg) {
+                console.log("Ajax获取服务器数据出错了！"+ errmsg);
+            }
+        });
     }
     function refreshed(id) {
         $("#"+id).html("<i class='fa fa-refresh' aria-hidden='true'></i>");

@@ -51,7 +51,7 @@
                                         @endif
                                     </td>
                                     <td class="playlist-actions hp">
-                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" onclick="refresh({{ $machine->id }})">
+                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" onclick="refresh('{{ $machine->id }}', '{{ $machine->registration_id }}')">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
                                         </a>
                                         <a href="{{ route('admin.machine.show', $machine->id) }}" class="btn btn-normal btn-m">
@@ -102,8 +102,25 @@
 
 @push('js')
 <script>
-    function refresh(id) {
+    function refresh(id, registrationId) {
         $("#machine-"+id).html("<i class='fa fa-refresh fa-spin'></i>");
+        $.ajax({
+            type: "get",
+            async : true,
+            url: "/api/push_overage_signal",
+            data: {
+                'registrationId' : registrationId
+            },
+            dataType: "json",
+            success: function(result){
+                if (result.http_code == 200) {
+                    refreshed(id);
+                }
+            },
+            error: function(errmsg) {
+                console.log("Ajax获取服务器数据出错了！"+ errmsg);
+            }
+        });
     }
     function refreshed(id) {
         $("#machine-"+id).html("<i class='fa fa-refresh' aria-hidden='true'></i>");

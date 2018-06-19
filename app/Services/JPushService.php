@@ -16,14 +16,14 @@ class JPushService
         $this->master_secret = config('jpush.master_secret');
     }
 
-    public function push($registrationId)
+    public function push($registrationId, $sign)
     {
         $client = new JPush($this->app_key, $this->master_secret); // 实例化client.php中的client类
 
         $push_payload = $client->push() // 调用push方法（返回一个PushPayload实例）
             ->setPlatform('android') // 设置平台
             ->addRegistrationId($registrationId) // 设置设备推送
-            ->message('Hello JPush'); // 设置推送通知内容
+            ->message($sign); // 设置推送通知内容
         try {
             $response = $push_payload->send(); // 执行推送
         }catch (\JPush\Exceptions\APIConnectionException $e) { // 请求异常
@@ -32,6 +32,6 @@ class JPushService
             Log::error($e);
         }
 
-        Log::error($response); // 请求成功，返回信息
+        return $response; // 请求成功，返回信息
     }
 }
