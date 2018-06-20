@@ -18,7 +18,7 @@ class JPushService
 
     public function push($registrationId, $sign)
     {
-        $client = new JPush($this->app_key, $this->master_secret); // 实例化client.php中的client类
+        $client = new JPush($this->app_key, $this->master_secret, config('jpush.default_log_file')); // 实例化client.php中的client类
 
         $push_payload = $client->push() // 调用push方法（返回一个PushPayload实例）
             ->setPlatform('android') // 设置平台
