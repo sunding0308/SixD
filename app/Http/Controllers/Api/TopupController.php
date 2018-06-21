@@ -21,7 +21,8 @@ class TopupController extends Controller
             ]);
 
             Log::info('Device '.$request->device.' topup success!');
-            return redirect('/api/push_topup_signal?registrationId='.$machine->registration_id.
+            //push topup data to machine
+            return redirect('/api/push_topup_signal?registrationId='.$machine->registration_id.'&device='.$request->device.
             '&water_overage=2&oxygen_overage=0&air_overage=0&humidity_overage=0');
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());

@@ -19,7 +19,7 @@ class PushController extends Controller
 
     public function pushTopupSignal(Request $request)
     {
-        return $this->client->push($request->registrationId, 'topup',
+        return $this->client->push($request->registrationId, 'topup', $request->device,
         [$request->water_overage,$request->oxygen_overage,$request->air_overage,$request->humidity_overage]);
     }
 
