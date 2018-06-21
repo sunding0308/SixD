@@ -29,7 +29,7 @@ Route::get('/push_water_quality_statistics_signal', 'Api\PushController@pushWate
 Route::get('/push_app_menu_analysis_signal', 'Api\PushController@pushAppMenuAnalysisSignal');
 Route::get('/push_api_analysis_signal', 'Api\PushController@pushApiAnalysisSignal');
 
-Route::post('/topup', 'Api\TopupController@topup');
+Route::get('/topup', 'Api\TopupController@topup');
 Route::post('/online', 'Api\OnlineController@online');
 Route::post('/alarms', 'Api\AlarmsController@alarms');
 Route::post('/realtime/overage', 'Api\RealtimeController@overage');

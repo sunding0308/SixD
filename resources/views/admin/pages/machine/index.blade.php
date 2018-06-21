@@ -26,10 +26,10 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.mac') }}</th>
-                            <th style="width: 10%;">{{ __('admin/machine.water_remaining_time') }}</th>
-                            <th style="width: 10%;">{{ __('admin/machine.air_remaining_time') }}</th>
-                            <th style="width: 10%;">{{ __('admin/machine.oxygen_remaining_time') }}</th>
-                            <th style="width: 10%;">{{ __('admin/machine.humidity_remaining_time') }}</th>
+                            <th style="width: 15%;">{{ __('admin/machine.water_remaining_time') }}(h)</th>
+                            <th style="width: 15%;">{{ __('admin/machine.air_remaining_time') }}(h)</th>
+                            <th style="width: 15%;">{{ __('admin/machine.oxygen_remaining_time') }}(h)</th>
+                            <th style="width: 15%;">{{ __('admin/machine.humidity_remaining_time') }}(h)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -38,11 +38,11 @@
                         <tbody>
                             @foreach($machines as $machine)
                                 <tr>
-                                    <td>{{ base64_decode($machine->unique_code) }}</td>
-                                    <td>2h</td>
-                                    <td>0h</td>
-                                    <td>0h</td>
-                                    <td>0h</td>
+                                    <td>{{ $machine->device }}</td>
+                                    <td>{{ $machine->water_overage }}</td>
+                                    <td>{{ $machine->oxygen_overage }}</td>
+                                    <td>{{ $machine->air_overage }}</td>
+                                    <td>{{ $machine->humidity_overage }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>
@@ -114,7 +114,12 @@
             dataType: "json",
             success: function(result){
                 if (result.http_code == 200) {
-                    refreshed(id);
+                    setTimeout(
+                        function() 
+                        {
+                            refreshed(id);
+                            location.reload();
+                        }, 2000);
                 }
             },
             error: function(errmsg) {

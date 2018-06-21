@@ -12,8 +12,8 @@ class Machine extends Model
      * @var array
      */
     protected $fillable = [
-        'unique_code', 'registration_id', 'status', 'overage', 'filter1_lifespan', 'filter2_lifespan', 'filter3_lifespan',
-        '2g4g_status', 'wifi_status', 'bluetooth_status', 'temperature', 'humidity', 'pm2_5', 'oxygen_concentration', 'total_produce_water_time',
+        'device', 'registration_id', 'status', 'water_overage', 'oxygen_overage', 'air_overage', 'humidity_overage', 'filter1_lifespan', 'filter2_lifespan', 'filter3_lifespan',
+        'g_status', 'wifi_status', 'bluetooth_status', 'temperature', 'humidity', 'pm2_5', 'oxygen_concentration', 'total_produce_water_time',
     ];
 
     public function bluetoothRecords()

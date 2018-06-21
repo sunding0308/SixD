@@ -15,10 +15,13 @@ class CreateMachinesTable extends Migration
     {
         Schema::create('machines', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('unique_code')->unique()->index();
+            $table->macAddress('device')->unique()->index();
             $table->string('registration_id')->unique()->index();
             $table->string('status');
-            $table->string('overage');
+            $table->float('water_overage', 8, 2);
+            $table->float('oxygen_overage', 8, 2);
+            $table->float('air_overage', 8, 2);
+            $table->float('humidity_overage', 8, 2);
             $table->string('filter1_lifespan');
             $table->string('filter2_lifespan');
             $table->string('filter3_lifespan');
