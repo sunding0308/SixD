@@ -16,7 +16,6 @@ class CreateAlarmsTable extends Migration
         Schema::create('alarms', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('machine_id')->unsigned()->index();
-            $table->string('filter_alarm');
             $table->string('position_change_alarm');
             $table->string('service_alarm_status');
             $table->string('sterilization_alarm');
