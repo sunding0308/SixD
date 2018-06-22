@@ -119,7 +119,7 @@
                         {
                             refreshed(id);
                             location.reload();
-                        }, 2000);
+                        }, 5000);
                 }
             },
             error: function(errmsg) {

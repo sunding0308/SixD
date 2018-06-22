@@ -273,7 +273,12 @@
             dataType: "json",
             success: function(result){
                 if (result.http_code == 200) {
-                    refreshed(id);
+                    setTimeout(
+                        function() 
+                        {
+                            refreshed(id);
+                            location.reload();
+                        }, 5000);
                 }
             },
             error: function(errmsg) {

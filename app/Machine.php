@@ -58,22 +58,19 @@ class Machine extends Model
 
     public function hasAlarms()
     {
-        if(optional($this->alarm)->filter_alarm){
-            return true;
-        }
-        if(optional($this->alarm)->position_change_alarm){
-            return true;
-        }
-        if(optional($this->alarm)->service_alarm_status){
-            return true;
-        }
-        if(optional($this->alarm)->sterilization_alarm){
-            return true;
-        }
-        if(optional($this->alarm)->malfunction_code){
-            return true;
+        if(!optional($this->alarm)->position_change_alarm
+            && !optional($this->alarm)->service_alarm_status
+            && !optional($this->alarm)->sterilization_alarm
+            && !optional($this->alarm)->filter_alarm
+            && !optional($this->alarm)->water_shortage_alarm
+            && !optional($this->alarm)->filter_anti_counterfeiting_alarm
+            && !optional($this->alarm)->slave_mobile_alarm
+            && !optional($this->alarm)->dehumidification_tank_full_water_alarm
+            && !optional($this->alarm)->malfunction_code
+        ){
+            return false;
         }
 
-        return false;
+        return true;
     }
 }
