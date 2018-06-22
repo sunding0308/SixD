@@ -19,7 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/get_statistics_data', 'Api\ApiController@getStatisticsData');
 
 //push signal
-Route::get('/push_topup_signal', 'Api\PushController@pushTopupSignal');
 Route::get('/push_alarms_signal', 'Api\PushController@pushAlarmsSignal');
 Route::get('/push_overage_signal', 'Api\PushController@pushOverageSignal');
 Route::get('/push_hardware_status_signal', 'Api\PushController@pushHardwareStatusSignal');

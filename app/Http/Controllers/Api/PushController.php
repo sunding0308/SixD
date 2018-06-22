@@ -17,12 +17,6 @@ class PushController extends Controller
         $this->client = $client;
     }
 
-    public function pushTopupSignal(Request $request)
-    {
-        return $this->client->push($request->registrationId, 'topup', $request->device,
-        [$request->water_overage,$request->oxygen_overage,$request->air_overage,$request->humidity_overage]);
-    }
-
     public function pushAlarmsSignal(Request $request)
     {
         return $this->pushSignal($request->registrationId, 'alarms');
