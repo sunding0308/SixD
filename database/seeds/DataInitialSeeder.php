@@ -3,6 +3,7 @@
 use App\User;
 use App\Alarm;
 use App\Machine;
+use App\UserRank;
 use App\Sterilization;
 use App\WaterQualityStatistics;
 use Illuminate\Database\Seeder;
@@ -105,6 +106,14 @@ class DataInitialSeeder extends Seeder
         DB::table('humidity_records')->insert([
             ['machine_id' => $machine->id, 'type' => '加湿', 'date' => '2018-06-05 08:05:23', 'time' => 2],
             ['machine_id' => $machine->id, 'type' => '除湿', 'date' => '2018-06-05 08:21:00', 'time' => 1]
+        ]);
+        DB::table('user_ranks')->truncate();
+        UserRank::create([
+            'machine_id' => 1,
+            'user_id' => 1001,
+            'user_nickname' => '孤独风中一匹狼',
+            'rank' => 123,
+            'machine_rank' => 34
         ]);
     }
 }

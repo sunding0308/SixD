@@ -30,6 +30,8 @@ Route::get('/push_api_analysis_signal', 'Api\PushController@pushApiAnalysisSigna
 
 Route::get('/topup', 'Api\TopupController@topup');
 Route::post('/online', 'Api\OnlineController@online');
+Route::post('/online/user_rank', 'Api\OnlineController@setUserRank');
+Route::get('/online/user_rank', 'Api\OnlineController@getUserRank');
 Route::post('/alarms', 'Api\AlarmsController@alarms');
 Route::post('/realtime/overage', 'Api\RealtimeController@overage');
 Route::post('/report/hardware_status', 'Api\ReportController@hardwareStatus');

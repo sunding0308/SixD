@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 
-class AlarmsController extends Controller
+class AlarmsController extends ApiController
 {
     public function alarms(Request $request)
     {

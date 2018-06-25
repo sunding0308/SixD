@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
+use App\UserRank;
 use App\Sterilization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Resources\UserRankResource;
+use App\Http\Controllers\Api\ApiController;
 
-class OnlineController extends Controller
+class OnlineController extends ApiController
 {
     public function online(Request $request)
     {
@@ -79,5 +81,32 @@ class OnlineController extends Controller
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' online error: '.$e->getMessage().' Line: '.$e->getLine());
         }
+    }
+
+    public function setUserRank(Request $request)
+    {
+        try {
+            $machine = Machine::where('device',$request->device)->first();
+            UserRank::updateOrCreate(
+                ['machine_id' => $machine->id],
+                [
+                    'user_id' => $request->user_id,
+                    'user_nickname' => $request->user_nickname,
+                    'rank' => $request->rank,
+                    'machine_rank' => $request->machine_rank
+                ]
+            );
+            Log::info('Device '.$request->device.' update user rank success!');
+            return $this->responseSuccess();
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' update user rank error: '.$e->getMessage().' Line: '.$e->getLine());
+            return $this->responseErrorWithMessage($e->getMessage());
+        }
+    }
+
+    public function getUserRank(Request $request)
+    {
+        $machine = Machine::where('device',$request->device)->first();
+        return new UserRankResource($machine->userRank);
     }
 }

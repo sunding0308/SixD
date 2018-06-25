@@ -56,6 +56,11 @@ class Machine extends Model
         return $this->hasOne(Alarm::class);
     }
 
+    public function userRank()
+    {
+        return $this->hasOne(UserRank::class);
+    }
+
     public function hasAlarms()
     {
         if(!optional($this->alarm)->position_change_alarm

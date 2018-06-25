@@ -6,9 +6,9 @@ use App\Machine;
 use Illuminate\Http\Request;
 use App\Services\JPushService;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 
-class TopupController extends Controller
+class TopupController extends ApiController
 {
     public function topup(Request $request, JPushService $client)
     {
