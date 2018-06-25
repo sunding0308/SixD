@@ -28,7 +28,10 @@ Route::get('/push_water_quality_statistics_signal', 'Api\PushController@pushWate
 Route::get('/push_app_menu_analysis_signal', 'Api\PushController@pushAppMenuAnalysisSignal');
 Route::get('/push_api_analysis_signal', 'Api\PushController@pushApiAnalysisSignal');
 
+Route::get('/check_status', 'Api\OnlineController@checkStatus');
 Route::get('/topup', 'Api\TopupController@topup');
+Route::get('/vip_topup', 'Api\TopupController@vipTopup');
+Route::get('/reset_overage', 'Api\TopupController@resetOverage');
 Route::post('/online', 'Api\OnlineController@online');
 Route::post('/online/user_rank', 'Api\OnlineController@setUserRank');
 Route::get('/online/user_rank', 'Api\OnlineController@getUserRank');

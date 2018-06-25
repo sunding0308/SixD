@@ -46,6 +46,13 @@ class OnlineController extends ApiController
                     'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?: '',
                     'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?: '',
                 ]);
+                UserRank::create([
+                    'machine_id' => $machine->id,
+                    'user_id' => 0,
+                    'user_nickname' => 'unknow',
+                    'rank' => 0,
+                    'machine_rank' => 0
+                ]);
             } else {
                 Machine::where('id',$machine->id)->update([
                     'registration_id' => $request->registration_id,
@@ -108,5 +115,15 @@ class OnlineController extends ApiController
     {
         $machine = Machine::where('device',$request->device)->first();
         return new UserRankResource($machine->userRank);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $machine = Machine::where('device',$request->device)->first();
+        if (!$machine) {
+            return $this->responseErrorWithMessage('非正常状态');
+        }
+
+        return $this->responseSuccessWithMessage('在线且数据正常');
     }
 }
