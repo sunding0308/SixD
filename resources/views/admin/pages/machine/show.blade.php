@@ -64,19 +64,19 @@
                             <div class="col-md-9 control-label t-a-l">{{ $machine->bluetooth_status }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">
-                                水：{{ $machine->water_overage }}
-                                氧气：{{ $machine->oxygen_overage }}
-                                空净：{{ $machine->air_overage }}
-                                湿度调节：{{ $machine->humidity_overage }}
+                                水：{{ secToHR($machine->water_overage) }}
+                                氧气：{{ secToHR($machine->oxygen_overage) }}
+                                空净：{{ secToHR($machine->air_overage) }}
+                                湿度调节：{{ secToHR($machine->humidity_overage) }}
                             </div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.sterilizations') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">
-                                uv1:{{ $machine->sterilization->uv1 }}
-                                uv2:{{ $machine->sterilization->uv2 }}
-                                uv3:{{ $machine->sterilization->uv3 }}
-                                uv4:{{ $machine->sterilization->uv4 }}
-                                uv5:{{ $machine->sterilization->uv5 }}
-                                uv6:{{ $machine->sterilization->uv6 }}
+                                uv1:{{ secToHR($machine->sterilization->uv1) }}
+                                uv2:{{ secToHR($machine->sterilization->uv2) }}
+                                uv3:{{ secToHR($machine->sterilization->uv3) }}
+                                uv4:{{ secToHR($machine->sterilization->uv4) }}
+                                uv5:{{ secToHR($machine->sterilization->uv5) }}
+                                uv6:{{ secToHR($machine->sterilization->uv6) }}
                             </div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.filter1_lifespan') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->filter1_lifespan }}</div>
@@ -85,7 +85,7 @@
                             <label class="col-md-3 control-label">{{ __('admin/machine.filter3_lifespan') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->filter3_lifespan }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.total_produce_water_time') }}(h)</label>
-                            <div class="col-md-9 control-label t-a-l">{{ $machine->total_produce_water_time }}</div>
+                            <div class="col-md-9 control-label t-a-l">{{ secToHR($machine->total_produce_water_time) }}</div>
                         </div>
                     </div>
                 </div>
@@ -161,7 +161,7 @@
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.total_connect_time') }}(h)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->bluetoothRecords->sum('total_time') }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ secToHR($machine->bluetoothRecords->sum('total_time')) }}</div>
                                     </td>
                                     <td class="playlist-actions pl">
                                         <a href="{{ route('admin.machine.bluetooth.records', ['machine' => $machine->id]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.bluetooth_records') }}</a>
@@ -178,7 +178,7 @@
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.total_water_time') }}(h)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterRecords->sum('time') }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ secToHR($machine->waterRecords->sum('time')) }}</div>
                                     </td>
                                     <td class="playlist-actions pl">
                                         <a href="{{ route('admin.machine.water.records', ['machine' => $machine->id]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.water_records') }}</a>
@@ -191,7 +191,7 @@
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.total_air_time') }}(h)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->airRecords->sum('time') }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ secToHR($machine->airRecords->sum('time')) }}</div>
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l"></label>
@@ -225,7 +225,7 @@
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.total_humidity_time') }}(h)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->humidityRecords->sum('time') }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ secToHR($machine->humidityRecords->sum('time')) }}</div>
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l"></label>

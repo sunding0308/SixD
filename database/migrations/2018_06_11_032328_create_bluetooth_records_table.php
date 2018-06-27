@@ -18,7 +18,7 @@ class CreateBluetoothRecordsTable extends Migration
             $table->integer('machine_id')->unsigned()->index();
             $table->dateTime('started_at');
             $table->dateTime('stopped_at');
-            $table->string('total_time');
+            $table->integer('total_time')->unsigned();
             $table->timestamps();
         });
     }

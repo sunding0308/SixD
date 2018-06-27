@@ -17,7 +17,7 @@ class CreateHumidityRecordsTable extends Migration
             $table->integer('machine_id')->unsigned()->index();
             $table->string('type');
             $table->dateTime('date');
-            $table->string('time');
+            $table->integer('time')->unsigned();
         });
     }
 

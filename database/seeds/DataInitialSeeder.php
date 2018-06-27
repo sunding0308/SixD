@@ -32,7 +32,7 @@ class DataInitialSeeder extends Seeder
             'g_status' => '信号强',
             'wifi_status' => '未连接',
             'bluetooth_status' => '当前未连接',
-            'water_overage' => 2,
+            'water_overage' => 3600,
             'oxygen_overage' => 0,
             'air_overage' => 0,
             'humidity_overage' => 0,
@@ -43,7 +43,7 @@ class DataInitialSeeder extends Seeder
             'humidity' => 75,
             'pm2_5' => 20,
             'oxygen_concentration' => 95,
-            'total_produce_water_time' => 300
+            'total_produce_water_time' => 7200
         ]);
         DB::table('sterilizations')->truncate();
         Sterilization::create([
@@ -84,28 +84,28 @@ class DataInitialSeeder extends Seeder
         ]);
         DB::table('bluetooth_records')->truncate();
         DB::table('bluetooth_records')->insert([
-            ['machine_id' => $machine->id, 'started_at' => '2018-06-05 08:05:23', 'stopped_at' => '2018-06-05 10:05:23', 'total_time' => 2, 'created_at' => '2018-06-05 12:05:23', 'updated_at' => '2018-06-05 12:05:23'],
-            ['machine_id' => $machine->id, 'started_at' => '2018-06-05 11:02:12', 'stopped_at' => '2018-06-05 12:05:23', 'total_time' => 1, 'created_at' => '2018-06-05 12:05:23', 'updated_at' => '2018-06-05 12:05:23']
+            ['machine_id' => $machine->id, 'started_at' => '2018-06-05 08:05:23', 'stopped_at' => '2018-06-05 10:05:23', 'total_time' => 7200, 'created_at' => '2018-06-05 12:05:23', 'updated_at' => '2018-06-05 12:05:23'],
+            ['machine_id' => $machine->id, 'started_at' => '2018-06-05 11:02:12', 'stopped_at' => '2018-06-05 12:05:23', 'total_time' => 3600, 'created_at' => '2018-06-05 12:05:23', 'updated_at' => '2018-06-05 12:05:23']
         ]);
         DB::table('water_records')->truncate();
         DB::table('water_records')->insert([
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 30, 'flow' => 800, 'total_flow' => 400],
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 60, 'flow' => 800, 'total_flow' => 800]
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 60, 'flow' => 450, 'total_flow' => 450],
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 30, 'flow' => 1000, 'total_flow' => 500]
         ]);
         DB::table('oxygen_records')->truncate();
         DB::table('oxygen_records')->insert([
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 2],
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 1]
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 7200],
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 3600]
         ]);
         DB::table('air_records')->truncate();
         DB::table('air_records')->insert([
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 2],
-            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 1]
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:05:23', 'time' => 7200],
+            ['machine_id' => $machine->id, 'date' => '2018-06-05 08:21:00', 'time' => 3600]
         ]);
         DB::table('humidity_records')->truncate();
         DB::table('humidity_records')->insert([
-            ['machine_id' => $machine->id, 'type' => '加湿', 'date' => '2018-06-05 08:05:23', 'time' => 2],
-            ['machine_id' => $machine->id, 'type' => '除湿', 'date' => '2018-06-05 08:21:00', 'time' => 1]
+            ['machine_id' => $machine->id, 'type' => '加湿', 'date' => '2018-06-05 08:05:23', 'time' => 7200],
+            ['machine_id' => $machine->id, 'type' => '除湿', 'date' => '2018-06-05 08:21:00', 'time' => 3600]
         ]);
         DB::table('user_ranks')->truncate();
         UserRank::create([

@@ -33,7 +33,7 @@
                             <th style="width: 30%;">{{ __('admin/machine.date') }}</th>
                             <th style="width: 10%;"></th>
                             <th style="width: 10%;"></th>
-                            <th style="width: 30%;">{{ __('admin/machine.oxygen_time') }}</th>
+                            <th style="width: 30%;">{{ __('admin/machine.oxygen_time') }}(min)</th>
                             <th style="width: 10%;"></th>
                             <th style="width: 10%;"></th>
                         </tr>
@@ -47,7 +47,7 @@
                                     <td>{{ $oxygenRecord->date }}</td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{ $oxygenRecord->time }}</td>
+                                    <td>{{ secToMin($oxygenRecord->time) }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>

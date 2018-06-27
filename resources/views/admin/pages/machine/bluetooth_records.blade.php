@@ -32,7 +32,7 @@
                             <th style="width: 33%;">{{ __('admin/machine.stopped_at') }}</th>
                             <th style="width: 0.5%;"></th>
                             <th style="width: 0.5%;"></th>
-                            <th style="width: 33%;">{{ __('admin/machine.connect_time') }}</th>
+                            <th style="width: 33%;">{{ __('admin/machine.connect_time') }}(min)</th>
                         </tr>
                         </thead>
 
@@ -43,7 +43,7 @@
                                     <td>{{ $bluetoothRecord->stopped_at }}</td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{ $bluetoothRecord->total_time }}</td>
+                                    <td>{{ secToMin($bluetoothRecord->total_time) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

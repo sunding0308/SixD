@@ -29,10 +29,10 @@
                         <thead>
                         <tr>
                             <th style="width: 30%;">{{ __('admin/machine.date') }}</th>
-                            <th style="width: 25%;">{{ __('admin/machine.air_time') }}</th>
-                            <th style="width: 25%;">{{ __('admin/machine.flow') }}</th>
+                            <th style="width: 25%;">{{ __('admin/machine.air_time') }}(s)</th>
+                            <th style="width: 25%;">{{ __('admin/machine.flow') }}(ml)</th>
                             <th style="width: 1%;"></th>
-                            <th style="width: 29%;">{{ __('admin/machine.total_flow') }}</th>
+                            <th style="width: 29%;">{{ __('admin/machine.total_flow') }}(ml)</th>
                         </tr>
                         </thead>
 

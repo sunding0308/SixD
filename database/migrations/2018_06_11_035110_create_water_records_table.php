@@ -16,9 +16,9 @@ class CreateWaterRecordsTable extends Migration
         Schema::create('water_records', function (Blueprint $table) {
             $table->integer('machine_id')->unsigned()->index();
             $table->dateTime('date');
-            $table->string('time');
-            $table->string('flow');
-            $table->string('total_flow');
+            $table->integer('time')->unsigned();
+            $table->integer('flow')->unsigned();
+            $table->integer('total_flow')->unsigned();
         });
     }
 

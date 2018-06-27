@@ -16,12 +16,12 @@ class CreateSterilizationsTable extends Migration
         Schema::create('sterilizations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('machine_id')->unsigned()->index();
-            $table->string('uv1');
-            $table->string('uv2');
-            $table->string('uv3');
-            $table->string('uv4');
-            $table->string('uv5');
-            $table->string('uv6');
+            $table->integer('uv1')->unsigned();
+            $table->integer('uv2')->unsigned();
+            $table->integer('uv3')->unsigned();
+            $table->integer('uv4')->unsigned();
+            $table->integer('uv5')->unsigned();
+            $table->integer('uv6')->unsigned();
             $table->timestamps();
         });
     }

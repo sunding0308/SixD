@@ -21,8 +21,10 @@ class RealtimeController extends ApiController
             ]);
 
             Log::info('Device '.$request->device.' refresh overage success!');
+            return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' refresh overage error: '.$e->getMessage().' Line: '.$e->getLine());
+            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 }

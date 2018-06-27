@@ -15,9 +15,9 @@ class CreateWaterQualityStatisticsTable extends Migration
     {
         Schema::create('water_quality_statistics', function (Blueprint $table) {
             $table->integer('machine_id')->unsigned()->index();
-            $table->string('raw_water_tds');
-            $table->string('pure_water_tds');
-            $table->string('salt_rejection_rate');
+            $table->integer('raw_water_tds')->unsigned();
+            $table->integer('pure_water_tds')->unsigned();
+            $table->integer('salt_rejection_rate')->unsigned();
             $table->timestamps();
         });
     }

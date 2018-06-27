@@ -16,7 +16,7 @@ class CreateAirRecordsTable extends Migration
         Schema::create('air_records', function (Blueprint $table) {
             $table->integer('machine_id')->unsigned()->index();
             $table->dateTime('date');
-            $table->string('time');
+            $table->integer('time')->unsigned();
         });
     }
 

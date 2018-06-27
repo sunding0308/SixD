@@ -39,10 +39,10 @@
                             @foreach($machines as $machine)
                                 <tr>
                                     <td>{{ $machine->device }}</td>
-                                    <td>{{ $machine->water_overage }}</td>
-                                    <td>{{ $machine->oxygen_overage }}</td>
-                                    <td>{{ $machine->air_overage }}</td>
-                                    <td>{{ $machine->humidity_overage }}</td>
+                                    <td>{{ secToHR($machine->water_overage) }}</td>
+                                    <td>{{ secToHR($machine->oxygen_overage) }}</td>
+                                    <td>{{ secToHR($machine->air_overage) }}</td>
+                                    <td>{{ secToHR($machine->humidity_overage) }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>

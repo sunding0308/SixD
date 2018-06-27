@@ -33,7 +33,7 @@
                             <th style="width: 30%;">{{ __('admin/machine.date') }}</th>
                             <th style="width: 10%;"></th>
                             <th style="width: 10%;"></th>
-                            <th style="width: 30%;">{{ __('admin/machine.air_time') }}</th>
+                            <th style="width: 30%;">{{ __('admin/machine.air_time') }}(min)</th>
                             <th style="width: 10%;"></th>
                             <th style="width: 10%;"></th>
                         </tr>
@@ -47,7 +47,7 @@
                                     <td>{{ $airRecord->date }}</td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{ $airRecord->time }}</td>
+                                    <td>{{ secToMin($airRecord->time) }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>

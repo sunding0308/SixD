@@ -33,7 +33,7 @@
                             <th style="width: 30%;">{{ __('admin/machine.date') }}</th>
                             <th style="width: 10%;">{{ __('admin/machine.type') }}</th>
                             <th style="width: 10%;"></th>
-                            <th style="width: 30%;">{{ __('admin/machine.humidity_time') }}</th>
+                            <th style="width: 30%;">{{ __('admin/machine.humidity_time') }}(min)</th>
                             <th style="width: 10%;"></th>
                             <th style="width: 10%;"></th>
                         </tr>
@@ -47,7 +47,7 @@
                                     <td>{{ $humidityRecord->date }}</td>
                                     <td>{{ $humidityRecord->type }}</td>
                                     <td></td>
-                                    <td>{{ $humidityRecord->time }}</td>
+                                    <td>{{ secToMin($humidityRecord->time) }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>

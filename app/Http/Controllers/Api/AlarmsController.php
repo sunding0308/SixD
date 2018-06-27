@@ -43,9 +43,11 @@ class AlarmsController extends ApiController
                 ]);
 
                 Log::info('Device '.$request->device.' update alarm success!');
+                return $this->responseSuccess();
             }
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update alarm error: '.$e->getMessage().' Line: '.$e->getLine());
+            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 }
