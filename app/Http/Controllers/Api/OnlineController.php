@@ -24,10 +24,10 @@ class OnlineController extends ApiController
                     'g_status' => $request->hardware_status['g_status'] ?: '',
                     'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
                     'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
-                    'water_overage' => $request->overage['water_overage'] ?: '',
-                    'oxygen_overage' => $request->overage['oxygen_overage'] ?: '',
-                    'air_overage' => $request->overage['air_overage'] ?: '',
-                    'humidity_overage' => $request->overage['humidity_overage'] ?: '',
+                    'water_overage' => $request->overage['water_overage'] ?? 0,
+                    'oxygen_overage' => $request->overage['oxygen_overage'] ?? 0,
+                    'air_overage' => $request->overage['air_overage'] ?? 0,
+                    'humidity_overage' => $request->overage['humidity_overage'] ?? 0,
                     'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
                     'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
                     'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
@@ -39,12 +39,12 @@ class OnlineController extends ApiController
                 ]);
                 Sterilization::create([
                     'machine_id' => $machine->id,
-                    'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?: '',
-                    'uv2' => $request->hardware_status['sterilization_time']['uv2'] ?: '',
-                    'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?: '',
-                    'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?: '',
-                    'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?: '',
-                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?: '',
+                    'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?? 0,
+                    'uv2' => $request->hardware_status['sterilization_time']['uv2'] ?? 0,
+                    'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?? 0,
+                    'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
+                    'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
+                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0,
                 ]);
                 UserRank::create([
                     'machine_id' => $machine->id,
@@ -60,10 +60,10 @@ class OnlineController extends ApiController
                     'g_status' => $request->hardware_status['g_status'] ?: '',
                     'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
                     'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
-                    'water_overage' => $request->overage['water_overage'] ?: '',
-                    'oxygen_overage' => $request->overage['oxygen_overage'] ?: '',
-                    'air_overage' => $request->overage['air_overage'] ?: '',
-                    'humidity_overage' => $request->overage['humidity_overage'] ?: '',
+                    'water_overage' => $request->overage['water_overage'] ?? 0,
+                    'oxygen_overage' => $request->overage['oxygen_overage'] ?? 0,
+                    'air_overage' => $request->overage['air_overage'] ?? 0,
+                    'humidity_overage' => $request->overage['humidity_overage'] ?? 0,
                     'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
                     'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
                     'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
@@ -75,18 +75,20 @@ class OnlineController extends ApiController
                 ]);
                 Sterilization::where('machine_id',$machine->id)->update([
                     'machine_id' => $machine->id,
-                    'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?: '',
-                    'uv2' => $request->hardware_status['sterilization_time']['uv2'] ?: '',
-                    'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?: '',
-                    'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?: '',
-                    'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?: '',
-                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?: '',
+                    'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?? 0,
+                    'uv2' => $request->hardware_status['sterilization_time']['uv2'] ?? 0,
+                    'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?? 0,
+                    'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
+                    'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
+                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0,
                 ]);
             }
 
             Log::info('Device '.$request->device.' online success!');
+            return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' online error: '.$e->getMessage().' Line: '.$e->getLine());
+            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 
