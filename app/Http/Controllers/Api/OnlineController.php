@@ -31,11 +31,11 @@ class OnlineController extends ApiController
                     'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
                     'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
                     'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
-                    'temperature' => $request->environment['temperature'] ?: '',
-                    'humidity' => $request->environment['humidity'] ?: '',
-                    'pm2_5' => $request->environment['pm2_5'] ?: '',
-                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?: '',
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?: '',
+                    'temperature' => $request->environment['temperature'] ?? 0,
+                    'humidity' => $request->environment['humidity'] ?? 0,
+                    'pm2_5' => $request->environment['pm2_5'] ?? 0,
+                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
                 ]);
                 Sterilization::create([
                     'machine_id' => $machine->id,
@@ -67,11 +67,11 @@ class OnlineController extends ApiController
                     'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
                     'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
                     'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
-                    'temperature' => $request->environment['temperature'] ?: '',
-                    'humidity' => $request->environment['humidity'] ?: '',
-                    'pm2_5' => $request->environment['pm2_5'] ?: '',
-                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?: '',
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?: '',
+                    'temperature' => $request->environment['temperature'] ?? 0,
+                    'humidity' => $request->environment['humidity'] ?? 0,
+                    'pm2_5' => $request->environment['pm2_5'] ?? 0,
+                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
                 ]);
                 Sterilization::where('machine_id',$machine->id)->update([
                     'machine_id' => $machine->id,
