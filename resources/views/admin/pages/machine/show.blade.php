@@ -122,15 +122,15 @@
                                 <tr>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.raw_water') }}(ppm)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->raw_water_tds }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last() ? $machine->waterQualityStatistics->last()->raw_water_tds : 0 }}</div>
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.pure_water') }}(ppm)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->pure_water_tds }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last() ? $machine->waterQualityStatistics->last()->pure_water_tds : 0 }}</div>
                                     </td>
                                     <td>
                                         <label class="col-md-9 control-label t-a-l">{{ __('admin/machine.salt_rejection_rate') }}(%)</label>
-                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last()->salt_rejection_rate }}</div>
+                                        <div class="col-md-9 control-label t-a-l">{{ $machine->waterQualityStatistics->last() ? $machine->waterQualityStatistics->last()->salt_rejection_rate : 0 }}</div>
                                     </td>
                                     <td class="playlist-actions pl">
                                         <a href="{{ route('admin.machine.water_quality_statistics', ['machine' => $machine->id]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.water_quality_statistics') }}</a>
