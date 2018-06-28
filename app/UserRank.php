@@ -14,4 +14,11 @@ class UserRank extends Model
     protected $fillable = [
         'machine_id', 'user_id', 'user_nickname', 'rank', 'machine_rank',
     ];
+
+    protected $casts = [
+        'machine_id' => 'integer',
+        'user_id' => 'integer',
+        'rank' => 'integer',
+        'machine_rank' => 'integer'
+        ];
 }
