@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "737bf7b65dd75525f5fab9c4607ffa3c",
+    "content-hash": "fb54bd4df40242abff3da408ac201f6f",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1769,58 +1769,6 @@
                 "uuid"
             ],
             "time": "2018-01-20T00:28:24+00:00"
-        },
-        {
-            "name": "sunding0308/laravel-api-auth",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sunding0308/laravel-api-auth.git",
-                "reference": "cc81b90453ac63f2027d22ebdf40c59541637463"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sunding0308/laravel-api-auth/zipball/cc81b90453ac63f2027d22ebdf40c59541637463",
-                "reference": "cc81b90453ac63f2027d22ebdf40c59541637463",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require-dev": {
-                "laravel/laravel": "^5.5"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Qbhy\\LaravelApiAuth\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Qbhy\\LaravelApiAuth\\": "src"
-                },
-                "files": [
-                    "src/fn.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "sunding0308",
-                    "email": "sunding1992@gmail.com"
-                }
-            ],
-            "description": "laravel API 鉴权",
-            "time": "2018-06-28T10:15:46+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
