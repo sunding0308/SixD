@@ -12,7 +12,7 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
-        "sunding0308/laravel-api-auth": "v2.0.0",
+        "sunding0308/laravel-api-auth": "2.0.*",
         "symfony/psr-http-message-bridge": "^1.0",
         "zendframework/zend-diactoros": "^1.7"
     },

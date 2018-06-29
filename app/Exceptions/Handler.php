@@ -3,6 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Support\Facades\Response;
+use SunD1ng\LaravelApiAuth\Exceptions\AccessKeyException;
+use SunD1ng\LaravelApiAuth\Exceptions\InvalidTokenException;
+use SunD1ng\LaravelApiAuth\Exceptions\SignatureMethodException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -46,6 +50,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof InvalidTokenException) {
+            return Response::json($exception->getMessage());
+        }
+        if ($exception instanceof AccessKeyException) {
+            return Response::json($exception->getMessage());
+        }
+        if ($exception instanceof SignatureMethodException) {
+            return Response::json($exception->getMessage());
+        }
+        
         return parent::render($request, $exception);
     }
 }
