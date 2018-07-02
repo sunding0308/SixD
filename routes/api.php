@@ -30,9 +30,10 @@ Route::group(['namespace'=>'Api'], function(){
     Route::get('/push_app_menu_analysis_signal', 'PushController@pushAppMenuAnalysisSignal');
     Route::get('/push_api_analysis_signal', 'PushController@pushApiAnalysisSignal');
 
+    Route::get('/topup', 'TopupController@topup');
     Route::group(['middleware'=>'api_auth'], function(){
         Route::get('/check_status', 'OnlineController@checkStatus');
-        Route::get('/topup', 'TopupController@topup');
+        // Route::get('/topup', 'TopupController@topup');
         Route::get('/vip_topup', 'TopupController@vipTopup');
         Route::get('/reset_overage', 'TopupController@resetOverage');
         Route::post('/online', 'OnlineController@online');
