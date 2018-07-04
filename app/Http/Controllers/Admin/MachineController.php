@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Machine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class MachineController extends Controller
 {
@@ -58,5 +62,23 @@ class MachineController extends Controller
     {
         $humidityRecords = $machine->humidityRecords()->paginate(10);
         return view('admin.pages.machine.humidity_records', compact('machine', 'humidityRecords'));
+    }
+
+    public function debug(Request $request, Machine $machine)
+    {
+        $files = $this->paginate(Storage::files($machine->device), 10);
+        return view('admin.pages.machine.debug', compact('machine', 'files'));
+    }
+
+    public function debugDownload(Request $request, Machine $machine)
+    {
+        return Storage::download($machine->device . '/' . $request->filename);
+    }
+
+    private function paginate($items, $perPage = 15, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 }

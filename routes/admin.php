@@ -11,5 +11,7 @@ Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'
     Route::get('/{machine}/air_records', 'MachineController@airRecords')->name('air.records');
     Route::get('/{machine}/oxygen_records', 'MachineController@oxygenRecords')->name('oxygen.records');
     Route::get('/{machine}/humidity_records', 'MachineController@humidityRecords')->name('humidity.records');
+    Route::get('/{machine}/debug', 'MachineController@debug')->name('debug');
+    Route::get('/{machine}/debug/{filename}/download', 'MachineController@debugDownload')->name('debug.download');
 });
 Route::resource('/user', 'Admin\UserController')->except('show');

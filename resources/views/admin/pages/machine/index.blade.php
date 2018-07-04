@@ -26,10 +26,10 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.mac') }}</th>
-                            <th style="width: 15%;">{{ __('admin/machine.water_remaining_time') }}(h)</th>
-                            <th style="width: 15%;">{{ __('admin/machine.air_remaining_time') }}(h)</th>
-                            <th style="width: 15%;">{{ __('admin/machine.oxygen_remaining_time') }}(h)</th>
-                            <th style="width: 15%;">{{ __('admin/machine.humidity_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.water_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.air_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.oxygen_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.humidity_remaining_time') }}(h)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -56,6 +56,9 @@
                                         </a>
                                         <a href="{{ route('admin.machine.show', $machine->id) }}" class="btn btn-normal btn-m">
                                             <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m">
+                                            <i class="fa fa-book"></i>
                                         </a>
                                     </td>
                                 </tr>
