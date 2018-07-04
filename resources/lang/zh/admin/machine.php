@@ -77,4 +77,7 @@ return [
     'pure_water' => '当前纯水TDS值',
     'salt_rejection_rate' => '脱盐率监测',
     'water_quality_statistics' => '水质变化统计',
+
+    'showing_from_to_files' => '共:total个文件，当前:from-:to',
+    'no_files' => '没有文件',
 ];

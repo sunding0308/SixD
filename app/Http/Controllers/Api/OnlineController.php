@@ -128,4 +128,9 @@ class OnlineController extends ApiController
 
         return $this->responseSuccessWithMessage('在线且数据正常');
     }
+
+    public function logfile(Request $request)
+    {
+        return $request;
+    }
 }

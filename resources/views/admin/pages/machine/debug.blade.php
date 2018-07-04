@@ -26,11 +26,11 @@
                         <thead>
                             <tr>
                                 <th>文件名</th>
-                                <th style="width: 15%;"></th>
-                                <th style="width: 15%;"></th>
-                                <th style="width: 15%;"></th>
-                                <th style="width: 15%;"></th>
-                                <th style="width: 15%;"></th>
+                                <th style="width: 17%;"></th>
+                                <th style="width: 17%;"></th>
+                                <th style="width: 17%;"></th>
+                                <th style="width: 17%;"></th>
+                                <th style="width: 17%;"></th>
                                 <th>{{ __('admin/machine.actions') }}</th>
                             </tr>
                         </thead>
@@ -61,7 +61,7 @@
                                 @if ($files->count()>0)
                                 {{
                                         __(
-                                            'admin/machine.showing_from_to_machines',
+                                            'admin/machine.showing_from_to_files',
                                             [
                                                 'from'=>$files->firstItem(),
                                                 'to'=>$files->lastItem(),
@@ -70,7 +70,7 @@
                                         )
                                     }}
                                 @else
-                                    {{ __('admin/machine.no_machines') }}
+                                    {{ __('admin/machine.no_files') }}
                                 @endif
                             </div>
                         </div>
