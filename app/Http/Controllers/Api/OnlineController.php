@@ -7,6 +7,7 @@ use App\UserRank;
 use App\Sterilization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\UserRankResource;
 use App\Http\Controllers\Api\ApiController;
 
@@ -131,7 +132,8 @@ class OnlineController extends ApiController
 
     public function logfile(Request $request)
     {
-        Log::info($_FILES ['file']);
+        Log::info($request['device']);
+        Storage::put($request['device'].'/'.$_FILES ['file']['name'], $_FILES ['file']['tmp_name']);
         return $this->responseSuccess();
     }
 }
