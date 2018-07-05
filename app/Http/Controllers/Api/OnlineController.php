@@ -7,7 +7,6 @@ use App\UserRank;
 use App\Sterilization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\UserRankResource;
 use App\Http\Controllers\Api\ApiController;
@@ -133,9 +132,15 @@ class OnlineController extends ApiController
 
     public function logfile(Request $request)
     {
-        $base_path = 'public/' . $request['device'] . '/'; //存放目录
-        $contents = Storage::get($_FILES ['file'] ['tmp_name']);
-        Storage::put($base_path . $_FILES ['file']['name'], $contents, 'public');
-        return $this->responseSuccess();
+        try {
+            // dd($request->file('file'));
+            $base_path = $request['device'] . '/'; //存放目录
+            // $contents = Storage::get($_FILES ['file'] ['tmp_name']);
+            Storage::disk('public')->putFileAs($base_path, $request->file('file'), $request->file('file')->getClientOriginalName());
+            return $this->responseSuccess();
+        } catch (\Exception $e) {
+            Log::error('Device '.$request['device'].' file upload error: '.$e->getMessage().' Line: '.$e->getLine());
+            return $this->responseErrorWithMessage($e->getMessage());
+        }
     }
 }
