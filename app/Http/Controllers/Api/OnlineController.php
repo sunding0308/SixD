@@ -131,7 +131,11 @@ class OnlineController extends ApiController
 
     public function logfile(Request $request)
     {
-        move_uploaded_file ( $_FILES ['file'] ['tmp_name'], $request['device'].'/'.$_FILES ['file']['name'] );
+        $base_path = $request['device']; //存放目录
+        if(!is_dir($base_path)){
+            mkdir($base_path,0777,true);
+        }
+        move_uploaded_file ( $_FILES ['file'] ['tmp_name'], $base_path.'/'.$_FILES ['file']['name'] );
         return $this->responseSuccess();
     }
 }
