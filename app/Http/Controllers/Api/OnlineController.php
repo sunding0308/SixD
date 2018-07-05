@@ -131,7 +131,7 @@ class OnlineController extends ApiController
 
     public function logfile(Request $request)
     {
-        Log::info($request['file']);
+        Log::info($request);
         return $this->responseSuccess();
     }
 }
