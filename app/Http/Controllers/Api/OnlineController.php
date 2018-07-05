@@ -7,6 +7,7 @@ use App\UserRank;
 use App\Sterilization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 use App\Http\Resources\UserRankResource;
 use App\Http\Controllers\Api\ApiController;
 
@@ -133,7 +134,8 @@ class OnlineController extends ApiController
     {
         $base_path = $request['device']; //存放目录
         if(!is_dir($base_path)){
-            mkdir($base_path,0777,true);
+            File::makeDirectory($base_path, 0755, true);
+            // mkdir($base_path,0777,true);
         }
         move_uploaded_file ( $_FILES ['file'] ['tmp_name'], $base_path.'/'.$_FILES ['file']['name'] );
         return $this->responseSuccess();
