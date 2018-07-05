@@ -72,7 +72,7 @@ class MachineController extends Controller
 
     public function debugDownload(Request $request, Machine $machine)
     {
-        return Storage::download($machine->device . '/' . $request->filename);
+        return Storage::download('public/' . $machine->device . '/' . $request->filename);
     }
 
     private function paginate($items, $perPage = 15, $page = null, $options = [])
