@@ -133,9 +133,7 @@ class OnlineController extends ApiController
     public function logfile(Request $request)
     {
         try {
-            // dd($request->file('file'));
             $base_path = $request['device'] . '/'; //存放目录
-            // $contents = Storage::get($_FILES ['file'] ['tmp_name']);
             Storage::disk('public')->putFileAs($base_path, $request->file('file'), $request->file('file')->getClientOriginalName());
             return $this->responseSuccess();
         } catch (\Exception $e) {
