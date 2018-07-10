@@ -23,7 +23,7 @@ class TopupController extends ApiController
             ]);
 
             //push topup data to machine
-            $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [7200,0,0,0]);
+            $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [7200,300,300,300]);
             if ($response['http_code'] == 200) {
                 Log::info('Device '.$request->device.' topup success!');
                 return $this->responseSuccess();
