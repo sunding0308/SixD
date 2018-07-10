@@ -17,9 +17,9 @@ class TopupController extends ApiController
             $machine = Machine::where('device',$request->device)->first();
             Machine::where('id',$machine->id)->update([
                 'water_overage' => 7200,
-                'oxygen_overage' => 0,
-                'air_overage' => 0,
-                'humidity_overage' => 0,
+                'oxygen_overage' => 300,
+                'air_overage' => 300,
+                'humidity_overage' => 300,
             ]);
 
             //push topup data to machine
