@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
 class AlarmsController extends ApiController
@@ -12,6 +13,14 @@ class AlarmsController extends ApiController
     public function alarms(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+            
             $machine = Machine::with('alarm')->where('device',$request->device)->first();
             $alarm = $machine->alarm;
             if ($alarm) {
@@ -47,7 +56,6 @@ class AlarmsController extends ApiController
             }
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update alarm error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 }

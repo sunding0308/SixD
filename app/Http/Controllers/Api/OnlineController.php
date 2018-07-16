@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Machine;
 use App\UserRank;
+use App\Installation;
 use App\Sterilization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\UserRankResource;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
 class OnlineController extends ApiController
@@ -16,6 +18,15 @@ class OnlineController extends ApiController
     public function online(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'registration_id' => 'required|exists:machines',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
             $machine = Machine::where('device',$request->device)->first();
             if (!$machine) {
                 $machine = Machine::create([
@@ -89,13 +100,24 @@ class OnlineController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' online error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 
     public function setUserRank(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'user_id' => 'required',
+                'user_nickname' => 'required',
+                'rank' => 'required',
+                'machine_rank' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
             $machine = Machine::where('device',$request->device)->first();
             UserRank::updateOrCreate(
                 ['machine_id' => $machine->id],
@@ -110,7 +132,6 @@ class OnlineController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update user rank error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 
@@ -120,14 +141,71 @@ class OnlineController extends ApiController
         return new UserRankResource($machine->userRank);
     }
 
+    public function checkReserve(Request $request)
+    {
+
+    }
+
     public function checkStatus(Request $request)
     {
-        $machine = Machine::where('device',$request->device)->first();
-        if (!$machine) {
-            return $this->responseErrorWithMessage('非正常状态');
-        }
+        try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
 
-        return $this->responseSuccessWithMessage('在线且数据正常');
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
+            $machine = Machine::where('device',$request->device)->first();
+            if (!$machine) {
+                return $this->responseErrorWithMessage('非正常状态');
+            }
+
+            return $this->responseSuccessWithMessage('在线且数据正常');
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' check status error: '.$e->getMessage().' Line: '.$e->getLine());
+        }
+    }
+
+    public function installation(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'hotel_name' => 'required',
+                'hotel_code' => 'required',
+                'hotel_address' => 'required',
+                'room' => 'required',
+                'machine_name' => 'required',
+                'machine_model' => 'required',
+                'installation_date' => 'required',
+                'production_date' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
+            $machine = Machine::where('device',$request->device)->first();
+            Installation::updateOrCreate(
+                ['machine_id' => $machine->id],
+                [
+                    'hotel_name' => $request->hotel_name,
+                    'hotel_code' => $request->hotel_code,
+                    'hotel_address' => $request->hotel_address,
+                    'room' => $request->room,
+                    'machine_name' => $request->machine_name,
+                    'machine_model' => $request->machine_model,
+                    'installation_date' => $request->installation_date,
+                    'production_date' => $request->production_date
+                ]
+            );
+            Log::info('Device '.$request->device.' update installation success!');
+            return $this->responseSuccess();
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' update installation error: '.$e->getMessage().' Line: '.$e->getLine());
+        }
     }
 
     public function logfile(Request $request)

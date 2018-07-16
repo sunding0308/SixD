@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
 class ReportController extends ApiController
@@ -12,6 +13,14 @@ class ReportController extends ApiController
     public function hardwareStatus(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+            
             $machine = Machine::where('device',$request->device)->first();
             $machine->update([
                 'status' => $request->hardware_status['machine_status'] ?: '',
@@ -37,13 +46,20 @@ class ReportController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update hardware status error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
     
     public function records(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
             $machine = Machine::where('device',$request->device)->first();
             $machine->waterRecords()->delete();
             $machine->waterRecords()->createMany($request->water_records);
@@ -63,13 +79,20 @@ class ReportController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update records error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 
     public function environment(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
             $machine = Machine::where('device',$request->device)->first();
             $machine->update([
                 'temperature' => $request->temperature ?: 0,
@@ -82,13 +105,20 @@ class ReportController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update environment error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 
     public function waterQualityStatistics(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
             $machine = Machine::where('device',$request->device)->first();
             $machine->waterQualityStatistics()->create([
                 'machine_id' => $machine->id,
@@ -101,7 +131,6 @@ class ReportController extends ApiController
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' create water quality statistics error: '.$e->getMessage().' Line: '.$e->getLine());
-            return $this->responseErrorWithMessage($e->getMessage());
         }
     }
 

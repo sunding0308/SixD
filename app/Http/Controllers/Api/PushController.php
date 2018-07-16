@@ -6,6 +6,7 @@ use App\Machine;
 use Illuminate\Http\Request;
 use App\Services\JPushService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
 class PushController extends ApiController
@@ -55,6 +56,26 @@ class PushController extends ApiController
     public function pushApiAnalysisSignal(Request $request)
     {
         return $this->client->push($request->registrationId, 'api_analysis');
+    }
+
+    public function pushAccountType(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        
+        $response = $this->pushSignal($machine->registrationId, 'account_type:'.$request->account_type);
+        if ($response['http_code'] == 200) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage('push to machine failed!');
+        }
     }
 
     private function pushSignal($registrationId, $sign)
