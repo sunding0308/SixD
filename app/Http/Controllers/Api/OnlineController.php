@@ -19,7 +19,7 @@ class OnlineController extends ApiController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
+                'device' => 'required',
                 'registration_id' => 'required',
             ]);
 
