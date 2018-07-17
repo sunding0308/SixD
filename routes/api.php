@@ -20,7 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['namespace'=>'Api'], function(){
     Route::post('/get_statistics_data', 'ApiController@getStatisticsData');
 
-    //push signal
+    /**
+     * push signal to machine
+     */
     Route::get('/push_alarms_signal', 'PushController@pushAlarmsSignal');
     Route::get('/push_overage_signal', 'PushController@pushOverageSignal');
     Route::get('/push_hardware_status_signal', 'PushController@pushHardwareStatusSignal');
@@ -29,6 +31,12 @@ Route::group(['namespace'=>'Api'], function(){
     Route::get('/push_water_quality_statistics_signal', 'PushController@pushWaterQualityStatisticsSignal');
     Route::get('/push_app_menu_analysis_signal', 'PushController@pushAppMenuAnalysisSignal');
     Route::get('/push_api_analysis_signal', 'PushController@pushApiAnalysisSignal');
+
+    /**
+     * push to data cloud
+     */
+    Route::get('/push_alarms_to_data_cloud', 'PushController@pushAlarmsToDataCloud');
+    Route::get('/push_alarms_complete_to_data_cloud', 'PushController@pushAlarmsCompleteToDataCloud');
 
     Route::group(['middleware'=>'api_auth'], function(){
         Route::get('/check_status', 'OnlineController@checkStatus');

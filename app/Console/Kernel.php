@@ -24,6 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /**
+         * push signal to machine
+         */
         $schedule->call('\App\Http\Controllers\Api\PushController@pushAlarmsSignal')
                  ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushOverageSignal')
@@ -36,6 +39,11 @@ class Kernel extends ConsoleKernel
                  ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushWaterQualityStatisticsSignal')
                  ->daily();
+        /**
+         * push to data cloud
+         */
+        $schedule->call('\App\Http\Controllers\Api\PushController@pushAlarmsToDataCloud')
+                 ->hourly();
     }
 
     /**

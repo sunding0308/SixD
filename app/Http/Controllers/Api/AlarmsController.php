@@ -36,7 +36,7 @@ class AlarmsController extends ApiController
                     'malfunction_code' => $request->malfunction_code ?: '',
                 ]);
 
-                Log::info('Device '.$request->device.' create alarm success!');
+                Log::info('Device '.$request->device.' update alarm success!');
             } else {
                 $machine->alarm()->create([
                     'machine_id' => $machine->id,
@@ -51,7 +51,7 @@ class AlarmsController extends ApiController
                     'malfunction_code' => $request->malfunction_code ?: '',
                 ]);
 
-                Log::info('Device '.$request->device.' update alarm success!');
+                Log::info('Device '.$request->device.' create alarm success!');
                 return $this->responseSuccess();
             }
         } catch (\Exception $e) {

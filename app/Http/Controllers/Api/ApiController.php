@@ -14,6 +14,9 @@ class ApiController extends Controller
     const STATUS_ERROR = 'error';
     const STATUS_SUCCESS = 'success';
 
+    const CODE_STATUS_ERROR = 1;
+    const CODE_STATUS_SUCCESS = 0;
+
     const CODE_SUCCESS = 200;
     const CODE_ERROR = 400;
     const CODE_NOT_FOUND = 404;

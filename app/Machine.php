@@ -26,6 +26,11 @@ class Machine extends Model
         return $this->hasOne(Sterilization::class);
     }
 
+    public function installation()
+    {
+        return $this->hasOne(Installation::class);
+    }
+
     public function waterRecords()
     {
         return $this->hasMany(WaterRecord::class);

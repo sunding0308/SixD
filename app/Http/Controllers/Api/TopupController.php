@@ -12,7 +12,10 @@ use App\Http\Controllers\Api\ApiController;
 
 class TopupController extends ApiController
 {
+    //vip码产品信息
     const VIP_CODE_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchange.do';
+    //vip码兑换结果
+    const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
 
     public function topup(Request $request, JPushService $jpush)
     {
@@ -60,7 +63,7 @@ class TopupController extends ApiController
 
             //push topup data to machine
             $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [$water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
-            if ($response['http_code'] == 200) {
+            if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' topup success!');
                 return $this->responseSuccess();
             }
@@ -90,13 +93,26 @@ class TopupController extends ApiController
             ]);
 
             $client = new Client();
-            $response = $client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['device' => $request->device, 'vip_code' => $request->vip_code]
+            //获取VIP码产品信息
+            $exchangeResult = $client->request('GET', self::VIP_CODE_URL, [
+                'query' => ['machineId' => $machine->device, 'vipCode' => $request->vip_code]
             ]);
 
+            if ($exchangeResult->status !== static::CODE_STATUS_SUCCESS) {
+                return $this->responseErrorWithMessage($exchangeResult->msg);
+            }
+            //兑换结果
+            $exchangeStatus = $client->request('GET', self::VIP_CODE_RESULT_URL, [
+                'query' => ['machineId' => $request->device, 'vipCode' => $request->vip_code, 'exchangeStatus' => 0]
+            ]);
+
+            if ($exchangeStatus->status !== static::CODE_STATUS_SUCCESS) {
+                return $this->responseErrorWithMessage($exchangeResult->msg);
+            }
+
             //push topup data to machine
-            $response = $jpush->push($machine->registration_id, 'vip_topup', $machine->device, [$response]);
-            if ($response['http_code'] == 200) {
+            $response = $jpush->push($machine->registration_id, 'vip_topup', $machine->device, [$exchangeResult]);
+            if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' vip topup success!');
                 return $this->responseSuccess();
             }
@@ -126,7 +142,7 @@ class TopupController extends ApiController
 
             //push reset data to machine
             $response = $jpush->push($machine->registration_id, 'reset', $machine->device, [7200,0,0,0]);
-            if ($response['http_code'] == 200) {
+            if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' reset success!');
                 return $this->responseSuccess();
             }
