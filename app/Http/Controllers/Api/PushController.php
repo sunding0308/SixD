@@ -69,6 +69,26 @@ class PushController extends ApiController
         return $this->jpush->push($request->registrationId, 'api_analysis');
     }
 
+    public function pushAccountType(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        
+        $response = $this->jpush->push($machine->registrationId, 'account_type', null, [], $request->account_type);
+        if ($response['http_code'] == static::CODE_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage('push to machine failed!');
+        }
+    }
+
     private function pushSignal($registrationId, $sign)
     {
         if (!$registrationId) {
@@ -133,26 +153,6 @@ class PushController extends ApiController
         } else {
             Log::error('Device '.$request->device.' pushed alarm complete to data cloud failed!');
             return $this->responseErrorWithMessage('pushed alarm complete to data cloud failed!');
-        }
-    }
-
-    public function pushAccountType(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $machine = Machine::where('device',$request->device)->first();
-        
-        $response = $this->pushSignal($machine->registrationId, 'account_type', null, [], $request->account_type);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage('push to machine failed!');
         }
     }
 }
