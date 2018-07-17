@@ -81,7 +81,7 @@ class PushController extends ApiController
 
         $machine = Machine::where('device',$request->device)->first();
         
-        $response = $this->jpush->push($machine->registrationId, 'account_type', null, [], $request->account_type);
+        $response = $this->jpush->push($machine->registration_id, 'account_type', null, [], $request->account_type);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             return $this->responseSuccess();
         } else {
