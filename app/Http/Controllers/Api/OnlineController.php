@@ -143,7 +143,7 @@ class OnlineController extends ApiController
 
     public function checkReserve(Request $request)
     {
-
+        return $this->responseSuccessWithMessage('可购买');
     }
 
     public function checkStatus(Request $request)
