@@ -17,23 +17,20 @@ class TopupController extends ApiController
     //vip码兑换结果
     const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
 
-    public function topup(Request $request, JPushService $jpush)
+    private $jpush;
+    private $client;
+
+    public function __construct(JPushService $jpush, Client $client)
+    {
+        $this->jpush = $jpush;
+        $this->client = $client;
+    }
+
+    public function topup(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
-                'user_id' => 'required',
-                'user_nickname' => 'required',
-                'order_time' => 'required',
-                'total_number' => 'required',
-                'is_show_red_envelopes' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-            
-            $machine = Machine::where('device',$request->device)->first();
+            $content = json_decode($request->getContent())->content;
+            $machine = Machine::where('device',$content->device)->first();
             $hot_water_overage = $machine->hot_water_overage;
             $cold_water_overage = $machine->cold_water_overage;
             $oxygen_overage = $machine->oxygen_overage;
@@ -49,22 +46,42 @@ class TopupController extends ApiController
             ]);
 
             //push topup data to machine
-            $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [$hot_water_overage,$cold_water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
+            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [$hot_water_overage,$cold_water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' topup success!');
                 return $this->responseSuccess();
             }
         } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());
+            Log::error('Device '.$content->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());
         }
     }
 
-    public function vipTopup(Request $request, JPushService $jpush)
+    public function getVipProduct(Request $request)
+    {
+        try {
+            //获取VIP码产品信息
+            $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
+                'query' => ['machineId' => $machine->device, 'vipCode' => $request->vip_code]
+            ]);
+
+            dd($exchangeResult);
+            if ($exchangeStatus->status == static::CODE_STATUS_SUCCESS) {
+                return $this->responseSuccessWithMessage($exchangeResult->data);
+            } else {
+                return $this->responseErrorWithMessage($exchangeResult->msg);
+            }
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' get vip product error: '.$e->getMessage().' Line: '.$e->getLine());
+        }
+    }
+
+    public function vipTopup(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
                 'device' => 'required|exists:machines',
-                'vip_code' => 'required'
+                'vip_code' => 'required',
+                'exchange_status' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -80,9 +97,8 @@ class TopupController extends ApiController
                 'humidity_overage' => 0,
             ]);
 
-            $client = new Client();
             //获取VIP码产品信息
-            $exchangeResult = $client->request('GET', self::VIP_CODE_URL, [
+            $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
                 'query' => ['machineId' => $machine->device, 'vipCode' => $request->vip_code]
             ]);
 
@@ -90,7 +106,7 @@ class TopupController extends ApiController
                 return $this->responseErrorWithMessage($exchangeResult->msg);
             }
             //兑换结果
-            $exchangeStatus = $client->request('GET', self::VIP_CODE_RESULT_URL, [
+            $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
                 'query' => ['machineId' => $request->device, 'vipCode' => $request->vip_code, 'exchangeStatus' => 0]
             ]);
 
@@ -99,7 +115,7 @@ class TopupController extends ApiController
             }
 
             //push topup data to machine
-            $response = $jpush->push($machine->registration_id, 'vip_topup', $machine->device, [$exchangeResult]);
+            $response = $this->jpush->push($machine->registration_id, 'vip_topup', $machine->device, [$exchangeResult]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' vip topup success!');
                 return $this->responseSuccess();
@@ -109,7 +125,7 @@ class TopupController extends ApiController
         }
     }
 
-    public function resetOverage(Request $request, JPushService $jpush)
+    public function resetOverage(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -130,7 +146,7 @@ class TopupController extends ApiController
             ]);
 
             //push reset data to machine
-            $response = $jpush->push($machine->registration_id, 'reset', $machine->device, [7200,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, 'reset', $machine->device, [7200,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' reset success!');
                 return $this->responseSuccess();
