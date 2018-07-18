@@ -44,15 +44,15 @@ class TopupController extends ApiController
             $oxygen_overage = $machine->oxygen_overage;
             $air_overage = $machine->air_overage;
             $humidity_overage = $machine->humidity_overage;
-            if ($request->product_name == 'water') {
-                $water_overage += $request->purchase_quantity;
-            } else if ($request->product_name == 'oxygen') {
-                $oxygen_overage += $request->purchase_quantity;
-            } else if ($request->product_name == 'air') {
-                $air_overage += $request->purchase_quantity;
-            } else {
-                $humidity_overage += $request->purchase_quantity;
-            }
+            // if ($request->product_name == 'water') {
+            //     $water_overage += $request->purchase_quantity;
+            // } else if ($request->product_name == 'oxygen') {
+            //     $oxygen_overage += $request->purchase_quantity;
+            // } else if ($request->product_name == 'air') {
+            //     $air_overage += $request->purchase_quantity;
+            // } else {
+            //     $humidity_overage += $request->purchase_quantity;
+            // }
 
             Machine::where('id',$machine->id)->update([
                 'water_overage' => $water_overage,
