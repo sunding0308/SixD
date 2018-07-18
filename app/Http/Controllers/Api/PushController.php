@@ -69,10 +69,33 @@ class PushController extends ApiController
         return $this->jpush->push($request->registrationId, 'api_analysis');
     }
 
+    public function pushUrgentAccountType(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'account_type' => 'required',
+            'is_same_person' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        
+        $response = $this->jpush->push($machine->registration_id, 'account_type', null, [], $request->account_type, $request->is_same_person);
+        if ($response['http_code'] == static::CODE_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage('push to machine failed!');
+        }
+    }
+
     public function pushAccountType(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines'
+            'device' => 'required|exists:machines',
+            'account_type' => 'required',
         ]);
 
         if ($validator->fails()) {
