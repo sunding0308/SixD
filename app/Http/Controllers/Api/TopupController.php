@@ -34,29 +34,22 @@ class TopupController extends ApiController
             }
             
             $machine = Machine::where('device',$request->device)->first();
-            $water_overage = $machine->water_overage;
+            $hot_water_overage = $machine->hot_water_overage;
+            $cold_water_overage = $machine->cold_water_overage;
             $oxygen_overage = $machine->oxygen_overage;
             $air_overage = $machine->air_overage;
             $humidity_overage = $machine->humidity_overage;
-            // if ($request->product_name == 'water') {
-            //     $water_overage += $request->purchase_quantity;
-            // } else if ($request->product_name == 'oxygen') {
-            //     $oxygen_overage += $request->purchase_quantity;
-            // } else if ($request->product_name == 'air') {
-            //     $air_overage += $request->purchase_quantity;
-            // } else {
-            //     $humidity_overage += $request->purchase_quantity;
-            // }
 
             Machine::where('id',$machine->id)->update([
-                'water_overage' => $water_overage,
+                'hot_water_overage' => $hot_water_overage,
+                'cold_water_overage' => $cold_water_overage,
                 'oxygen_overage' => $oxygen_overage,
                 'air_overage' => $air_overage,
                 'humidity_overage' => $humidity_overage,
             ]);
 
             //push topup data to machine
-            $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [$water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
+            $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [$hot_water_overage,$cold_water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' topup success!');
                 return $this->responseSuccess();
@@ -80,7 +73,8 @@ class TopupController extends ApiController
 
             $machine = Machine::where('device',$request->device)->first();
             Machine::where('id',$machine->id)->update([
-                'water_overage' => 0,
+                'hot_water_overage' => 0,
+                'cold_water_overage' => 0,
                 'oxygen_overage' => 0,
                 'air_overage' => 0,
                 'humidity_overage' => 0,
@@ -128,7 +122,8 @@ class TopupController extends ApiController
 
             $machine = Machine::where('device',$request->device)->first();
             Machine::where('id',$machine->id)->update([
-                'water_overage' => 7200,
+                'hot_water_overage' => 7200,
+                'cold_water_overage' => 7200,
                 'oxygen_overage' => 0,
                 'air_overage' => 0,
                 'humidity_overage' => 0,

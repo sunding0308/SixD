@@ -26,7 +26,8 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.mac') }}</th>
-                            <th>{{ __('admin/machine.water_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.hot_water_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.cold_water_remaining_time') }}(h)</th>
                             <th>{{ __('admin/machine.air_remaining_time') }}(h)</th>
                             <th>{{ __('admin/machine.oxygen_remaining_time') }}(h)</th>
                             <th>{{ __('admin/machine.humidity_remaining_time') }}(h)</th>
@@ -39,7 +40,8 @@
                             @foreach($machines as $machine)
                                 <tr>
                                     <td>{{ $machine->device }}</td>
-                                    <td>{{ secToHR($machine->water_overage) }}</td>
+                                    <td>{{ secToHR($machine->hot_water_overage) }}</td>
+                                    <td>{{ secToHR($machine->cold_water_overage) }}</td>
                                     <td>{{ secToHR($machine->oxygen_overage) }}</td>
                                     <td>{{ secToHR($machine->air_overage) }}</td>
                                     <td>{{ secToHR($machine->humidity_overage) }}</td>

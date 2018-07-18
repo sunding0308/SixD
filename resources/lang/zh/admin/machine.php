@@ -9,7 +9,8 @@
 return [
     'machines' => '设备列表',
     'mac' => 'MAC地址',
-    'water_remaining_time' => '水余量',
+    'hot_water_remaining_time' => '热水余量',
+    'cold_water_remaining_time' => '凉水余量',
     'air_remaining_time' => '空净余量',
     'oxygen_remaining_time' => '氧气余量',
     'humidity_remaining_time' => '湿度余量',

@@ -64,7 +64,8 @@
                             <div class="col-md-9 control-label t-a-l">{{ $machine->bluetooth_status }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">
-                                水：{{ secToHR($machine->water_overage) }}
+                                热水：{{ secToHR($machine->hot_water_overage) }}
+                                凉水：{{ secToHR($machine->cold_water_overage) }}
                                 氧气：{{ secToHR($machine->oxygen_overage) }}
                                 空净：{{ secToHR($machine->air_overage) }}
                                 湿度调节：{{ secToHR($machine->humidity_overage) }}

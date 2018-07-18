@@ -23,7 +23,8 @@ class RealtimeController extends ApiController
             
             $machine = Machine::where('device',$request->device)->first();
             Machine::where('id',$machine->id)->update([
-                'water_overage' => $request->water_overage,
+                'hot_water_overage' => $request->hot_water_overage,
+                'cold_water_overage' => $request->cold_water_overage,
                 'oxygen_overage' => $request->oxygen_overage,
                 'air_overage' => $request->air_overage,
                 'humidity_overage' => $request->humidity_overage,
