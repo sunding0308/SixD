@@ -35,8 +35,8 @@ Route::group(['namespace'=>'Api'], function(){
     /**
      * push to data cloud
      */
-    Route::get('/push_alarms_to_data_cloud', 'PushController@pushAlarmsToDataCloud');
-    Route::get('/push_alarms_complete_to_data_cloud', 'PushController@pushAlarmsCompleteToDataCloud');
+    Route::get('/push_urgent', 'PushController@pushUrgentServiceToDataCloud');
+    Route::get('/push_urgent_complete', 'PushController@pushUrgentServiceCompleteToDataCloud');
 
     Route::group(['middleware'=>'api_auth'], function(){
         Route::get('/check_status', 'OnlineController@checkStatus');

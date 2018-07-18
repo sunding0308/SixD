@@ -22,14 +22,8 @@ class TopupController extends ApiController
         try {
             $validator = Validator::make($request->all(), [
                 'device' => 'required|exists:machines',
-                'order_number' => 'required',
                 'user_id' => 'required',
                 'user_nickname' => 'required',
-                'product_code' => 'required',
-                'product_name' => 'required',
-                'purchase_quantity' => 'required',
-                'product_unit' => 'required',
-                'available_period' => 'required',
                 'order_time' => 'required',
                 'total_number' => 'required',
                 'is_show_red_envelopes' => 'required'

@@ -138,30 +138,35 @@ class PushController extends ApiController
     /**
      * push to data cloud
      */
-    public function pushAlarmsToDataCloud(Request $request)
+    public function pushUrgentServiceToDataCloud(Request $request)
     {
-        Machine::with('alarm')->get()->map(function ($item, $key) {
-            if ($item->hasAlarms()) {
-                $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
-                    'form_params' => [
-                        'machineId' => $item->device,
-                        'hotelName' => $item->installation->hotel_name,
-                        'hotelId' => $item->installation->hotel_code,
-                        'hotelAddress' => $item->installation->hotel_address,
-                        'roomNo' => $item->installation->room,
-                        'serviceContent' => collect($item->alarm)->except('id', 'machine_id', 'created_at', 'updated_at')->filter()->implode(',')
-                    ]
-                ]);
-                if ($response->status == static::CODE_STATUS_SUCCESS) {
-                    Log::info('Device '.$item->device.' pushed alarm to data cloud success!');
-                } else {
-                    Log::error('Device '.$item->device.' pushed alarm to data cloud failed!');
-                }
-            }
-        });
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'account_type' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
+            'form_params' => [
+                'machineId' => $request->device,
+                'hotelName' => $request->hotel_name,
+                'hotelId' => $request->hotel_code,
+                'hotelAddress' => $request->hotel_address,
+                'roomNo' => $request->room,
+                'serviceContent' => $request->service_content
+            ]
+        ]);
+        if ($response->status == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage('pushed urgent service to data cloud failed!');
+        }
     }
 
-    public function pushAlarmsCompleteToDataCloud(Request $request)
+    public function pushUrgentServiceCompleteToDataCloud(Request $request)
     {
         $response = $this->client->request('POST', self::URGENT_SERVICE_COMPLETE_URL, [
             'form_params' => [
@@ -171,11 +176,9 @@ class PushController extends ApiController
             ]
         ]);
         if ($response->status == static::CODE_STATUS_SUCCESS) {
-            Log::info('Device '.$request->device.' pushed alarm complete to data cloud success!');
             return $this->responseSuccess();
         } else {
-            Log::error('Device '.$request->device.' pushed alarm complete to data cloud failed!');
-            return $this->responseErrorWithMessage('pushed alarm complete to data cloud failed!');
+            return $this->responseErrorWithMessage('pushed urgent service complete to data cloud failed!');
         }
     }
 }

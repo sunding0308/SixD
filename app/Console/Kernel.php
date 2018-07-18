@@ -39,11 +39,6 @@ class Kernel extends ConsoleKernel
                  ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushWaterQualityStatisticsSignal')
                  ->daily();
-        /**
-         * push to data cloud
-         */
-        $schedule->call('\App\Http\Controllers\Api\PushController@pushAlarmsToDataCloud')
-                 ->hourly();
     }
 
     /**
