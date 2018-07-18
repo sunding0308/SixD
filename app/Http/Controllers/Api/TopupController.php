@@ -30,7 +30,6 @@ class TopupController extends ApiController
     {
         try {
             $content = json_decode($request->content);
-            $product_list = json_decode($content->product_list);
             $machine = Machine::where('device',$content->device)->first();
             $hot_water_overage = $machine->hot_water_overage;
             $cold_water_overage = $machine->cold_water_overage;
@@ -62,10 +61,10 @@ class TopupController extends ApiController
         try {
             //获取VIP码产品信息
             $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => $machine->device, 'vipCode' => $request->vip_code]
+                'query' => ['machineId' => $request->device, 'vipCode' => $request->vip_code]
             ]);
-
             dd($exchangeResult);
+
             if ($exchangeStatus->status == static::CODE_STATUS_SUCCESS) {
                 return $this->responseSuccessWithMessage($exchangeResult->data);
             } else {
