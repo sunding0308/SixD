@@ -182,7 +182,8 @@ class OnlineController extends ApiController
                 'machine_name' => 'required',
                 'machine_model' => 'required',
                 'installation_date' => 'required',
-                'production_date' => 'required'
+                'production_date' => 'required',
+                'qr_code' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -200,7 +201,8 @@ class OnlineController extends ApiController
                     'machine_name' => $request->machine_name,
                     'machine_model' => $request->machine_model,
                     'installation_date' => $request->installation_date,
-                    'production_date' => $request->production_date
+                    'production_date' => $request->production_date,
+                    'qr_code' => $request->qr_code,
                 ]
             );
             Log::info('Device '.$request->device.' update installation success!');

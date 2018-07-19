@@ -12,6 +12,6 @@ class Installation extends Model
      * @var array
      */
     protected $fillable = [
-        'machine_id', 'hotel_name', 'hotel_code', 'hotel_address', 'room', 'machine_name', 'machine_model', 'installation_date', 'production_date'
+        'machine_id', 'hotel_name', 'hotel_code', 'hotel_address', 'room', 'machine_name', 'machine_model', 'installation_date', 'production_date', 'qr_code'
     ];
 }
