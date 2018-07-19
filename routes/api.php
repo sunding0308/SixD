@@ -23,7 +23,6 @@ Route::group(['namespace'=>'Api'], function(){
     /**
      * push signal to machine
      */
-    Route::get('/push_alarms_signal', 'PushController@pushAlarmsSignal');
     Route::get('/push_overage_signal', 'PushController@pushOverageSignal');
     Route::get('/push_hardware_status_signal', 'PushController@pushHardwareStatusSignal');
     Route::get('/push_records_signal', 'PushController@pushRecordsSignal');
@@ -38,12 +37,16 @@ Route::group(['namespace'=>'Api'], function(){
     Route::get('/push_urgent', 'PushController@pushUrgentServiceToDataCloud');
     Route::get('/push_urgent_complete', 'PushController@pushUrgentServiceCompleteToDataCloud');
 
+    /**
+     * apis for andriod and data cloud
+     */
     Route::group(['middleware'=>'api_auth'], function(){
         Route::get('/check_status', 'OnlineController@checkStatus');
         Route::post('/machine/installation', 'OnlineController@installation');
         Route::post('/urgent/account_type', 'PushController@pushUrgentAccountType');
         Route::post('/account_type', 'PushController@pushAccountType');
         Route::post('/topup', 'TopupController@topup');
+        Route::get('/vip_product', 'TopupController@getVipProduct');
         Route::post('/vip_topup', 'TopupController@vipTopup');
         Route::post('/reset_overage', 'TopupController@resetOverage');
         Route::post('/online', 'OnlineController@online');

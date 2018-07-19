@@ -61,12 +61,13 @@ class TopupController extends ApiController
         try {
             //获取VIP码产品信息
             $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => $request->device, 'vipCode' => $request->vip_code]
+                'query' => ['machineId' => '11c6f1c9d07c474a9d2da34b1c05681c', 'vipCode' => $request->vip_code]
             ]);
-            dd($exchangeResult);
+            //处理获取的json
+            $exchangeResult = json_decode((string)$exchangeResult->getBody());
 
-            if ($exchangeStatus->status == static::CODE_STATUS_SUCCESS) {
-                return $this->responseSuccessWithMessage($exchangeResult->data);
+            if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
+                return $this->responseSuccessWithExtrasAndMessage(['data' => $exchangeResult->data], $exchangeResult->msg);
             } else {
                 return $this->responseErrorWithMessage($exchangeResult->msg);
             }
@@ -82,40 +83,45 @@ class TopupController extends ApiController
                 'device' => 'required|exists:machines',
                 'vip_code' => 'required',
                 'exchange_status' => 'required',
+                'hot_water_overage' => 'required',
+                'cold_water_overage' => 'required',
+                'oxygen_overage' => 'required',
+                'air_overage' => 'required',
+                'humidity_overage' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return $this->responseErrorWithMessage($validator->errors()->first());
             }
 
-            $machine = Machine::where('device',$request->device)->first();
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => 0,
-                'cold_water_overage' => 0,
-                'oxygen_overage' => 0,
-                'air_overage' => 0,
-                'humidity_overage' => 0,
-            ]);
-
-            //获取VIP码产品信息
-            $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => $machine->device, 'vipCode' => $request->vip_code]
-            ]);
-
-            if ($exchangeResult->status !== static::CODE_STATUS_SUCCESS) {
-                return $this->responseErrorWithMessage($exchangeResult->msg);
-            }
             //兑换结果
             $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
-                'query' => ['machineId' => $request->device, 'vipCode' => $request->vip_code, 'exchangeStatus' => 0]
+                'query' => ['machineId' => '11c6f1c9d07c474a9d2da34b1c05681c', 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
             ]);
+            //处理获取的json
+            $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
 
             if ($exchangeStatus->status !== static::CODE_STATUS_SUCCESS) {
                 return $this->responseErrorWithMessage($exchangeResult->msg);
             }
 
+            $machine = Machine::where('device',$request->device)->first();
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $request->hot_water_overage,
+                'cold_water_overage' => $request->cold_water_overage,
+                'oxygen_overage' => $request->oxygen_overage,
+                'air_overage' => $request->air_overage,
+                'humidity_overage' => $request->humidity_overage,
+            ]);
+
             //push topup data to machine
-            $response = $this->jpush->push($machine->registration_id, 'vip_topup', $machine->device, [$exchangeResult]);
+            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
+                $request->hot_water_overage,
+                $request->cold_water_overage,
+                $request->oxygen_overage,
+                $request->air_overage,
+                $request->humidity_overage
+            ]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' vip topup success!');
                 return $this->responseSuccess();

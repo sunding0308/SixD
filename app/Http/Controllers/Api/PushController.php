@@ -29,11 +29,6 @@ class PushController extends ApiController
     /**
      * push signal to machine
      */
-    public function pushAlarmsSignal(Request $request)
-    {
-        return $this->pushSignal($request->registrationId, 'alarms');
-    }
-
     public function pushOverageSignal(Request $request)
     {
         return $this->pushSignal($request->registrationId, 'overage');

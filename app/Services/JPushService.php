@@ -16,7 +16,7 @@ class JPushService
         $this->master_secret = config('jpush.master_secret');
     }
 
-    public function push($registrationId, $sign, $device=null, $overage=[], $account_type=null, $is_same_person=null)
+    public function push($registrationId, $sign, $device=null, $overage=[], $account_type=null, $is_same_person=true)
     {
         $client = new JPush($this->app_key, $this->master_secret, config('jpush.default_log_file')); // 实例化client.php中的client类
 
