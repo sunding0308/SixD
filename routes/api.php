@@ -34,8 +34,13 @@ Route::group(['namespace'=>'Api'], function(){
     /**
      * push to data cloud
      */
-    Route::get('/push_urgent', 'PushController@pushUrgentServiceToDataCloud');
-    Route::get('/push_urgent_complete', 'PushController@pushUrgentServiceCompleteToDataCloud');
+    Route::post('/push_urgent', 'PushController@pushUrgentServiceToDataCloud');
+    Route::post('/push_urgent_complete', 'PushController@pushUrgentServiceCompleteToDataCloud');
+    Route::post('/push_ordinary', 'PushController@pushOrdinaryServiceToDataCloud');
+    Route::post('/push_single_ordinary_complete', 'PushController@pushSingleOrdinaryServiceCompleteToDataCloud');
+    Route::post('/push_all_ordinary_complete', 'PushController@pushAllOrdinaryServiceCompleteToDataCloud');
+    Route::post('/push_maintenance', 'PushController@pushMaintenanceToDataCloud');
+    Route::post('/push_maintenance_complete', 'PushController@pushMaintenanceCompleteToDataCloud');
 
     /**
      * apis for andriod and data cloud
