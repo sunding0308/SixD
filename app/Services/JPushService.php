@@ -16,7 +16,7 @@ class JPushService
         $this->master_secret = config('jpush.master_secret');
     }
 
-    public function push($registrationId, $sign, $device=null, $overage=[], $account_type=null, $is_same_person=true)
+    public function push($registrationId, $sign, $device=null, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false)
     {
         $client = new JPush($this->app_key, $this->master_secret, config('jpush.default_log_file')); // 实例化client.php中的client类
 
@@ -29,6 +29,7 @@ class JPushService
                   'overage' => $overage,
                   'account_type' => $account_type,
                   'is_same_person' => $is_same_person,
+                  'show_redpacket' => $show_redpacket,
                 ]
               ]); // 设置推送通知内容
         try {

@@ -145,42 +145,8 @@ class PushController extends ApiController
      * push to data cloud
      */
 
-     //紧急服务申请
+    //紧急服务
     public function pushUrgentServiceToDataCloud(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
-            'service_content' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $machine = Machine::with('installation')->where('device',$request->device)->first();
-        $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'hotelName' => $machine->installation->hotel_name,
-                // 'hotelId' => $machine->installation->hotel_code,
-                'hotelId' => '5201282319504302aaaa9d2215c468cb',
-                'hotelAddress' => $machine->installation->hotel_address,
-                'roomNo' => $machine->installation->room,
-                'serviceContent' => $request->service_content
-            ]
-        ]);
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
-
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage($response->msg);
-        }
-    }
-
-    //紧急服务完成
-    public function pushUrgentServiceCompleteToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'device' => 'required|exists:machines',
@@ -192,13 +158,30 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
-        $response = $this->client->request('POST', self::URGENT_SERVICE_COMPLETE_URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'serviceContent' => $request->service_content,
-                'maintenanceStatus' => $request->maintenance_status
-            ]
-        ]);
+        if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
+            $machine = Machine::with('installation')->where('device',$request->device)->first();
+            //紧急服务申请
+            $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'hotelName' => $machine->installation->hotel_name,
+                    // 'hotelId' => $machine->installation->hotel_code,
+                    'hotelId' => '5201282319504302aaaa9d2215c468cb',
+                    'hotelAddress' => $machine->installation->hotel_address,
+                    'roomNo' => $machine->installation->room,
+                    'serviceContent' => $request->service_content
+                ]
+            ]);
+        } else {
+            //紧急服务完成
+            $response = $this->client->request('POST', self::URGENT_SERVICE_COMPLETE_URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'serviceContent' => $request->service_content,
+                    'maintenanceStatus' => $request->maintenance_status
+                ]
+            ]);
+        }
         //处理获取的json
         $response = json_decode((string)$response->getBody());
 
@@ -214,19 +197,32 @@ class PushController extends ApiController
     {
         $validator = Validator::make($request->all(), [
             'device' => 'required|exists:machines',
-            'service_content' => 'required'
+            'service_content' => 'required',
+            'maintenance_status' => 'required'
         ]);
 
         if ($validator->fails()) {
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
-        $response = $this->client->request('POST', self::ORDINARY_SERVICE_URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'serviceContent' => $request->service_content
-            ]
-        ]);
+        if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
+            //普通服务申请
+            $response = $this->client->request('POST', self::ORDINARY_SERVICE_URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'serviceContent' => $request->service_content
+                ]
+            ]);
+        } else {
+            //普通服务完成
+            $response = $this->client->request('POST', self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'serviceContent' => $request->service_content,
+                    'maintenanceStatus' => $request->maintenance_status
+                ]
+            ]);
+        }
         //处理获取的json
         $response = json_decode((string)$response->getBody());
 
@@ -266,69 +262,12 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($response->msg);
         }
     }
-    //普通服务完成
-    public function pushAllOrdinaryServiceCompleteToDataCloud(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
-            'service_content' => 'required',
-            'maintenance_status' => 'required'
-        ]);
 
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $response = $this->client->request('POST', self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'serviceContent' => $request->service_content,
-                'maintenanceStatus' => $request->maintenance_status
-            ]
-        ]);
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
-
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage($response->msg);
-        }
-    }
-
-    //维护申请
+    //维护
     public function pushMaintenanceToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'device' => 'required|exists:machines',
-            'service_content' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $response = $this->client->request('POST', self::MAINTENANCE__URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'serviceContent' => $request->service_content
-            ]
-        ]);
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
-
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage($response->msg);
-        }
-    }
-
-    //维护完成
-    public function pushMaintenanceCompleteToDataCloud(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
             'service_content' => 'required',
             'maintenance_status' => 'required'
         ]);
@@ -337,13 +276,24 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
-        $response = $this->client->request('POST', self::MAINTENANCE_COMPLETE_URL, [
-            'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
-                'serviceContent' => $request->service_content,
-                'maintenanceStatus' => $request->maintenance_status
-            ]
-        ]);
+        if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
+            //维护申请
+            $response = $this->client->request('POST', self::MAINTENANCE__URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'serviceContent' => $request->service_content
+                ]
+            ]);
+        } else {
+            //维护完成
+            $response = $this->client->request('POST', self::MAINTENANCE_COMPLETE_URL, [
+                'form_params' => [
+                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'serviceContent' => $request->service_content,
+                    'maintenanceStatus' => $request->maintenance_status
+                ]
+            ]);
+        }
         //处理获取的json
         $response = json_decode((string)$response->getBody());
 

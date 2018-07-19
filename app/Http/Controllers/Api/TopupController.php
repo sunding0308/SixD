@@ -46,7 +46,12 @@ class TopupController extends ApiController
             ]);
 
             //push topup data to machine
-            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [$hot_water_overage,$cold_water_overage,$oxygen_overage,$air_overage,$humidity_overage]);
+            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
+                $hot_water_overage,
+                $cold_water_overage,
+                $oxygen_overage,$air_overage,
+                $humidity_overage
+            ], null, true, $content->is_show_red_envelopes);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$request->device.' topup success!');
                 return $this->responseSuccess();
