@@ -66,7 +66,7 @@ class TopupController extends ApiController
         try {
             //获取VIP码产品信息
             $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => '11c6f1c9d07c474a9d2da34b1c05681c', 'vipCode' => $request->vip_code]
+                'query' => ['machineId' => '1913fb64c55843caa46133d313ae3547', 'vipCode' => $request->vip_code]
             ]);
             //处理获取的json
             $exchangeResult = json_decode((string)$exchangeResult->getBody());
@@ -101,7 +101,7 @@ class TopupController extends ApiController
 
             //兑换结果
             $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
-                'query' => ['machineId' => '11c6f1c9d07c474a9d2da34b1c05681c', 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
+                'query' => ['machineId' => '1913fb64c55843caa46133d313ae3547', 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
             ]);
             //处理获取的json
             $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
