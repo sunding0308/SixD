@@ -78,7 +78,7 @@ class PushController extends ApiController
     public function pushUrgentAccountType(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
+            'machine_id' => 'required|exists:machines',
             'account_type' => 'required',
             'is_same_person' => 'required',
         ]);
@@ -87,7 +87,7 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
-        $machine = Machine::where('device',$request->device)->first();
+        $machine = Machine::where('machine_id',$request->machine_id)->first();
         
         $response = $this->jpush->push($machine->registration_id, 'account_type', null, [], $request->account_type, $request->is_same_person);
         if ($response['http_code'] == static::CODE_SUCCESS) {
@@ -100,7 +100,7 @@ class PushController extends ApiController
     public function pushAccountType(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
+            'machine_id' => 'required|exists:machines',
             'account_type' => 'required',
         ]);
 
@@ -108,7 +108,7 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
-        $machine = Machine::where('device',$request->device)->first();
+        $machine = Machine::where('machine_id',$request->machine_id)->first();
         
         $response = $this->jpush->push($machine->registration_id, 'account_type', null, [], $request->account_type);
         if ($response['http_code'] == static::CODE_SUCCESS) {
@@ -158,15 +158,14 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
+        $machine = Machine::with('installation')->where('device',$request->device)->first();
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
-            $machine = Machine::with('installation')->where('device',$request->device)->first();
             //紧急服务申请
             $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'hotelName' => $machine->installation->hotel_name,
-                    // 'hotelId' => $machine->installation->hotel_code,
-                    'hotelId' => '5201282319504302aaaa9d2215c468cb',
+                    'hotelId' => $machine->installation->hotel_code,
                     'hotelAddress' => $machine->installation->hotel_address,
                     'roomNo' => $machine->installation->room,
                     'serviceContent' => $request->service_content
@@ -176,7 +175,7 @@ class PushController extends ApiController
             //紧急服务完成
             $response = $this->client->request('POST', self::URGENT_SERVICE_COMPLETE_URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content,
                     'maintenanceStatus' => $request->maintenance_status
                 ]
@@ -205,11 +204,12 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
+        $machine = Machine::where('device',$request->device)->first();        
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
             //普通服务申请
             $response = $this->client->request('POST', self::ORDINARY_SERVICE_URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content
                 ]
             ]);
@@ -217,7 +217,7 @@ class PushController extends ApiController
             //普通服务完成
             $response = $this->client->request('POST', self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content,
                     'maintenanceStatus' => $request->maintenance_status
                 ]
@@ -246,9 +246,10 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
+        $machine = Machine::where('device',$request->device)->first(); 
         $response = $this->client->request('POST', self::SINGLE_ORDINARY_SERVICE_COMPLETE_URL, [
             'form_params' => [
-                'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                'machineId' => $machine->machine_id,
                 'stepName' => $request->step_name,
                 'processStatus' => $request->process_status
             ]
@@ -276,11 +277,12 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
 
+        $machine = Machine::where('device',$request->device)->first(); 
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
             //维护申请
             $response = $this->client->request('POST', self::MAINTENANCE__URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content
                 ]
             ]);
@@ -288,7 +290,7 @@ class PushController extends ApiController
             //维护完成
             $response = $this->client->request('POST', self::MAINTENANCE_COMPLETE_URL, [
                 'form_params' => [
-                    'machineId' => '11c6f1c9d07c474a9d2da34b1c05681c',
+                    'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content,
                     'maintenanceStatus' => $request->maintenance_status
                 ]

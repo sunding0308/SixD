@@ -31,6 +31,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
+                    'machine_id' => '',
                     'registration_id' => $request->registration_id,
                     'status' => $request->hardware_status['machine_status'] ?: '',
                     'g_status' => $request->hardware_status['g_status'] ?: '',
@@ -48,7 +49,7 @@ class OnlineController extends ApiController
                     'humidity' => $request->environment['humidity'] ?? 0,
                     'pm2_5' => $request->environment['pm2_5'] ?? 0,
                     'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0
                 ]);
                 Sterilization::create([
                     'machine_id' => $machine->id,
@@ -57,7 +58,7 @@ class OnlineController extends ApiController
                     'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?? 0,
                     'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
                     'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
-                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0,
+                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0
                 ]);
                 UserRank::create([
                     'machine_id' => $machine->id,
@@ -85,7 +86,7 @@ class OnlineController extends ApiController
                     'humidity' => $request->environment['humidity'] ?? 0,
                     'pm2_5' => $request->environment['pm2_5'] ?? 0,
                     'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0
                 ]);
                 Sterilization::where('machine_id',$machine->id)->update([
                     'machine_id' => $machine->id,
@@ -94,7 +95,7 @@ class OnlineController extends ApiController
                     'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?? 0,
                     'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
                     'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
-                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0,
+                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0
                 ]);
             }
 
@@ -109,7 +110,7 @@ class OnlineController extends ApiController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
+                'machine_id' => 'required|exists:machines',
                 'user_id' => 'required',
                 'user_nickname' => 'required',
                 'rank' => 'required',
@@ -120,7 +121,7 @@ class OnlineController extends ApiController
                 return $this->responseErrorWithMessage($validator->errors()->first());
             }
 
-            $machine = Machine::where('device',$request->device)->first();
+            $machine = Machine::where('machine_id',$request->machine_id)->first();
             UserRank::updateOrCreate(
                 ['machine_id' => $machine->id],
                 [
@@ -174,7 +175,8 @@ class OnlineController extends ApiController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
+                'device' => 'required',
+                'machine_id' => 'required',
                 'hotel_name' => 'required',
                 'hotel_code' => 'required',
                 'hotel_address' => 'required',
@@ -191,6 +193,50 @@ class OnlineController extends ApiController
             }
 
             $machine = Machine::where('device',$request->device)->first();
+            if (!$machine) {
+                $machine = Machine::create([
+                    'device' => $request->device,
+                    'machine_id' => $request->machine_id,
+                    'registration_id' => '',
+                    'status' => '',
+                    'g_status' => '',
+                    'wifi_status' => '',
+                    'bluetooth_status' => '',
+                    'hot_water_overage' => 0,
+                    'cold_water_overage' => 0,
+                    'oxygen_overage' => 0,
+                    'air_overage' => 0,
+                    'humidity_overage' => 0,
+                    'filter1_lifespan' => '',
+                    'filter2_lifespan' => '',
+                    'filter3_lifespan' => '',
+                    'temperature' => 0,
+                    'humidity' => 0,
+                    'pm2_5' => 0,
+                    'oxygen_concentration' => 0,
+                    'total_produce_water_time' => 0
+                ]);
+                Sterilization::create([
+                    'machine_id' => $machine->id,
+                    'uv1' => 0,
+                    'uv2' => 0,
+                    'uv3' => 0,
+                    'uv4' => 0,
+                    'uv5' => 0,
+                    'uv6' => 0
+                ]);
+                UserRank::create([
+                    'machine_id' => $machine->id,
+                    'user_id' => 0,
+                    'user_nickname' => 'unknow',
+                    'rank' => 0,
+                    'machine_rank' => 0
+                ]);
+            } else {
+                Machine::where('id',$machine->id)->update([
+                    'machine_id' => $request->machine_id
+                ]);
+            }
             Installation::updateOrCreate(
                 ['machine_id' => $machine->id],
                 [

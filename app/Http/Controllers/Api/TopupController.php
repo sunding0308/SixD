@@ -30,7 +30,7 @@ class TopupController extends ApiController
     {
         try {
             $content = json_decode($request->content);
-            $machine = Machine::where('device',$content->device)->first();
+            $machine = Machine::where('machine_id',$content->machine_id)->first();
             $hot_water_overage = $machine->hot_water_overage;
             $cold_water_overage = $machine->cold_water_overage;
             $oxygen_overage = $machine->oxygen_overage;
@@ -85,20 +85,21 @@ class TopupController extends ApiController
                 $humidity_overage
             ], null, true, $content->is_show_red_envelopes);
             if ($response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Device '.$request->device.' topup success!');
+                Log::info('Device '.$machine->device.' topup success!');
                 return $this->responseSuccess();
             }
         } catch (\Exception $e) {
-            Log::error('Device '.$content->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());
+            Log::error('Device '.$machine->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());
         }
     }
 
     public function getVipProduct(Request $request)
     {
         try {
+            $machine = Machine::where('device',$request->device)->first();
             //获取VIP码产品信息
             $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => '1913fb64c55843caa46133d313ae3547', 'vipCode' => $request->vip_code]
+                'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code]
             ]);
             //处理获取的json
             $exchangeResult = json_decode((string)$exchangeResult->getBody());
@@ -131,9 +132,10 @@ class TopupController extends ApiController
                 return $this->responseErrorWithMessage($validator->errors()->first());
             }
 
+            $machine = Machine::where('device',$request->device)->first();
             //兑换结果
             $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
-                'query' => ['machineId' => '1913fb64c55843caa46133d313ae3547', 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
+                'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
             ]);
             //处理获取的json
             $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
@@ -172,14 +174,14 @@ class TopupController extends ApiController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines'
+                'machine_id' => 'required|exists:machines'
             ]);
 
             if ($validator->fails()) {
                 return $this->responseErrorWithMessage($validator->errors()->first());
             }
 
-            $machine = Machine::where('device',$request->device)->first();
+            $machine = Machine::where('machine_id',$request->machine_id)->first();
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => 7200,
                 'cold_water_overage' => 7200,
@@ -191,11 +193,11 @@ class TopupController extends ApiController
             //push reset data to machine
             $response = $this->jpush->push($machine->registration_id, 'reset', $machine->device, [7200,7200,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Device '.$request->device.' reset success!');
+                Log::info('Device '.$machine->device.' reset success!');
                 return $this->responseSuccess();
             }
         } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' reset error: '.$e->getMessage().' Line: '.$e->getLine());
+            Log::error('Device '.$machine->device.' reset error: '.$e->getMessage().' Line: '.$e->getLine());
         }
     }
 }
