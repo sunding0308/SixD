@@ -42,8 +42,8 @@
                                     <td>{{ $machine->device }}</td>
                                     <td>{{ secToMin($machine->hot_water_overage) }}</td>
                                     <td>{{ secToMin($machine->cold_water_overage) }}</td>
-                                    <td>{{ secToMin($machine->oxygen_overage) }}</td>
                                     <td>{{ secToMin($machine->air_overage) }}</td>
+                                    <td>{{ secToMin($machine->oxygen_overage) }}</td>
                                     <td>{{ secToMin($machine->humidity_overage) }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
