@@ -58,7 +58,7 @@ class TopupController extends ApiController
                         $air_overage = $product->purchase_quantity * 3600;
                         break;
                     case Machine::CODE_OXYGEN:
-                        $oxygen_overage = $product->purchase_quantity * 3600;
+                        $oxygen_overage = $product->purchase_quantity;
                         break;
                     case Machine::CODE_HUMIDITY:
                         $humidity_overage = $product->purchase_quantity * 3600 * 24;
