@@ -49,19 +49,19 @@ class TopupController extends ApiController
                 if (in_array($product->product_code, $productArr)) {
                     switch ($product->product_code) {
                     case Machine::CODE_HOT_WATER:
-                        $hot_water_overage = intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
+                        $hot_water_overage += intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
                         break;
                     case Machine::CODE_COLD_WATER:
-                        $cold_water_overage = intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
+                        $cold_water_overage += intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
                         break;
                     case Machine::CODE_AIR:
-                        $air_overage = $product->purchase_quantity * 3600;
+                        $air_overage += $product->purchase_quantity * 3600;
                         break;
                     case Machine::CODE_OXYGEN:
-                        $oxygen_overage = $product->purchase_quantity;
+                        $oxygen_overage += $product->purchase_quantity;
                         break;
                     case Machine::CODE_HUMIDITY:
-                        $humidity_overage = $product->purchase_quantity * 3600 * 24;
+                        $humidity_overage += $product->purchase_quantity * 3600 * 24;
                         break;
                     default:
                         break;
