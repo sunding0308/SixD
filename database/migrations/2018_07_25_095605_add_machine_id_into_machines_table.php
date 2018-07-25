@@ -14,7 +14,7 @@ class AddMachineIdIntoMachinesTable extends Migration
     public function up()
     {
         Schema::table('machines', function (Blueprint $table) {
-            $table->string('machine_id')->unique()->index()->after('device');
+            $table->string('machine_id')->index()->after('device');
         });
     }
 
