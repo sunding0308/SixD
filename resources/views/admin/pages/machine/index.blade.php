@@ -26,11 +26,11 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.mac') }}</th>
-                            <th>{{ __('admin/machine.hot_water_remaining_time') }}(h)</th>
-                            <th>{{ __('admin/machine.cold_water_remaining_time') }}(h)</th>
-                            <th>{{ __('admin/machine.air_remaining_time') }}(h)</th>
-                            <th>{{ __('admin/machine.oxygen_remaining_time') }}(h)</th>
-                            <th>{{ __('admin/machine.humidity_remaining_time') }}(h)</th>
+                            <th>{{ __('admin/machine.hot_water_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.cold_water_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.air_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.oxygen_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.humidity_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -40,11 +40,11 @@
                             @foreach($machines as $machine)
                                 <tr>
                                     <td>{{ $machine->device }}</td>
-                                    <td>{{ secToHR($machine->hot_water_overage) }}</td>
-                                    <td>{{ secToHR($machine->cold_water_overage) }}</td>
-                                    <td>{{ secToHR($machine->oxygen_overage) }}</td>
-                                    <td>{{ secToHR($machine->air_overage) }}</td>
-                                    <td>{{ secToHR($machine->humidity_overage) }}</td>
+                                    <td>{{ secToMin($machine->hot_water_overage) }}</td>
+                                    <td>{{ secToMin($machine->cold_water_overage) }}</td>
+                                    <td>{{ secToMin($machine->oxygen_overage) }}</td>
+                                    <td>{{ secToMin($machine->air_overage) }}</td>
+                                    <td>{{ secToMin($machine->humidity_overage) }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>

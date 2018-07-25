@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Machine extends Model
 {
+    //product code
+    const CODE_HOT_WATER = 001;
+    const CODE_COLD_WATER = 002;
+    const CODE_AIR = 003;
+    const CODE_OXYGEN = 004;
+    const CODE_HUMIDITY = 005;
+    //water flow (ml)
+    const HOT_WATER_FLOW = 450;
+    const COLD_WATER_FLOW = 1000;
+
     /**
      * The attributes that are mass assignable.
      *

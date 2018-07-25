@@ -62,13 +62,13 @@
                             <div class="col-md-9 control-label t-a-l">{{ $machine->wifi_status }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.bluetooth_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->bluetooth_status }}</div>
-                            <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}(h)</label>
+                            <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}(min)</label>
                             <div class="col-md-9 control-label t-a-l">
-                                热水：{{ secToHR($machine->hot_water_overage) }}
-                                凉水：{{ secToHR($machine->cold_water_overage) }}
-                                氧气：{{ secToHR($machine->oxygen_overage) }}
-                                空净：{{ secToHR($machine->air_overage) }}
-                                湿度调节：{{ secToHR($machine->humidity_overage) }}
+                                热水：{{ secToMin($machine->hot_water_overage) }}
+                                凉水：{{ secToMin($machine->cold_water_overage) }}
+                                氧气：{{ secToMin($machine->oxygen_overage) }}
+                                空净：{{ secToMin($machine->air_overage) }}
+                                湿度调节：{{ secToMin($machine->humidity_overage) }}
                             </div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.sterilizations') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">
