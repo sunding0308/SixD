@@ -28,68 +28,64 @@ class TopupController extends ApiController
 
     public function topup(Request $request)
     {
-        try {
-            $content = json_decode($request->content);
-            $machine = Machine::where('machine_id',$content->machine_id)->first();
-            $hot_water_overage = $machine->hot_water_overage;
-            $cold_water_overage = $machine->cold_water_overage;
-            $oxygen_overage = $machine->oxygen_overage;
-            $air_overage = $machine->air_overage;
-            $humidity_overage = $machine->humidity_overage;
+        $content = json_decode($request->content);
+        $machine = Machine::where('machine_id',$content->machine_id)->first();
+        $hot_water_overage = $machine->hot_water_overage;
+        $cold_water_overage = $machine->cold_water_overage;
+        $oxygen_overage = $machine->oxygen_overage;
+        $air_overage = $machine->air_overage;
+        $humidity_overage = $machine->humidity_overage;
 
-            $productArr = [
-                Machine::CODE_HOT_WATER,
-                Machine::CODE_COLD_WATER,
-                Machine::CODE_AIR,
-                Machine::CODE_OXYGEN,
-                Machine::CODE_HUMIDITY
-            ];
+        $productArr = [
+            Machine::CODE_HOT_WATER,
+            Machine::CODE_COLD_WATER,
+            Machine::CODE_AIR,
+            Machine::CODE_OXYGEN,
+            Machine::CODE_HUMIDITY
+        ];
 
-            foreach($content->product_list as $product) {
-                if (in_array($product->product_code, $productArr)) {
-                    switch ($product->product_code) {
-                    case Machine::CODE_HOT_WATER:
-                        $hot_water_overage += intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
-                        break;
-                    case Machine::CODE_COLD_WATER:
-                        $cold_water_overage += intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
-                        break;
-                    case Machine::CODE_AIR:
-                        $air_overage += $product->purchase_quantity;
-                        break;
-                    case Machine::CODE_OXYGEN:
-                        $oxygen_overage += $product->purchase_quantity * 3600;
-                        break;
-                    case Machine::CODE_HUMIDITY:
-                        $humidity_overage += $product->purchase_quantity * 3600 * 24;
-                        break;
-                    default:
-                        break;
-                    }
+        foreach($content->product_list as $product) {
+            if (in_array($product->product_code, $productArr)) {
+                switch ($product->product_code) {
+                case Machine::CODE_HOT_WATER:
+                    $hot_water_overage += intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
+                    break;
+                case Machine::CODE_COLD_WATER:
+                    $cold_water_overage += intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
+                    break;
+                case Machine::CODE_AIR:
+                    $air_overage += $product->purchase_quantity;
+                    break;
+                case Machine::CODE_OXYGEN:
+                    $oxygen_overage += $product->purchase_quantity * 3600;
+                    break;
+                case Machine::CODE_HUMIDITY:
+                    $humidity_overage += $product->purchase_quantity * 3600 * 24;
+                    break;
+                default:
+                    break;
                 }
             }
+        }
 
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $hot_water_overage,
-                'cold_water_overage' => $cold_water_overage,
-                'oxygen_overage' => $oxygen_overage,
-                'air_overage' => $air_overage,
-                'humidity_overage' => $humidity_overage,
-            ]);
+        Machine::where('id',$machine->id)->update([
+            'hot_water_overage' => $hot_water_overage,
+            'cold_water_overage' => $cold_water_overage,
+            'oxygen_overage' => $oxygen_overage,
+            'air_overage' => $air_overage,
+            'humidity_overage' => $humidity_overage,
+        ]);
 
-            //push topup data to machine
-            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
-                $hot_water_overage,
-                $cold_water_overage,
-                $oxygen_overage,$air_overage,
-                $humidity_overage
-            ], null, true, $content->is_show_red_envelopes);
-            if ($response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Device '.$machine->device.' topup success!');
-                return $this->responseSuccess();
-            }
-        } catch (\Exception $e) {
-            Log::error('Device '.$machine->device.' topup error: '.$e->getMessage().' Line: '.$e->getLine());
+        //push topup data to machine
+        $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
+            $hot_water_overage,
+            $cold_water_overage,
+            $oxygen_overage,$air_overage,
+            $humidity_overage
+        ], null, true, $content->is_show_red_envelopes);
+        if ($response['http_code'] == static::CODE_SUCCESS) {
+            Log::info('Device '.$machine->device.' topup success!');
+            return $this->responseSuccess();
         }
     }
 
