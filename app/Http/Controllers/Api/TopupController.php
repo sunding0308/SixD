@@ -28,7 +28,6 @@ class TopupController extends ApiController
 
     public function topup(Request $request)
     {
-        Log::info($request->content);
         $content = json_decode($request->content);
         $machine = Machine::where('machine_id',$content->machine_id)->first();
         $hot_water_overage = $machine->hot_water_overage;
