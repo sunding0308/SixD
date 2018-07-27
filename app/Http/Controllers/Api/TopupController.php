@@ -113,58 +113,29 @@ class TopupController extends ApiController
 
     public function vipTopup(Request $request)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
-                'vip_code' => 'required',
-                'exchange_status' => 'required',
-                'hot_water_overage' => 'required',
-                'cold_water_overage' => 'required',
-                'oxygen_overage' => 'required',
-                'air_overage' => 'required',
-                'humidity_overage' => 'required',
-            ]);
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'vip_code' => 'required',
+            'exchange_status' => 'required'
+        ]);
 
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-
-            $machine = Machine::where('device',$request->device)->first();
-            //兑换结果
-            $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
-                'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
-            ]);
-            //处理获取的json
-            $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
-
-            if ($exchangeStatus->status !== static::CODE_STATUS_SUCCESS) {
-                return $this->responseErrorWithMessage($exchangeResult->msg);
-            }
-
-            $machine = Machine::where('device',$request->device)->first();
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $request->hot_water_overage,
-                'cold_water_overage' => $request->cold_water_overage,
-                'oxygen_overage' => $request->oxygen_overage,
-                'air_overage' => $request->air_overage,
-                'humidity_overage' => $request->humidity_overage,
-            ]);
-
-            //push topup data to machine
-            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
-                $request->hot_water_overage,
-                $request->cold_water_overage,
-                $request->oxygen_overage,
-                $request->air_overage,
-                $request->humidity_overage
-            ]);
-            if ($response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Device '.$request->device.' vip topup success!');
-                return $this->responseSuccess();
-            }
-        } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' vip topup error: '.$e->getMessage().' Line: '.$e->getLine());
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
         }
+
+        $machine = Machine::where('device',$request->device)->first();
+        //兑换结果
+        $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
+            'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
+        ]);
+        //处理获取的json
+        $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
+
+        if ($exchangeStatus->status == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        }
+
+        return $this->responseErrorWithMessage($exchangeResult->msg);
     }
 
     public function resetOverage(Request $request)
