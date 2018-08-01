@@ -21,4 +21,9 @@ class UserRank extends Model
         'rank' => 'integer',
         'machine_rank' => 'integer'
         ];
+
+    public function machine()
+    {
+        return $this->belongsTo(Machine::class);
+    }
 }

@@ -81,7 +81,8 @@ class TopupController extends ApiController
         $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
-            $oxygen_overage,$air_overage,
+            $oxygen_overage,
+            $air_overage,
             $humidity_overage
         ], null, true, $content->is_show_red_envelopes);
         if ($response['http_code'] == static::CODE_SUCCESS) {
@@ -159,7 +160,7 @@ class TopupController extends ApiController
             ]);
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [0,0,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, 'reset', $machine->device, [0,0,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$machine->device.' reset success!');
                 return $this->responseSuccess();
