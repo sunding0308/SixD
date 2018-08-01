@@ -53,14 +53,17 @@
                                         @endif
                                     </td>
                                     <td class="playlist-actions hp">
-                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" onclick="refresh('{{ $machine->id }}', '{{ $machine->registration_id }}')">
+                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->registration_id }}')">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
                                         </a>
-                                        <a href="{{ route('admin.machine.show', $machine->id) }}" class="btn btn-normal btn-m">
+                                        <a href="{{ route('admin.machine.show', $machine->id) }}" class="btn btn-normal btn-m" title="详情">
                                             <i class="fa fa-info"></i>
                                         </a>
-                                        <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m">
+                                        <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m" title="调试信息">
                                             <i class="fa fa-book"></i>
+                                        </a>
+                                        <a href="{{ route('admin.machine.clean_overage', $machine->id) }}" class="btn btn-normal btn-m" title="清除余量">
+                                            <i class="fa fa-eraser"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -119,12 +122,7 @@
             dataType: "json",
             success: function(result){
                 if (result.http_code == 200) {
-                    setTimeout(
-                        function() 
-                        {
-                            refreshed(id);
-                            location.reload();
-                        }, 5000);
+                    getReportStatus(result.body.msg_id, registrationId, id);
                 }
             },
             error: function(errmsg) {
@@ -132,6 +130,32 @@
             }
         });
     }
+
+    function getReportStatus(msgId, registrationId, id) {
+        $.ajax({
+            type: "get",
+            async : true,
+            url: "/api/get_report_status",
+            data: {
+                'msg_id' : msgId,
+                'registration_ids' : registrationId,
+            },
+            dataType: 'json',
+            success: function(result){
+                console.log(result);
+                if (result.registrationId.status == 0) {
+                    location.reload();
+                } else {
+                    refreshed(id);
+                    alert('机器未在线，获取各余量失败！')
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Ajax获取服务器数据出错了！"+ errorThrown);
+            }
+        });
+    }
+    
     function refreshed(id) {
         $("#machine-"+id).html("<i class='fa fa-refresh' aria-hidden='true'></i>");
     }

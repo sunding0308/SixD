@@ -13,5 +13,6 @@ Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'
     Route::get('/{machine}/humidity_records', 'MachineController@humidityRecords')->name('humidity.records');
     Route::get('/{machine}/debug', 'MachineController@debug')->name('debug');
     Route::get('/{machine}/debug/{filename}/download', 'MachineController@debugDownload')->name('debug.download');
+    Route::get('/{machine}/clean_overage', 'MachineController@cleanOverage')->name('clean_overage');
 });
 Route::resource('/user', 'Admin\UserController')->except('show');
