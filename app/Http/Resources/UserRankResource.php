@@ -19,7 +19,8 @@ class UserRankResource extends JsonResource
             'user_id' => $this->user_id,
             'user_nickname' => $this->user_nickname,
             'rank' => $this->rank,
-            'machine_rank' => $this->machine_rank
+            'machine_rank' => $this->machine_rank,
+            'city' => getProvince($this->machine->installation->hotel_address),
         ];
     }
 
