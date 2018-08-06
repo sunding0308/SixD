@@ -84,19 +84,21 @@ class MachineController extends Controller
 
     public function cleanOverage(Request $request, Machine $machine, JPushService $jpush)
     {
-        Machine::where('id',$machine->id)->update([
-            'hot_water_overage' => 0,
-            'cold_water_overage' => 0,
-            'oxygen_overage' => 0,
-            'air_overage' => 0,
-            'humidity_overage' => 0,
-        ]);
-
         //push reset data to machine
         $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [0,0,0,0,0]);
-        if ($response['http_code'] == 200) {
+        if ($response && $response['http_code'] == 200) {
             Log::info('Device '.$machine->device.' reset success!');
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => 0,
+                'cold_water_overage' => 0,
+                'oxygen_overage' => 0,
+                'air_overage' => 0,
+                'humidity_overage' => 0,
+            ]);
             session()->flash('success', '清除余量成功.');
+            return back();
+        } else {
+            session()->flash('error', '清除余量失败，请稍后再试！');
             return back();
         }
     }
