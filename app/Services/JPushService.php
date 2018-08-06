@@ -34,12 +34,13 @@ class JPushService
               ]); // 设置推送通知内容
         try {
             $response = $push_payload->send(); // 执行推送
+            return $response; // 请求成功，返回信息
         }catch (\JPush\Exceptions\APIConnectionException $e) { // 请求异常
             Log::error($e);
         } catch (\JPush\Exceptions\APIRequestException $e) { // 回复异常
             Log::error($e);
         }
 
-        return $response; // 请求成功，返回信息
+        return false; // 请求失败
     }
 }

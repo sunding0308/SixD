@@ -69,14 +69,6 @@ class TopupController extends ApiController
             }
         }
 
-        Machine::where('id',$machine->id)->update([
-            'hot_water_overage' => $hot_water_overage,
-            'cold_water_overage' => $cold_water_overage,
-            'oxygen_overage' => $oxygen_overage,
-            'air_overage' => $air_overage,
-            'humidity_overage' => $humidity_overage,
-        ]);
-
         //push topup data to machine
         $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
             $hot_water_overage,
@@ -85,9 +77,19 @@ class TopupController extends ApiController
             $air_overage,
             $humidity_overage
         ], null, true, $content->is_show_red_envelopes);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
+        if ($response && $response['http_code'] == static::CODE_SUCCESS) {
             Log::info('Device '.$machine->device.' topup success!');
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $hot_water_overage,
+                'cold_water_overage' => $cold_water_overage,
+                'oxygen_overage' => $oxygen_overage,
+                'air_overage' => $air_overage,
+                'humidity_overage' => $humidity_overage
+            ]);
+
             return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage('购买失败，请稍后尝试！');
         }
     }
 
@@ -151,19 +153,22 @@ class TopupController extends ApiController
             }
 
             $machine = Machine::where('machine_id',$request->machine_id)->first();
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => 0,
-                'cold_water_overage' => 0,
-                'oxygen_overage' => 0,
-                'air_overage' => 0,
-                'humidity_overage' => 0,
-            ]);
 
             //push reset data to machine
             $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [0,0,0,0,0]);
-            if ($response['http_code'] == static::CODE_SUCCESS) {
+            if ($response && $response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Device '.$machine->device.' reset success!');
+                Machine::where('id',$machine->id)->update([
+                    'hot_water_overage' => 0,
+                    'cold_water_overage' => 0,
+                    'oxygen_overage' => 0,
+                    'air_overage' => 0,
+                    'humidity_overage' => 0,
+                ]);
+                
                 return $this->responseSuccess();
+            } else {
+                return $this->responseErrorWithMessage('重置失败，请稍后尝试！');
             }
         } catch (\Exception $e) {
             Log::error('Device '.$machine->device.' reset error: '.$e->getMessage().' Line: '.$e->getLine());
