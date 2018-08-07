@@ -31,7 +31,10 @@ class JPushService
                   'is_same_person' => $is_same_person,
                   'show_redpacket' => $show_redpacket,
                 ]
-              ]); // 设置推送通知内容
+              ]) // 设置推送通知内容
+            ->options([
+                'time_to_live' => 0,
+            ]); //设置可选参数
         try {
             $response = $push_payload->send(); // 执行推送
             return $response; // 请求成功，返回信息
@@ -41,7 +44,7 @@ class JPushService
             Log::error($e);
         }
 
-        return false; // 请求失败
+        return response()->json(['http_code'=>400]); // 请求失败
     }
 
     //送达状态查询

@@ -77,19 +77,26 @@ class TopupController extends ApiController
             $air_overage,
             $humidity_overage
         ], null, true, $content->is_show_red_envelopes);
-        if ($response && $response['http_code'] == static::CODE_SUCCESS) {
-            Log::info('Device '.$machine->device.' topup success!');
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $hot_water_overage,
-                'cold_water_overage' => $cold_water_overage,
-                'oxygen_overage' => $oxygen_overage,
-                'air_overage' => $air_overage,
-                'humidity_overage' => $humidity_overage
-            ]);
+        if ($response['http_code'] == static::CODE_SUCCESS) {
+            $res = $this->jpush->report((int)$response['body']['msg_id'], $machine->registration_id);
+            if ($res['http_code'] == static::CODE_SUCCESS && $res['body'][$machine->registration_id]['status'] == 0) {
+                Machine::where('id',$machine->id)->update([
+                    'hot_water_overage' => $hot_water_overage,
+                    'cold_water_overage' => $cold_water_overage,
+                    'oxygen_overage' => $oxygen_overage,
+                    'air_overage' => $air_overage,
+                    'humidity_overage' => $humidity_overage
+                ]);
+                Log::info('Device '.$machine->device.' topup success!');
 
-            return $this->responseSuccess();
+                return $this->responseSuccess();
+            } else {
+                Log::error('Registration id: '.$machine->registration_id.' machine received fail!');
+                return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
+            }
         } else {
-            return $this->responseErrorWithMessage('购买失败，请稍后尝试！');
+            Log::error('Registration id: '.$machine->registration_id.' pushed fail!');
+            return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
         }
     }
 
