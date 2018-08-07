@@ -273,7 +273,7 @@
             },
             dataType: "json",
             success: function(result){
-                if (result && result.http_code == 200 && result.body[registrationId].status == 0) {
+                if (result.http_code == 200 && result.body[registrationId].status == 0) {
                     location.reload();
                 } else {
                     refreshed(id);

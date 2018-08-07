@@ -146,7 +146,7 @@ class PushController extends ApiController
                 return  $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
             } else {
                 Log::error('Registration id: '.$registrationId.' pushed fail!');
-                return false;
+                return response()->json(['http_code' => 500]);
             }
         }
     }
