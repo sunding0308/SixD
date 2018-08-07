@@ -273,7 +273,7 @@
             },
             dataType: "json",
             success: function(result){
-                if (result.http_code == 200 && result.body[registrationId].status == 0) {
+                if (result && result.http_code == 200 && result.body[registrationId].status == 0) {
                     location.reload();
                 } else {
                     refreshed(id);
@@ -281,7 +281,7 @@
                 }
             },
             error: function(errmsg) {
-                console.log("Ajax获取服务器数据出错了！"+ errmsg);
+                console.log("Ajax获取服务器数据出错了！"+ errmsg.status + ' ' + errmsg.statusText);
             }
         });
     }
