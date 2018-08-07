@@ -273,11 +273,16 @@
             },
             dataType: "json",
             success: function(result){
-                if (result.http_code == 200 && result.body[registrationId].status == 0) {
-                    location.reload();
+                if (result.http_code == 200) {
+                    if (result.body[registrationId].status == 0) {
+                        location.reload();
+                    } else {
+                        refreshed(id);
+                        alert('机器未在线，获取各余量失败！')
+                    }
                 } else {
                     refreshed(id);
-                    alert('机器未在线，获取各余量失败！')
+                    alert(result.msg)
                 }
             },
             error: function(errmsg) {

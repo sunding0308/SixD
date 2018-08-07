@@ -85,7 +85,7 @@ class MachineController extends Controller
     public function cleanOverage(Request $request, Machine $machine, JPushService $jpush)
     {
         //push reset data to machine
-        $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [0,0,0,0,0]);
+        $response = $jpush->push($machine->registration_id, 'reset', $machine->device, [0,0,0,0,0]);
         if ($response['http_code'] == 200) {
             Log::info('Device '.$machine->device.' reset success!');
             Machine::where('id',$machine->id)->update([
