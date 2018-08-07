@@ -121,37 +121,17 @@
             },
             dataType: "json",
             success: function(result){
-                if (result.http_code == 200) {
-                    getReportStatus(result.body.msg_id, registrationId, id);
-                }
-            },
-            error: function(errmsg) {
-                console.log("Ajax获取服务器数据出错了！"+ errmsg);
-            }
-        });
-    }
-
-    function getReportStatus(msgId, registrationId, id) {
-        $.ajax({
-            type: "get",
-            async : true,
-            url: "/api/get_report_status",
-            data: {
-                'msg_id' : msgId,
-                'registration_ids' : registrationId,
-            },
-            dataType: 'json',
-            success: function(result){
-                console.log(result);
-                if (result.registrationId.status == 0) {
+                // console.log(result.body[registrationId].status);
+                // console.log(result.http_code);
+                if (result.http_code == 200 && result.body[registrationId].status == 0) {
                     location.reload();
                 } else {
                     refreshed(id);
                     alert('机器未在线，获取各余量失败！')
                 }
             },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log("Ajax获取服务器数据出错了！"+ errorThrown);
+            error: function(errmsg) {
+                console.log("Ajax获取服务器数据出错了！"+ errmsg.status + ' ' + errmsg.statusText);
             }
         });
     }
