@@ -44,7 +44,7 @@ class JPushService
             Log::error($e);
         }
 
-        return response()->json(['http_code'=>400]); // 请求失败
+        return ['http_code'=>400]; // 请求失败
     }
 
     //送达状态查询
