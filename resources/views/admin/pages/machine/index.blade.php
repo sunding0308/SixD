@@ -131,6 +131,7 @@
                 }
             },
             error: function(errmsg) {
+                refreshed(id);
                 console.log("Ajax获取服务器数据出错了！"+ errmsg.status + ' ' + errmsg.statusText);
             }
         });

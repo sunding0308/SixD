@@ -92,7 +92,7 @@ class TopupController extends ApiController
                 return $this->responseSuccess();
             } else {
                 Log::error('Registration id: '.$machine->registration_id.' machine received fail!');
-                return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
+                return $this->responseErrorWithMessage('设备未在线，请开启后尝试！');
             }
         } else {
             Log::error('Registration id: '.$machine->registration_id.' pushed fail!');

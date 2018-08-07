@@ -86,7 +86,7 @@ class MachineController extends Controller
     {
         //push reset data to machine
         $response = $jpush->push($machine->registration_id, 'topup', $machine->device, [0,0,0,0,0]);
-        if ($response && $response['http_code'] == 200) {
+        if ($response['http_code'] == 200) {
             Log::info('Device '.$machine->device.' reset success!');
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => 0,
