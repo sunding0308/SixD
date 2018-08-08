@@ -35,6 +35,7 @@ class AlarmsController extends ApiController
                     'dehumidification_tank_full_water_alarm' => $request->dehumidification_tank_full_water_alarm ?: '',
                     'malfunction_code' => $request->malfunction_code ?: '',
                 ]);
+                $alarm->touch();
 
                 Log::info('Device '.$request->device.' update alarm success!');
             } else {
@@ -52,8 +53,8 @@ class AlarmsController extends ApiController
                 ]);
 
                 Log::info('Device '.$request->device.' create alarm success!');
-                return $this->responseSuccess();
             }
+            return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update alarm error: '.$e->getMessage().' Line: '.$e->getLine());
         }
