@@ -54,6 +54,7 @@ Route::group(['namespace'=>'Api'], function(){
         Route::post('/online', 'OnlineController@online');
         Route::get('/online/user_rank', 'OnlineController@getUserRank');
         Route::get('/online/check_reserve', 'OnlineController@checkReserve');
+        Route::get('/online/machine_info', 'OnlineController@getMachineInfo');
         Route::post('/online/logfile', 'OnlineController@logfile');
         Route::post('/alarms', 'AlarmsController@alarms');
         Route::post('/realtime/overage', 'RealtimeController@overage');

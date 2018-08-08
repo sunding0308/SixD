@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
-use App\UserRank;
 use App\Installation;
 use App\Sterilization;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\UserRankResource;
+use App\Http\Resources\MachineInfo as MachineInfoResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
@@ -63,13 +62,6 @@ class OnlineController extends ApiController
                     'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
                     'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
                     'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0
-                ]);
-                UserRank::create([
-                    'machine_id' => $machine->id,
-                    'user_id' => 0,
-                    'user_nickname' => 'unknow',
-                    'rank' => 0,
-                    'machine_rank' => 0
                 ]);
             } else {
                 Machine::where('id',$machine->id)->update([
@@ -125,6 +117,20 @@ class OnlineController extends ApiController
         } else {
             return $this->responseErrorWithMessage($exchangeResult->msg);
         }
+    }
+
+    public function getMachineInfo(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        return new MachineInfoResource($machine);
     }
 
     public function checkReserve(Request $request)
@@ -207,13 +213,6 @@ class OnlineController extends ApiController
                     'uv4' => 0,
                     'uv5' => 0,
                     'uv6' => 0
-                ]);
-                UserRank::create([
-                    'machine_id' => $machine->id,
-                    'user_id' => 0,
-                    'user_nickname' => 'unknow',
-                    'rank' => 0,
-                    'machine_rank' => 0
                 ]);
             } else {
                 Machine::where('id',$machine->id)->update([
