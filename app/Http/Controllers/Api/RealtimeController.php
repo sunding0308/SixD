@@ -36,4 +36,25 @@ class RealtimeController extends ApiController
             Log::error('Device '.$request->device.' refresh overage error: '.$e->getMessage().' Line: '.$e->getLine());
         }
     }
+
+    public function heartbeat(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
+            $machine = Machine::where('device',$request->device)->first();
+            $machine->touch();
+
+            Log::info('Device '.$request->device.' heartbeat success!');
+            return $this->responseSuccess();
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' heartbeat error: '.$e->getMessage().' Line: '.$e->getLine());
+        }
+    }
 }

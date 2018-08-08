@@ -58,6 +58,7 @@ Route::group(['namespace'=>'Api'], function(){
         Route::post('/online/logfile', 'OnlineController@logfile');
         Route::post('/alarms', 'AlarmsController@alarms');
         Route::post('/realtime/overage', 'RealtimeController@overage');
+        Route::post('/realtime/heartbeat', 'RealtimeController@heartbeat');
         Route::post('/report/hardware_status', 'ReportController@hardwareStatus');
         Route::post('/report/records', 'ReportController@records');
         Route::post('/report/environment', 'ReportController@environment');
