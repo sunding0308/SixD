@@ -52,7 +52,6 @@ Route::group(['namespace'=>'Api'], function(){
         Route::post('/vip_topup', 'TopupController@vipTopup');
         Route::post('/reset_overage', 'TopupController@resetOverage');
         Route::post('/online', 'OnlineController@online');
-        Route::post('/online/user_rank', 'OnlineController@setUserRank');
         Route::get('/online/user_rank', 'OnlineController@getUserRank');
         Route::get('/online/check_reserve', 'OnlineController@checkReserve');
         Route::post('/online/logfile', 'OnlineController@logfile');

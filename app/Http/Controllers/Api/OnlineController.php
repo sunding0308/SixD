@@ -6,6 +6,7 @@ use App\Machine;
 use App\UserRank;
 use App\Installation;
 use App\Sterilization;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,9 @@ use App\Http\Controllers\Api\ApiController;
 
 class OnlineController extends ApiController
 {
+    //机器、用户排名信息
+    const RANK_URL = 'https://tminiapps.sixdrops.com/outer/api/machine/machineRank/findMachineRank.do';
+
     public function online(Request $request)
     {
         try {
@@ -106,42 +110,21 @@ class OnlineController extends ApiController
         }
     }
 
-    public function setUserRank(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'machine_id' => 'required|exists:machines',
-                'user_id' => 'required',
-                'user_nickname' => 'required',
-                'rank' => 'required',
-                'machine_rank' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-
-            $machine = Machine::where('machine_id',$request->machine_id)->first();
-            UserRank::updateOrCreate(
-                ['machine_id' => $machine->id],
-                [
-                    'user_id' => $request->user_id,
-                    'user_nickname' => $request->user_nickname,
-                    'rank' => $request->rank,
-                    'machine_rank' => $request->machine_rank
-                ]
-            );
-            Log::info('Device '.$request->device.' update user rank success!');
-            return $this->responseSuccess();
-        } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' update user rank error: '.$e->getMessage().' Line: '.$e->getLine());
-        }
-    }
-
-    public function getUserRank(Request $request)
+    public function getUserRank(Request $request, Client $client)
     {
         $machine = Machine::where('device',$request->device)->first();
-        return new UserRankResource($machine->userRank);
+        //获取VIP码产品信息
+        $exchangeResult = $client->request('GET', self::RANK_URL, [
+            'query' => ['machineId' => $machine->machine_id]
+        ]);
+        //处理获取的json
+        $exchangeResult = json_decode((string)$exchangeResult->getBody());
+
+        if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccessWithExtrasAndMessage(['data' => $exchangeResult->data], $exchangeResult->msg);
+        } else {
+            return $this->responseErrorWithMessage($exchangeResult->msg);
+        }
     }
 
     public function checkReserve(Request $request)
