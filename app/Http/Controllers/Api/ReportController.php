@@ -144,6 +144,7 @@ class ReportController extends ApiController
         if ($validator->fails()) {
             return $this->responseErrorWithMessage($validator->errors()->first());
         }
+        Log::info('Device '.$request->device.' $request->type received!');
         
         $machine = Machine::where('device',$request->device)->first();
         $pushRecord = PushRecord::where('machine_id', $machine->id)
