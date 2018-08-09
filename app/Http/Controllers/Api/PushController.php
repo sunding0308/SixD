@@ -126,7 +126,7 @@ class PushController extends ApiController
                 $response = $this->jpush->push($registrationId, $sign);
                 if ($response['http_code'] == static::CODE_SUCCESS) {
                     Log::info('Registration id: '.$registrationId.' pushed success!');
-                    sleep(3);
+                    sleep(5);
                     $res = $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
                     if ($res['http_code'] == static::CODE_SUCCESS && $res['body'][$registrationId]['status'] == 0) {
                         Log::info('Registration id: '.$registrationId.' machine received success!');
@@ -142,7 +142,7 @@ class PushController extends ApiController
             $response = $this->jpush->push($registrationId, $sign);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Registration id: '.$registrationId.' pushed success!');
-                sleep(3);
+                sleep(5);
                 return  $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
             } else {
                 Log::error('Registration id: '.$registrationId.' pushed fail!');
