@@ -143,8 +143,8 @@ class PushController extends ApiController
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Registration id: '.$registrationId.' pushed success!');
                 while (empty($response['body']['msg_id'])) {
-                    sleep(1);
-                    Log::info('Sleep time: +1s');
+                    $response = $this->jpush->push($registrationId, $sign);
+                    Log::info('Retry push!');
                  }
                 return  $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
             } else {
