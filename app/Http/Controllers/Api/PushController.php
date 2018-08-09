@@ -122,25 +122,19 @@ class PushController extends ApiController
 
     private function pushSignal($registrationId, $sign)
     {
-        if (!$registrationId) {  //push signal to machine every hour
-            $registrationIds = Machine::pluck('registration_id');
-            foreach($registrationIds as $registrationId) {
-                $pushed_at = Carbon::now()->timestamp;
-                $machine = Machine::where('registration_id', $registrationId)->first();
-                $response = $this->jpush->push($registrationId, $sign, $pushed_at);
-                if ($response['http_code'] == static::CODE_SUCCESS) {
-                    Log::info('Registration id: '.$registrationId.' pushed success!');
-                    PushRecord::create([
-                        'machine_id' => $machine->id,
-                        'type' => $sign,
-                        'pushed_at' => $pushed_at,
-                    ]);
-                } else {
-                    Log::error('Registration id: '.$registrationId.' pushed fail!');
-                }
-            }
-            return;
-        } else {  //push to machine by manual control
+        if (!$registrationId) {
+            //push signal to machines every hour
+            $this->multiplePush($sign);
+        } else {
+            //push to machine by manual control
+            $this->singlePush($registrationId, $sign);
+        }
+    }
+
+    private function multiplePush($sign)
+    {
+        $registrationIds = Machine::pluck('registration_id');
+        foreach($registrationIds as $registrationId) {
             $pushed_at = Carbon::now()->timestamp;
             $machine = Machine::where('registration_id', $registrationId)->first();
             $response = $this->jpush->push($registrationId, $sign, $pushed_at);
@@ -151,16 +145,33 @@ class PushController extends ApiController
                     'type' => $sign,
                     'pushed_at' => $pushed_at,
                 ]);
-                return response()->json([
-                    'http_code' => static::CODE_SUCCESS
-                    ]);
             } else {
                 Log::error('Registration id: '.$registrationId.' pushed fail!');
-                return response()->json([
-                    'http_code' => static::CODE_ERROR,
-                    'msg' => '网络糟糕，获取信息失败！'
-                    ]);
             }
+        }
+    }
+
+    private function singlePush($registrationId, $sign)
+    {
+        $pushed_at = Carbon::now()->timestamp;
+        $machine = Machine::where('registration_id', $registrationId)->first();
+        $response = $this->jpush->push($registrationId, $sign, $pushed_at);
+        if ($response['http_code'] == static::CODE_SUCCESS) {
+            Log::info('Registration id: '.$registrationId.' pushed success!');
+            PushRecord::create([
+                'machine_id' => $machine->id,
+                'type' => $sign,
+                'pushed_at' => $pushed_at,
+            ]);
+            return response()->json([
+                'http_code' => static::CODE_SUCCESS
+            ]);
+        } else {
+            Log::error('Registration id: '.$registrationId.' pushed fail!');
+            return response()->json([
+                'http_code' => static::CODE_ERROR,
+                'msg' => '网络糟糕，获取信息失败！'
+            ]);
         }
     }
 

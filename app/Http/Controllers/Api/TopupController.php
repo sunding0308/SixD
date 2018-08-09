@@ -154,17 +154,15 @@ class TopupController extends ApiController
             }
 
             $machine = Machine::where('machine_id',$request->machine_id)->first();
+            $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'reset', $machine->device, [0,0,0,0,0]);
-            if ($response && $response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Device '.$machine->device.' reset success!');
-                Machine::where('id',$machine->id)->update([
-                    'hot_water_overage' => 0,
-                    'cold_water_overage' => 0,
-                    'oxygen_overage' => 0,
-                    'air_overage' => 0,
-                    'humidity_overage' => 0,
+            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, $machine->device, [0,0,0,0,0]);
+            if ($response['http_code'] == static::CODE_SUCCESS) {
+                PushRecord::create([
+                    'machine_id' => $machine->id,
+                    'type' => 'reset',
+                    'pushed_at' => $pushed_at,
                 ]);
                 
                 return $this->responseSuccess();
