@@ -84,7 +84,7 @@ class TopupController extends ApiController
             PushRecord::create([
                 'machine_id' => $machine->id,
                 'type' => 'topup',
-                'timestamp' => $pushed_at,
+                'pushed_at' => $pushed_at,
             ]);
 
             return $this->responseSuccess();

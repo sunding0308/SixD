@@ -133,7 +133,7 @@ class PushController extends ApiController
                     PushRecord::create([
                         'machine_id' => $machine->id,
                         'type' => $sign,
-                        'timestamp' => $pushed_at,
+                        'pushed_at' => $pushed_at,
                     ]);
                 } else {
                     Log::error('Registration id: '.$registrationId.' pushed fail!');
@@ -149,7 +149,7 @@ class PushController extends ApiController
                 PushRecord::create([
                     'machine_id' => $machine->id,
                     'type' => $sign,
-                    'timestamp' => $pushed_at,
+                    'pushed_at' => $pushed_at,
                 ]);
                 return response()->json([
                     'http_code' => static::CODE_SUCCESS
