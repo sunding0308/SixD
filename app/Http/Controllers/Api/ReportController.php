@@ -156,7 +156,10 @@ class ReportController extends ApiController
             return $this->responseErrorWithMessage('无效的device！');
         }
 
-        $pushRecord->delete();
+        PushRecord::where('machine_id', $machine->id)
+            ->where('type', $request->type)
+            ->where('pushed_at', $request->pushed_at)
+            ->delete();
 
         if ($request->type == 'topup') {
             Machine::where('id',$machine->id)->update([
