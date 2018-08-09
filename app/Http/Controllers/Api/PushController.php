@@ -124,9 +124,9 @@ class PushController extends ApiController
             $registrationIds = Machine::pluck('registration_id');
             foreach($registrationIds as $registrationId) {
                 $response = $this->jpush->push($registrationId, $sign);
-                sleep(5);
                 if ($response['http_code'] == static::CODE_SUCCESS) {
                     Log::info('Registration id: '.$registrationId.' pushed success!');
+                    sleep(3);
                     $res = $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
                     if ($res['http_code'] == static::CODE_SUCCESS && $res['body'][$registrationId]['status'] == 0) {
                         Log::info('Registration id: '.$registrationId.' machine received success!');
@@ -142,11 +142,7 @@ class PushController extends ApiController
             $response = $this->jpush->push($registrationId, $sign);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 Log::info('Registration id: '.$registrationId.' pushed success!');
-                Log::info($response);
-                while (empty($response['body']['msg_id'])) {
-                    $response = $this->jpush->push($registrationId, $sign);
-                    Log::info('Retry push!');
-                 }
+                sleep(3);
                 return  $this->jpush->report((int)$response['body']['msg_id'], $registrationId);
             } else {
                 Log::error('Registration id: '.$registrationId.' pushed fail!');
