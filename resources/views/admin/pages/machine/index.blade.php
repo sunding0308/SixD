@@ -124,12 +124,9 @@
                 // console.log(result.body[registrationId].status);
                 // console.log(result.http_code);
                 if (result.http_code == 200) {
-                    if (result.body[registrationId].status == 0) {
+                    setTimeout(() => {
                         location.reload();
-                    } else {
-                        refreshed(id);
-                        alert('机器未在线，获取各余量失败！')
-                    }
+                    }, 5000);
                 } else {
                     refreshed(id);
                     alert(result.msg)

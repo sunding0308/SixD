@@ -134,6 +134,42 @@ class ReportController extends ApiController
         }
     }
 
+    public function pushReceived(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+        
+        $machine = Machine::where('device',$request->device)->first();
+        $pushRecord = PushRecord::where('machine_id', $machine->id)
+            ->where('type', $request->type)
+            ->where('pushed_at', $request->pushed_at)
+            ->first();
+
+        if (!$pushRecord) {
+            return $this->responseErrorWithMessage('无效的device！');
+        }
+
+        $pushRecord->delete();
+
+        if ($request->type == 'topup') {
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $request->overage[0],
+                'cold_water_overage' => $request->overage[1],
+                'oxygen_overage' => $request->overage[2],
+                'air_overage' => $request->overage[3],
+                'humidity_overage' => $request->overage[4]
+            ]);
+            Log::info('Device '.$machine->device.' topup success!');
+        }
+
+        return $this->responseSuccess();
+    }
+
     public function appMenuAnalysis(Request $request)
     {
         return $request->data;

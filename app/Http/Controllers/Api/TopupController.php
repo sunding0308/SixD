@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
+use Carbon\Carbon;
+use App\PushRecord;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Services\JPushService;
@@ -69,8 +71,9 @@ class TopupController extends ApiController
             }
         }
 
+        $pushed_at = Carbon::now()->timestamp;
         //push topup data to machine
-        $response = $this->jpush->push($machine->registration_id, 'topup', $machine->device, [
+        $response = $this->jpush->push($machine->registration_id, 'topup', $pushed_at, $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
             $oxygen_overage,
@@ -78,14 +81,11 @@ class TopupController extends ApiController
             $humidity_overage
         ], null, true, $content->is_show_red_envelopes);
         if ($response['http_code'] == static::CODE_SUCCESS) {
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $hot_water_overage,
-                'cold_water_overage' => $cold_water_overage,
-                'oxygen_overage' => $oxygen_overage,
-                'air_overage' => $air_overage,
-                'humidity_overage' => $humidity_overage
+            PushRecord::create([
+                'machine_id' => $machine->id,
+                'type' => 'topup',
+                'timestamp' => $pushed_at,
             ]);
-            Log::info('Device '.$machine->device.' topup success!');
 
             return $this->responseSuccess();
         } else {
