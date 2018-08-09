@@ -169,6 +169,17 @@ class ReportController extends ApiController
             Log::info('Device '.$machine->device.' topup success!');
         }
 
+        if ($request->type == 'reset') {
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => 0,
+                'cold_water_overage' => 0,
+                'oxygen_overage' => 0,
+                'air_overage' => 0,
+                'humidity_overage' => 0,
+            ]);
+            Log::info('Device '.$machine->device.' reset success!');
+        }
+
         return $this->responseSuccess();
     }
 
