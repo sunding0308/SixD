@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
+use App\PushRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
