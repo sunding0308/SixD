@@ -127,7 +127,7 @@ class PushController extends ApiController
             $this->multiplePush($sign);
         } else {
             //push to machine by manual control
-            $this->singlePush($registrationId, $sign);
+            return $this->singlePush($registrationId, $sign);
         }
     }
 
