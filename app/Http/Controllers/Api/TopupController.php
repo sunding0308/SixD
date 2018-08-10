@@ -87,7 +87,20 @@ class TopupController extends ApiController
                 'pushed_at' => $pushed_at,
             ]);
 
-            return $this->responseSuccess();
+            while(true) {
+                //10秒未收到机器回调则购买失败
+                if (floor((strtotime(Carbon::now())-$pushed_at)%86400%60) > 10) {
+                    return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
+                }
+                $pushRecord = PushRecord::where('machine_id', $machine->id)
+                ->where('type', 'topup')
+                ->where('pushed_at', $pushed_at)
+                ->first();
+
+                if (!$pushRecord) {
+                    return $this->responseSuccess();
+                }
+            }
         } else {
             Log::error('Registration id: '.$machine->registration_id.' pushed fail!');
             return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');

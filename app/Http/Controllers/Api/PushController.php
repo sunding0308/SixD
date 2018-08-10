@@ -135,26 +135,31 @@ class PushController extends ApiController
     {
         $registrationIds = Machine::pluck('registration_id');
         foreach($registrationIds as $registrationId) {
-            $pushed_at = Carbon::now()->timestamp;
             $machine = Machine::where('registration_id', $registrationId)->first();
-            $response = $this->jpush->push($registrationId, $sign, $pushed_at);
-            if ($response['http_code'] == static::CODE_SUCCESS) {
-                Log::info('Registration id: '.$registrationId.' pushed success!');
-                PushRecord::create([
-                    'machine_id' => $machine->id,
-                    'type' => $sign,
-                    'pushed_at' => $pushed_at,
-                ]);
+            //心跳间隔超过30分钟，则认为机器未在线
+            if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
+                Log::error('Device '.$machine->device.' not online, not pushed!');
             } else {
-                Log::error('Registration id: '.$registrationId.' pushed fail!');
+                $pushed_at = Carbon::now()->timestamp;
+                $response = $this->jpush->push($registrationId, $sign, $pushed_at);
+                if ($response['http_code'] == static::CODE_SUCCESS) {
+                    Log::info('Registration id: '.$registrationId.' pushed success!');
+                    PushRecord::create([
+                        'machine_id' => $machine->id,
+                        'type' => $sign,
+                        'pushed_at' => $pushed_at,
+                    ]);
+                } else {
+                    Log::error('Registration id: '.$registrationId.' pushed fail!');
+                }
             }
         }
     }
 
     private function singlePush($registrationId, $sign)
     {
-        $pushed_at = Carbon::now()->timestamp;
         $machine = Machine::where('registration_id', $registrationId)->first();
+        $pushed_at = Carbon::now()->timestamp;
         $response = $this->jpush->push($registrationId, $sign, $pushed_at);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             Log::info('Registration id: '.$registrationId.' pushed success!');

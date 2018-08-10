@@ -18,13 +18,15 @@ class CheckOnline
      */
     public function handle($request, Closure $next)
     {
-        $machine = Machine::where('registration_id', $request->registrationId)->first();
-        if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
-            Log::error('Device '.$machine->device.' not online, push failed!');
-            return response()->json([
-                'http_code' => 401,
-                'msg' => '设备未在线，请开启后尝试！'
-            ]);
+        if ($request->registrationId) {
+            $machine = Machine::where('registration_id', $request->registrationId)->first();
+            if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
+                Log::error('Device '.$machine->device.' not online, not pushed!');
+                return response()->json([
+                    'http_code' => 401,
+                    'msg' => '设备未在线，请开启后尝试！'
+                ]);
+            }
         }
         return $next($request);
     }
