@@ -23,11 +23,11 @@ Route::group(['namespace'=>'Api'], function(){
     /**
      * push signal to machine
      */
-    Route::get('/push_overage_signal', 'PushController@pushOverageSignal');
-    Route::get('/push_hardware_status_signal', 'PushController@pushHardwareStatusSignal');
-    Route::get('/push_records_signal', 'PushController@pushRecordsSignal');
-    Route::get('/push_environment_signal', 'PushController@pushEnvironmentSignal');
+    Route::get('/push_overage_signal', 'PushController@pushOverageSignal')->middleware('check_online');
+    Route::get('/push_hardware_status_signal', 'PushController@pushHardwareStatusSignal')->middleware('check_online');
+    Route::get('/push_environment_signal', 'PushController@pushEnvironmentSignal')->middleware('check_online');
     Route::get('/push_water_quality_statistics_signal', 'PushController@pushWaterQualityStatisticsSignal');
+    Route::get('/push_records_signal', 'PushController@pushRecordsSignal');
     Route::get('/push_app_menu_analysis_signal', 'PushController@pushAppMenuAnalysisSignal');
     Route::get('/push_api_analysis_signal', 'PushController@pushApiAnalysisSignal');
 

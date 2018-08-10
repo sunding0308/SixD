@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'api_auth' => \SunD1ng\LaravelApiAuth\Middleware::class,
+        'check_online' => \App\Http\Middleware\CheckOnline::class,
     ];
 }

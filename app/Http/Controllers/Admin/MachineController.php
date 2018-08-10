@@ -86,6 +86,10 @@ class MachineController extends Controller
 
     public function cleanOverage(Request $request, Machine $machine, JPushService $jpush)
     {
+        if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
+            session()->flash('error', '设备未在线，请开启后尝试！');
+            return back();
+        }
         //push reset data to machine
         $pushed_at = Carbon::now()->timestamp;
         $response = $jpush->push($machine->registration_id, 'reset', $pushed_at, $machine->device, [0,0,0,0,0]);
