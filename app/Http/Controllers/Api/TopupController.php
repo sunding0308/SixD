@@ -71,9 +71,14 @@ class TopupController extends ApiController
             }
         }
 
+        if ($content->is_vip) {
+            $sign = 'vip_topup';
+        } else {
+            $sign = 'topup';
+        }
         $pushed_at = Carbon::now()->timestamp;
         //push topup data to machine
-        $response = $this->jpush->push($machine->registration_id, 'topup', $pushed_at, $machine->device, [
+        $response = $this->jpush->push($machine->registration_id, $sign, $pushed_at, $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
             $oxygen_overage,
