@@ -78,7 +78,7 @@ class TopupController extends ApiController
         }
         $pushed_at = Carbon::now()->timestamp;
         //push topup data to machine
-        $response = $this->jpush->push($machine->registration_id, $sign, $pushed_at, $machine->device, [
+        $response = $this->jpush->push($machine->registration_id, $sign, $pushed_at, null, $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
             $oxygen_overage,
@@ -175,7 +175,7 @@ class TopupController extends ApiController
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, $machine->device, [0,0,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [0,0,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 PushRecord::create([
                     'machine_id' => $machine->id,

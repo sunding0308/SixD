@@ -18,7 +18,7 @@ class JPushService
         $this->client = new JPush($this->app_key, $this->master_secret, config('jpush.default_log_file')); // 实例化client.php中的client类
     }
 
-    public function push($registrationId, $sign, $pushed_at, $device=null, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false)
+    public function push($registrationId, $sign, $pushed_at, $redpacket_qr_code=null, $device=null, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false)
     {
         $push_payload = $this->client->push() // 调用push方法（返回一个PushPayload实例）
             ->setPlatform('android') // 设置平台
@@ -30,6 +30,7 @@ class JPushService
                   'account_type' => $account_type,
                   'is_same_person' => $is_same_person,
                   'show_redpacket' => $show_redpacket,
+                  'redpacket_qr_code' => $redpacket_qr_code,
                   'pushed_at' => $pushed_at,
                 ]
               ]) // 设置推送通知内容

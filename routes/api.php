@@ -28,6 +28,8 @@ Route::group(['namespace'=>'Api'], function(){
     Route::get('/push_environment_signal', 'PushController@pushEnvironmentSignal')->middleware('check_online');
     Route::get('/push_water_quality_statistics_signal', 'PushController@pushWaterQualityStatisticsSignal');
     Route::get('/push_records_signal', 'PushController@pushRecordsSignal');
+    Route::post('/push_redpacket_qr_code', 'PushController@pushRedpacketQrCodeSignal');
+    Route::post('/push_redpacket_received_signal', 'PushController@pushRedpacketReceivedSignal');
     Route::get('/push_app_menu_analysis_signal', 'PushController@pushAppMenuAnalysisSignal');
     Route::get('/push_api_analysis_signal', 'PushController@pushApiAnalysisSignal');
 
