@@ -71,7 +71,7 @@ class TopupController extends ApiController
             }
         }
 
-        if ($content->is_vip) {
+        if ($content->is_vip == 'true') {
             $sign = 'vip_topup';
         } else {
             $sign = 'topup';
