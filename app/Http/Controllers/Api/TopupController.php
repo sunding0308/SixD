@@ -88,7 +88,7 @@ class TopupController extends ApiController
         if ($response['http_code'] == static::CODE_SUCCESS) {
             PushRecord::create([
                 'machine_id' => $machine->id,
-                'type' => 'topup',
+                'type' => $sign,
                 'pushed_at' => $pushed_at,
             ]);
 
@@ -98,7 +98,7 @@ class TopupController extends ApiController
                     return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
                 }
                 $pushRecord = PushRecord::where('machine_id', $machine->id)
-                ->where('type', 'topup')
+                ->where('type', $sign)
                 ->where('pushed_at', $pushed_at)
                 ->first();
 

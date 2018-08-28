@@ -172,6 +172,17 @@ class ReportController extends ApiController
             Log::info('Device '.$machine->device.' topup success!');
         }
 
+        if ($request->type == 'vip_topup') {
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $request->overage[0],
+                'cold_water_overage' => $request->overage[1],
+                'oxygen_overage' => $request->overage[2],
+                'air_overage' => $request->overage[3],
+                'humidity_overage' => $request->overage[4]
+            ]);
+            Log::info('Device '.$machine->device.' vip_topup success!');
+        }
+
         if ($request->type == 'reset') {
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => 0,
