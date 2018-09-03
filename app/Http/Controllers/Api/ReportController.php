@@ -167,10 +167,10 @@ class ReportController extends ApiController
                 'cold_water_overage' => $request->overage[1],
                 'oxygen_overage' => $request->overage[2],
                 'air_overage' => $request->overage[3],
-                'humidity_add_overage' => $request->overage[4],
-                'humidity_minus_overage' => $request->overage[5],
-                'humidity_child_overage' => $request->overage[6],
-                'humidity_adult_overage' => $request->overage[7],
+                'humidity_child_overage' => $request->overage[4],
+                'humidity_adult_overage' => $request->overage[5],
+                'humidity_add_overage' => $request->overage[6],
+                'humidity_minus_overage' => $request->overage[7],
             ]);
             Log::info('Device '.$machine->device.' topup success!');
         }
@@ -181,10 +181,10 @@ class ReportController extends ApiController
                 'cold_water_overage' => $request->overage[1],
                 'oxygen_overage' => $request->overage[2],
                 'air_overage' => $request->overage[3],
-                'humidity_add_overage' => $request->overage[4],
-                'humidity_minus_overage' => $request->overage[5],
-                'humidity_child_overage' => $request->overage[6],
-                'humidity_adult_overage' => $request->overage[7],
+                'humidity_child_overage' => $request->overage[4],
+                'humidity_adult_overage' => $request->overage[5],
+                'humidity_add_overage' => $request->overage[6],
+                'humidity_minus_overage' => $request->overage[7],
             ]);
             Log::info('Device '.$machine->device.' vip_topup success!');
         }
