@@ -27,7 +27,10 @@ class RealtimeController extends ApiController
                 'cold_water_overage' => $request->cold_water_overage,
                 'oxygen_overage' => $request->oxygen_overage,
                 'air_overage' => $request->air_overage,
-                'humidity_overage' => $request->humidity_overage,
+                'humidity_add_overage' => $request->humidity_add_overage,
+                'humidity_minus_overage' => $request->humidity_minus_overage,
+                'humidity_child_overage' => $request->humidity_child_overage,
+                'humidity_adult_overage' => $request->humidity_adult_overage,
             ]);
 
             Log::info('Device '.$request->device.' refresh overage success!');

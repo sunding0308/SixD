@@ -122,8 +122,8 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        
-        $response = $this->jpush->push($machine->registration_id, 'account_type', null, null, [], $request->account_type, $request->is_same_person);
+        $pushed_at = Carbon::now()->timestamp;
+        $response = $this->jpush->push($machine->registration_id, 'account_type', $pushed_at, null, null, [], $request->account_type, $request->is_same_person);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             return $this->responseSuccess();
         } else {
@@ -143,8 +143,8 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        
-        $response = $this->jpush->push($machine->registration_id, 'account_type', null, null, [], $request->account_type);
+        $pushed_at = Carbon::now()->timestamp;
+        $response = $this->jpush->push($machine->registration_id, 'account_type', $pushed_at, null, null, [], $request->account_type);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             return $this->responseSuccess();
         } else {
@@ -290,7 +290,7 @@ class PushController extends ApiController
                 'form_params' => [
                     'machineId' => $machine->machine_id,
                     'serviceContent' => $request->service_content,
-                    'maintenanceStatus' => $request->maintenance_status
+                    'maintenanceStatus' => static::CODE_STATUS_COMPLETE
                 ]
             ]);
         }

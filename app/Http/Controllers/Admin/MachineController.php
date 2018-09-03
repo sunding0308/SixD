@@ -92,7 +92,7 @@ class MachineController extends Controller
         }
         //push reset data to machine
         $pushed_at = Carbon::now()->timestamp;
-        $response = $jpush->push($machine->registration_id, 'reset', $pushed_at, $machine->device, [0,0,0,0,0]);
+        $response = $jpush->push($machine->registration_id, 'reset', $pushed_at, $machine->device, [0,0,0,0,0,0,0,0]);
         if ($response['http_code'] == 200) {
             PushRecord::create([
                 'machine_id' => $machine->id,

@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Machine extends Model
 {
     //product code
-    const CODE_HOT_WATER = 001;
-    const CODE_COLD_WATER = 002;
-    const CODE_AIR = 003;
-    const CODE_OXYGEN = 004;
-    const CODE_HUMIDITY = 005;
+    const CODE_HOT_WATER = '001';
+    const CODE_COLD_WATER = '002';
+    const CODE_AIR = '003';
+    const CODE_OXYGEN = '008';
+    const CODE_HUMIDIFICATION = '005';
+    const CODE_DEHUMIDIFICATION = '004';
+    const CODE_CHILD_CONSTANT_HUMIDITY = '006';
+    const CODE_ADULT_CONSTANT_HUMIDITY = '007';
     //water flow (ml)
     const HOT_WATER_FLOW = 450;
     const COLD_WATER_FLOW = 1000;
@@ -22,8 +25,9 @@ class Machine extends Model
      * @var array
      */
     protected $fillable = [
-        'device', 'registration_id', 'status', 'hot_water_overage', 'cold_water_overage', 'oxygen_overage', 'air_overage', 'humidity_overage', 'filter1_lifespan', 'filter2_lifespan', 'filter3_lifespan',
-        'g_status', 'wifi_status', 'bluetooth_status', 'temperature', 'humidity', 'pm2_5', 'oxygen_concentration', 'total_produce_water_time',
+        'device', 'registration_id', 'status', 'hot_water_overage', 'cold_water_overage', 'oxygen_overage', 'air_overage', 'humidity_add_overage', 
+        'humidity_minus_overage', 'humidity_child_overage', 'humidity_adult_overage', 'filter1_lifespan', 'filter2_lifespan',
+        'filter3_lifespan', 'g_status', 'wifi_status', 'bluetooth_status', 'temperature', 'humidity', 'pm2_5', 'oxygen_concentration', 'total_produce_water_time',
     ];
 
     public function bluetoothRecords()

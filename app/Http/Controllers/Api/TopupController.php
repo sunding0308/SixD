@@ -37,14 +37,20 @@ class TopupController extends ApiController
         $cold_water_overage = $machine->cold_water_overage;
         $oxygen_overage = $machine->oxygen_overage;
         $air_overage = $machine->air_overage;
-        $humidity_overage = $machine->humidity_overage;
+        $humidity_add_overage = $machine->humidity_add_overage;
+        $humidity_minus_overage = $machine->humidity_minus_overage;
+        $humidity_child_overage = $machine->humidity_child_overage;
+        $humidity_adult_overage = $machine->humidity_adult_overage;
 
         $productArr = [
             Machine::CODE_HOT_WATER,
             Machine::CODE_COLD_WATER,
             Machine::CODE_AIR,
             Machine::CODE_OXYGEN,
-            Machine::CODE_HUMIDITY
+            Machine::CODE_HUMIDIFICATION,
+            Machine::CODE_DEHUMIDIFICATION,
+            Machine::CODE_CHILD_CONSTANT_HUMIDITY,
+            Machine::CODE_ADULT_CONSTANT_HUMIDITY
         ];
 
         foreach($content->product_list as $product) {
@@ -62,8 +68,17 @@ class TopupController extends ApiController
                 case Machine::CODE_OXYGEN:
                     $oxygen_overage += $product->purchase_quantity;
                     break;
-                case Machine::CODE_HUMIDITY:
-                    $humidity_overage += $product->purchase_quantity;
+                case Machine::CODE_HUMIDIFICATION:
+                    $humidity_add_overage += $product->purchase_quantity;
+                    break;
+                case Machine::CODE_DEHUMIDIFICATION:
+                    $humidity_minus_overage += $product->purchase_quantity;
+                    break;
+                case Machine::CODE_CHILD_CONSTANT_HUMIDITY:
+                    $humidity_child_overage += $product->purchase_quantity;
+                    break;
+                case Machine::CODE_ADULT_CONSTANT_HUMIDITY:
+                    $humidity_adult_overage += $product->purchase_quantity;
                     break;
                 default:
                     break;
@@ -83,7 +98,10 @@ class TopupController extends ApiController
             $cold_water_overage,
             $oxygen_overage,
             $air_overage,
-            $humidity_overage
+            $humidity_child_overage,
+            $humidity_adult_overage,
+            $humidity_add_overage,
+            $humidity_minus_overage,
         ], null, true, $content->is_show_red_envelopes);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             PushRecord::create([
@@ -175,7 +193,7 @@ class TopupController extends ApiController
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [0,0,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [0,0,0,0,0,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 PushRecord::create([
                     'machine_id' => $machine->id,
