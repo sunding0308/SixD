@@ -40,6 +40,7 @@ Route::group(['namespace'=>'Api'], function(){
     Route::post('/push_ordinary', 'PushController@pushOrdinaryServiceToDataCloud');
     Route::post('/push_single_ordinary_complete', 'PushController@pushSingleOrdinaryServiceCompleteToDataCloud');
     Route::post('/push_maintenance', 'PushController@pushMaintenanceToDataCloud');
+    Route::post('/push_use_status', 'PushController@pushUseStatusToDataCloud');
 
     /**
      * apis for andriod and data cloud

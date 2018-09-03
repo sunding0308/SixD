@@ -29,6 +29,8 @@ class PushController extends ApiController
     const MAINTENANCE__URL = self::BASE_URL . '/api/machine/maintenanceTicket/maintenanceTicketApply.do';
     //维护完成
     const MAINTENANCE_COMPLETE_URL = self::BASE_URL . '/api/machine/maintenanceTicket/getMaintenanceTicketComplete.do';
+    //水机使用状态
+    const MACHINE_USE_STATUS_URL = self::BASE_URL . '/api/msale/sixdropsVipCodeExchange/findRedPackageQRcode.do';
 
     private $jpush;
     private $client;
@@ -374,4 +376,32 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage($response->msg);
         }
     }
+
+        //水机使用状态
+        public function pushUseStatusToDataCloud(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+    
+            $machine = Machine::where('device',$request->device)->first(); 
+            $response = $this->client->request('POST', self::MACHINE_USE_STATUS_URL, [
+                'form_params' => [
+                    'machineId' => $machine->machine_id,
+                    'useStatus' => 1
+                ]
+            ]);
+            //处理获取的json
+            $response = json_decode((string)$response->getBody());
+    
+            if ($response->status == static::CODE_STATUS_SUCCESS) {
+                return $this->responseSuccess();
+            } else {
+                return $this->responseErrorWithMessage($response->msg);
+            }
+        }
 }
