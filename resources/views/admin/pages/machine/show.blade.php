@@ -68,7 +68,10 @@
                                 凉水：{{ secToMin($machine->cold_water_overage) }}
                                 氧气：{{ secToMin($machine->oxygen_overage) }}
                                 空净：{{ secToMin($machine->air_overage) }}
-                                湿度调节：{{ secToMin($machine->humidity_overage) }}
+                                加湿：{{ secToMin($machine->humidity_add_overage) }}
+                                除湿：{{ secToMin($machine->humidity_minus_overage) }}
+                                儿童恒湿：{{ secToMin($machine->humidity_child_overage) }}
+                                成人恒湿：{{ secToMin($machine->humidity_adult_overage) }}
                             </div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.sterilizations') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">

@@ -30,7 +30,10 @@
                             <th>{{ __('admin/machine.cold_water_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.air_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.oxygen_remaining_time') }}(min)</th>
-                            <th>{{ __('admin/machine.humidity_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.humidity_add_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.humidity_minus_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.humidity_child_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.humidity_adult_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -44,7 +47,10 @@
                                     <td>{{ secToMin($machine->cold_water_overage) }}</td>
                                     <td>{{ secToMin($machine->air_overage) }}</td>
                                     <td>{{ secToMin($machine->oxygen_overage) }}</td>
-                                    <td>{{ secToMin($machine->humidity_overage) }}</td>
+                                    <td>{{ secToMin($machine->humidity_add_overage) }}</td>
+                                    <td>{{ secToMin($machine->humidity_minus_overage) }}</td>
+                                    <td>{{ secToMin($machine->humidity_child_overage) }}</td>
+                                    <td>{{ secToMin($machine->humidity_adult_overage) }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>
