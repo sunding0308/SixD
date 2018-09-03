@@ -162,7 +162,7 @@ class ReportController extends ApiController
             ->delete();
 
         if ($request->type == 'topup') {
-            Log::debug('Received overage: '.$request->overage);
+            Log::debug('Received overage: '.explode(',', $request->overage));
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => $request->overage[0],
                 'cold_water_overage' => $request->overage[1],
@@ -177,7 +177,7 @@ class ReportController extends ApiController
         }
 
         if ($request->type == 'vip_topup') {
-            Log::debug('Received overage: '.$request->overage);
+            Log::debug('Received overage: '.explode(',', $request->overage));
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => $request->overage[0],
                 'cold_water_overage' => $request->overage[1],
