@@ -182,7 +182,9 @@ class TopupController extends ApiController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'machine_id' => 'required|exists:machines'
+                'machine_id' => 'required|exists:machines',
+                'hot_water_overage' => 'required',
+                'cold_water_overage' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -190,10 +192,12 @@ class TopupController extends ApiController
             }
 
             $machine = Machine::where('machine_id',$request->machine_id)->first();
+            $hot_water_overage = intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
+            $cold_water_overage = intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [0,0,0,0,0,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 PushRecord::create([
                     'machine_id' => $machine->id,
