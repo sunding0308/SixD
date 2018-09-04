@@ -81,15 +81,10 @@ class PushController extends ApiController
                 'type' => 'redpacket',
                 'pushed_at' => $pushed_at,
             ]);
-            return response()->json([
-                'http_code' => static::CODE_SUCCESS
-            ]);
+            return $this->responseSuccess();
         } else {
             Log::error('Machine id: '.$machine->id.' pushed fail!');
-            return response()->json([
-                'http_code' => static::CODE_ERROR,
-                'msg' => '网络糟糕，获取信息失败！'
-            ]);
+            return $this->responseErrorWithMessage('网络糟糕，获取信息失败！');
         }
     }
 
