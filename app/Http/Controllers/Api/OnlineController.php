@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\ApiController;
 class OnlineController extends ApiController
 {
     //机器、用户排名信息
-    const RANK_URL = 'https://tminiapps.sixdrops.com/outer/api/machine/machineRank/findMachineRank.do';
+    const RANK_URL = 'http://chengliang.ngrok.xiaomiqiu.cn/outer/api/machine/machineRank/findMachineRank.do';
 
     public function online(Request $request)
     {

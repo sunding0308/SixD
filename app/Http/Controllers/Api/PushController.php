@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\ApiController;
 
 class PushController extends ApiController
 {
-    const BASE_URL = 'https://tminiapps.sixdrops.com/outer';
+    const BASE_URL = 'http://chengliang.ngrok.xiaomiqiu.cn/outer';
     //紧急服务申请
     const URGENT_SERVICE_URL = self::BASE_URL . '/api/machine/urgentServiceTicket/urgentServiceTicketApply.do';
     //紧急服务完成

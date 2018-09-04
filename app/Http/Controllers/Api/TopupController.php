@@ -15,9 +15,9 @@ use App\Http\Controllers\Api\ApiController;
 class TopupController extends ApiController
 {
     //vip码产品信息
-    const VIP_CODE_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchange.do';
+    const VIP_CODE_URL = 'http://chengliang.ngrok.xiaomiqiu.cn/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchange.do';
     //vip码兑换结果
-    const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
+    const VIP_CODE_RESULT_URL = 'http://chengliang.ngrok.xiaomiqiu.cn/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
 
     private $jpush;
     private $client;
