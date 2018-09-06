@@ -193,8 +193,8 @@ class ReportController extends ApiController
 
         if ($request->type == 'reset') {
             Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => 0,
-                'cold_water_overage' => 0,
+                'hot_water_overage' => 67,
+                'cold_water_overage' => 30,
                 'oxygen_overage' => 0,
                 'air_overage' => 0,
                 'humidity_add_overage' => 0,
