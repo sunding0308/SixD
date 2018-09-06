@@ -192,8 +192,8 @@ class TopupController extends ApiController
             }
 
             $machine = Machine::where('machine_id',$request->machine_id)->first();
-            $hot_water_overage = intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
-            $cold_water_overage = intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
+            $hot_water_overage = intval(($request->hot_water_overage * 60) / Machine::HOT_WATER_FLOW);
+            $cold_water_overage = intval(($request->cold_water_overage * 60) / Machine::COLD_WATER_FLOW);
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
