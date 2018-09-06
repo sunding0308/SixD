@@ -37,9 +37,11 @@ class IotService
 
         if ($response->Success) {
             return [
-                "DeviceName" => $response->DeviceName,
-                "DeviceSecret" => $response->DeviceSecret,
-                "ProductKey" => $this->productKey,
+                "data" => [
+                    "DeviceName" => $response->DeviceName,
+                    "DeviceSecret" => $response->DeviceSecret,
+                    "ProductKey" => $this->productKey,
+                ]
             ];
         } else {
             $res = $this->queryDeviceByName($deviceName);
@@ -61,9 +63,11 @@ class IotService
 
         if ($response->Success) {
             return [
-                "DeviceName" => $response->DeviceInfo->DeviceName,
-                "DeviceSecret" => $response->DeviceInfo->DeviceSecret,
-                "ProductKey" => $this->productKey,
+                "data" => [
+                    "DeviceName" => $response->DeviceInfo->DeviceName,
+                    "DeviceSecret" => $response->DeviceInfo->DeviceSecret,
+                    "ProductKey" => $this->productKey,
+                ]
             ];
         }
     }

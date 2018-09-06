@@ -252,7 +252,8 @@ class OnlineController extends ApiController
 
     public function register(Request $request, IotService $iot)
     {
-        return $iot->registDevice($request->device);
+        $response = $iot->registDevice($request->device);
+        return $this->responseSuccessWithExtrasAndMessage($response);
     }
 
     public function logfile(Request $request)
