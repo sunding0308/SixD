@@ -118,7 +118,7 @@ class ApiController extends Controller
      */
     protected function responseErrorWithMessage($message = 'Error')
     {
-        return $this->setStatusCode(self::CODE_ERROR)
+        return $this->setStatusCode(self::CODE_SUCCESS)
             ->response(
                 [
                     'status' => self::STATUS_ERROR,

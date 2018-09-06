@@ -88,6 +88,6 @@ class IotService
         $request->setTimeout(5000);
         $response = $this->client->getAcsResponse($request);
         
-        return $response;
+        return $response->Success;
     }
 }
