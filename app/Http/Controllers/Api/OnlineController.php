@@ -6,12 +6,13 @@ use App\Machine;
 use App\Installation;
 use App\Sterilization;
 use GuzzleHttp\Client;
+use App\Services\IotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\MachineInfo as MachineInfoResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Resources\MachineInfo as MachineInfoResource;
 
 class OnlineController extends ApiController
 {
@@ -247,6 +248,11 @@ class OnlineController extends ApiController
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' update installation error: '.$e->getMessage().' Line: '.$e->getLine());
         }
+    }
+
+    public function register(Request $request, IotService $iot)
+    {
+        return $iot->registDevice($request->device);
     }
 
     public function logfile(Request $request)

@@ -47,6 +47,7 @@ Route::group(['namespace'=>'Api'], function(){
      */
     Route::group(['middleware'=>'api_auth'], function(){
         Route::get('/check_status', 'OnlineController@checkStatus');
+        Route::post('/machine/register', 'OnlineController@register');
         Route::post('/machine/installation', 'OnlineController@installation');
         Route::post('/urgent/account_type', 'PushController@pushUrgentAccountType');
         Route::post('/account_type', 'PushController@pushAccountType');
