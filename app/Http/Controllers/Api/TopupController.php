@@ -87,9 +87,9 @@ class TopupController extends ApiController
         }
 
         if ($content->is_vip == 'true') {
-            $sign = 'vip_topup';
+            $sign = Machine::SIGNAL_VIP_TOPUP;
         } else {
-            $sign = 'topup';
+            $sign = Machine::SIGNAL_TOPUP;
         }
         $pushed_at = Carbon::now()->timestamp;
         //push topup data to machine
@@ -197,7 +197,7 @@ class TopupController extends ApiController
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, 'reset', $pushed_at, null, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
+            $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_RESET, $pushed_at, null, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
             if ($response['http_code'] == static::CODE_SUCCESS) {
                 PushRecord::create([
                     'machine_id' => $machine->id,

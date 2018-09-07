@@ -46,34 +46,34 @@ class PushController extends ApiController
      */
     public function pushOverageSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, 'overage');
+        return $this->pushSignal($request->registrationId, Machine::SIGNAL_OVERAGE);
     }
 
     public function pushHardwareStatusSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, 'hardware_status');
+        return $this->pushSignal($request->registrationId, Machine::SIGNAL_HARDWARE_STATUS);
     }
 
     public function pushRecordsSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, 'records');
+        return $this->pushSignal($request->registrationId, Machine::SIGNAL_RECORDS);
     }
 
     public function pushEnvironmentSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, 'environment');
+        return $this->pushSignal($request->registrationId, Machine::SIGNAL_ENVIROMENT);
     }
 
     public function pushWaterQualityStatisticsSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, 'water_quality_statistics');
+        return $this->pushSignal($request->registrationId, Machine::SIGNAL_WATER_QUALITY_STATISTICS);
     }
 
     public function pushRedpacketQrCodeSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
         $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, 'redpacket', $pushed_at, $request->redpacket_qr_code);
+        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_REDPACKET, $pushed_at, $request->redpacket_qr_code);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             Log::info('Machine id: '.$machine->id.' pushed success!');
             PushRecord::create([
@@ -91,17 +91,17 @@ class PushController extends ApiController
     public function pushRedpacketReceivedSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
-        return $this->pushSignal($machine->registration_id, 'redpacket_received');
+        return $this->pushSignal($machine->registration_id, Machine::SIGNAL_REDPACKET_RECEIVED);
     }
 
     public function pushAppMenuAnalysisSignal(Request $request)
     {
-        return $this->jpush->push($request->registrationId, 'app_menu_analysis');
+        return $this->jpush->push($request->registrationId, Machine::SIGNAL_APP_MENU_ANALYSIS);
     }
 
     public function pushApiAnalysisSignal(Request $request)
     {
-        return $this->jpush->push($request->registrationId, 'api_analysis');
+        return $this->jpush->push($request->registrationId, Machine::SIGNAL_API_ANALYSIS);
     }
 
     public function pushUrgentAccountType(Request $request)
@@ -118,7 +118,7 @@ class PushController extends ApiController
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
         $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, 'account_type', $pushed_at, null, null, [], $request->account_type, $request->is_same_person);
+        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_ACCOUT_TYPE, $pushed_at, null, null, [], $request->account_type, $request->is_same_person);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             return $this->responseSuccess();
         } else {
@@ -139,7 +139,7 @@ class PushController extends ApiController
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
         $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, 'account_type', $pushed_at, null, null, [], $request->account_type);
+        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_ACCOUT_TYPE, $pushed_at, null, null, [], $request->account_type);
         if ($response['http_code'] == static::CODE_SUCCESS) {
             return $this->responseSuccess();
         } else {

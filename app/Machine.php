@@ -15,9 +15,25 @@ class Machine extends Model
     const CODE_DEHUMIDIFICATION = '004';
     const CODE_CHILD_CONSTANT_HUMIDITY = '006';
     const CODE_ADULT_CONSTANT_HUMIDITY = '007';
+
     //water flow (ml)
     const HOT_WATER_FLOW = 450;
     const COLD_WATER_FLOW = 1000;
+
+    //signal
+    const SIGNAL_TOPUP = 'topup';
+    const SIGNAL_VIP_TOPUP = 'vip_topup';
+    const SIGNAL_RESET = 'reset';
+    const SIGNAL_OVERAGE = 'overage';
+    const SIGNAL_HARDWARE_STATUS = 'hardware_status';
+    const SIGNAL_RECORDS = 'records';
+    const SIGNAL_ENVIROMENT = 'environment';
+    const SIGNAL_WATER_QUALITY_STATISTICS = 'water_quality_statistics';
+    const SIGNAL_REDPACKET = 'redpacket';
+    const SIGNAL_REDPACKET_RECEIVED = 'redpacket_received';
+    const SIGNAL_ACCOUT_TYPE = 'account_type';
+    const SIGNAL_APP_MENU_ANALYSIS = 'app_menu_analysis';
+    const SIGNAL_API_ANALYSIS = 'api_analysis';
 
     /**
      * The attributes that are mass assignable.
