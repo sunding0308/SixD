@@ -6,6 +6,7 @@ include_once __DIR__.'/../Libs/aliyun-openapi-php-sdk/aliyun-php-sdk-core/Config
 use DefaultProfile;
 use DefaultAcsClient;
 use \Iot\Request\V20170420 as Iot;
+use Illuminate\Support\Facades\Response;
 
 class IotService
 {
@@ -77,17 +78,41 @@ class IotService
      * @param $productKey
      * @param $deviceName
      */
-    public function rrpc($deviceName)
+    public function rrpc($sign, $deviceName, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false, $redpacket_qr_code=null)
     {
         $request = new Iot\RRpcRequest();
         //Base64 String
-        $messageContent = base64_encode("{\"action\":\"unlock\"}");
+        $messageContent = base64_encode(json_encode([
+            'message' => $sign,
+            'extras' => [
+                'device' => $deviceName,
+                'overage' => $overage,
+                'account_type' => $account_type,
+                'is_same_person' => $is_same_person,
+                'show_redpacket' => $show_redpacket,
+                'redpacket_qr_code' => $redpacket_qr_code,
+            ]
+        ]));
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $request->setRequestBase64Byte($messageContent);
         $request->setTimeout(5000);
         $response = $this->client->getAcsResponse($request);
-        
-        return $response->Success;
+
+        if ($response->Success) {
+            $payload = json_decode(base64_decode($response->PayloadBase64Byte));
+            return [
+                "Success" => $response->Success,
+                "data" => [
+                    "device" => $payload->device,
+                    "type" => $payload->type,
+                    "overage" => $payload->overage,
+                ]
+            ];
+        } else {
+            return [
+                "Success" => $response->Success,
+            ];
+        }
     }
 }

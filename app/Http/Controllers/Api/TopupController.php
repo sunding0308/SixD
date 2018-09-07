@@ -6,6 +6,7 @@ use App\Machine;
 use Carbon\Carbon;
 use App\PushRecord;
 use GuzzleHttp\Client;
+use App\Services\IotService;
 use Illuminate\Http\Request;
 use App\Services\JPushService;
 use Illuminate\Support\Facades\Log;
@@ -20,11 +21,13 @@ class TopupController extends ApiController
     const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
 
     private $jpush;
+    private $iot;
     private $client;
-
-    public function __construct(JPushService $jpush, Client $client)
+    
+    public function __construct(JPushService $jpush, IotService $iot, Client $client)
     {
         $this->jpush = $jpush;
+        $this->iot = $iot;
         $this->client = $client;
     }
 
@@ -35,6 +38,10 @@ class TopupController extends ApiController
         $machine = Machine::where('machine_id',$content->machine_id)->first();
         $hot_water_overage = $machine->hot_water_overage;
         $cold_water_overage = $machine->cold_water_overage;
+        /*
+        $hot_water_overage = $machine->hot_water_overage * Machine::HOT_WATER_FLOW / 60;
+        $cold_water_overage = $machine->cold_water_overage * Machine::COLD_WATER_FLOW / 60;
+        */
         $oxygen_overage = $machine->oxygen_overage;
         $air_overage = $machine->air_overage;
         $humidity_add_overage = $machine->humidity_add_overage;
@@ -58,9 +65,15 @@ class TopupController extends ApiController
                 switch ($product->product_code) {
                 case Machine::CODE_HOT_WATER:
                     $hot_water_overage += intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
+                    /*
+                    $hot_water_overage += $product->purchase_quantity;
+                    */
                     break;
                 case Machine::CODE_COLD_WATER:
                     $cold_water_overage += intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
+                    /*
+                    $cold_water_overage += $product->purchase_quantity;
+                    */
                     break;
                 case Machine::CODE_AIR:
                     $air_overage += $product->purchase_quantity;
@@ -91,6 +104,37 @@ class TopupController extends ApiController
         } else {
             $sign = Machine::SIGNAL_TOPUP;
         }
+        /*
+        $response = $this->iot->rrpc($sign, $machine->device, [
+            $hot_water_overage,
+            $cold_water_overage,
+            $oxygen_overage,
+            $air_overage,
+            $humidity_child_overage,
+            $humidity_adult_overage,
+            $humidity_add_overage,
+            $humidity_minus_overage,
+        ], null ,true, $content->is_show_red_envelopes);
+        if ($response['Success']) {
+            Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $response['Success']['data']['overage'][0],
+                'cold_water_overage' => $response['Success']['data']['overage'][1],
+                'oxygen_overage' => $response['Success']['data']['overage'][2],
+                'air_overage' => $response['Success']['data']['overage'][3],
+                'humidity_child_overage' => $response['Success']['data']['overage'][4],
+                'humidity_adult_overage' => $response['Success']['data']['overage'][5],
+                'humidity_add_overage' => $response['Success']['data']['overage'][6],
+                'humidity_minus_overage' => $response['Success']['data']['overage'][7],
+            ]);
+            Log::info('Device '.$machine->device.' '.$sign.' success!');
+
+            return $this->responseSuccess();
+        } else {
+            Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
+            return $this->responseErrorWithMessage('推送'.$sign.'到机器失败！');
+        }
+        */
         $pushed_at = Carbon::now()->timestamp;
         //push topup data to machine
         $response = $this->jpush->push($machine->registration_id, $sign, $pushed_at, null, $machine->device, [
@@ -194,6 +238,10 @@ class TopupController extends ApiController
             $machine = Machine::where('machine_id',$request->machine_id)->first();
             $hot_water_overage = intval(($request->hot_water_overage * 60) / Machine::HOT_WATER_FLOW);
             $cold_water_overage = intval(($request->cold_water_overage * 60) / Machine::COLD_WATER_FLOW);
+            /*
+            $hot_water_overage = $request->hot_water_overage;
+            $cold_water_overage = $request->cold_water_overage;
+            */
             $pushed_at = Carbon::now()->timestamp;
 
             //push reset data to machine
@@ -209,6 +257,28 @@ class TopupController extends ApiController
             } else {
                 return $this->responseErrorWithMessage('重置失败，请稍后尝试！');
             }
+            /*
+            $response = $this->iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
+            if ($response['Success']) {
+                Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+                Machine::where('id',$machine->id)->update([
+                    'hot_water_overage' => $response['Success']['data']['overage'][0],
+                    'cold_water_overage' => $response['Success']['data']['overage'][1],
+                    'oxygen_overage' => $response['Success']['data']['overage'][2],
+                    'air_overage' => $response['Success']['data']['overage'][3],
+                    'humidity_child_overage' => $response['Success']['data']['overage'][4],
+                    'humidity_adult_overage' => $response['Success']['data']['overage'][5],
+                    'humidity_add_overage' => $response['Success']['data']['overage'][6],
+                    'humidity_minus_overage' => $response['Success']['data']['overage'][7],
+                ]);
+                Log::info('Device '.$machine->device.' reset success!');
+
+                return $this->responseSuccess();
+            } else {
+                Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
+                return $this->responseErrorWithMessage('推送重置数据到机器失败！');
+            }
+            */
         } catch (\Exception $e) {
             Log::error('Device '.$machine->device.' reset error: '.$e->getMessage().' Line: '.$e->getLine());
         }

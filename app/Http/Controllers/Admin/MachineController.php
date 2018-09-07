@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Machine;
 use Carbon\Carbon;
 use App\PushRecord;
+use App\Services\IotService;
 use Illuminate\Http\Request;
 use App\Services\JPushService;
 use Illuminate\Support\Collection;
@@ -84,7 +85,7 @@ class MachineController extends Controller
         return Storage::download('public/' . $machine->device . '/' . $request->filename);
     }
 
-    public function cleanOverage(Request $request, Machine $machine, JPushService $jpush)
+    public function cleanOverage(Request $request, Machine $machine, JPushService $jpush, IotService $iot)
     {
         if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
             session()->flash('error', '设备未在线，请开启后尝试！');
@@ -106,6 +107,28 @@ class MachineController extends Controller
             session()->flash('error', '清除余量失败，请稍后再试！');
             return back();
         }
+        /*
+        $response = $iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
+        if ($response['Success']) {
+            Machine::where('id',$machine->id)->update([
+                'hot_water_overage' => $response['Success']['data']['overage'][0],
+                'cold_water_overage' => $response['Success']['data']['overage'][1],
+                'oxygen_overage' => $response['Success']['data']['overage'][2],
+                'air_overage' => $response['Success']['data']['overage'][3],
+                'humidity_add_overage' => $response['Success']['data']['overage'][4],
+                'humidity_minus_overage' => $response['Success']['data']['overage'][5],
+                'humidity_child_overage' => $response['Success']['data']['overage'][6],
+                'humidity_adult_overage' => $response['Success']['data']['overage'][7],
+            ]);
+            Log::info('Device '.$machine->device.' reset success!');
+            
+            session()->flash('success', '清除余量成功.');
+            return back();
+        } else {
+            session()->flash('error', '清除余量失败，请稍后再试！');
+            return back();
+        }
+        */
     }
 
     private function paginate($items, $perPage = 15, $page = null, $options = [])
