@@ -41,7 +41,7 @@ class Machine extends Model
      * @var array
      */
     protected $fillable = [
-        'device', 'registration_id', 'status', 'hot_water_overage', 'cold_water_overage', 'oxygen_overage', 'air_overage', 'humidity_add_overage', 
+        'device', 'machine_id', 'registration_id', 'status', 'hot_water_overage', 'cold_water_overage', 'oxygen_overage', 'air_overage', 'humidity_add_overage', 
         'humidity_minus_overage', 'humidity_child_overage', 'humidity_adult_overage', 'filter1_lifespan', 'filter2_lifespan',
         'filter3_lifespan', 'g_status', 'wifi_status', 'bluetooth_status', 'temperature', 'humidity', 'pm2_5', 'oxygen_concentration', 'total_produce_water_time',
     ];
