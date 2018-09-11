@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
+use App\Version;
 use App\Installation;
 use App\Sterilization;
 use GuzzleHttp\Client;
@@ -266,5 +267,34 @@ class OnlineController extends ApiController
             Log::error('Device '.$request['device'].' file upload error: '.$e->getMessage().' Line: '.$e->getLine());
             return $this->responseErrorWithMessage($e->getMessage());
         }
+    }
+
+    public function getOta(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'versionName' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $latestVersion = Version::latest()->first();
+        if (!$latestVersion) {
+            return $this->responseErrorWithMessage('版本库中还没有任何版本');
+        }
+        $latestVersionCode = $latestVersion->version_code;
+        $versionCode = preg_replace("/[^0-9]/", '', $request->versionName);
+        if ($versionCode >= $latestVersionCode) {
+            return $this->responseErrorWithMessage('当前已是最新版本');
+        }
+
+        return $this->responseSuccessWithExtrasAndMessage([
+            'data' => [
+                'versionName' => $latestVersion->version_name,
+                'description' => $latestVersion->description,
+                'url' => $latestVersion->url,
+            ]
+        ]);
     }
 }

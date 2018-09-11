@@ -70,5 +70,6 @@ Route::group(['namespace'=>'Api'], function(){
         Route::post('/report/water_quality_statistics', 'ReportController@waterQualityStatistics');
         Route::post('/report/app_menu_analysis', 'ReportController@appMenuAnalysis');
         Route::post('/report/api_analysis', 'ReportController@apiAnalysis');
+        Route::get('/check_update', 'OnlineController@getOta');
     });
 });

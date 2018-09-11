@@ -16,3 +16,5 @@ Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'
     Route::get('/{machine}/clean_overage', 'MachineController@cleanOverage')->name('clean_overage');
 });
 Route::resource('/user', 'Admin\UserController')->except('show');
+Route::resource('/version', 'Admin\VersionController')->except('show', 'edit', 'update', 'destroy');
+Route::get('/version/download', 'Admin\VersionController@download')->name('version.download');
