@@ -10,6 +10,9 @@
     }
 
     function getProvince($address) {
+        if (!$address) {
+            return null;
+        }
         $province = strstr($address, '省', true);
         if (!$province) {
             $province = strstr($address, '市', true);
