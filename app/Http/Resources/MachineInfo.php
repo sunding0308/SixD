@@ -16,6 +16,7 @@ class MachineInfo extends JsonResource
     {
         return [
             'city' => getProvince(optional($this->installation)->hotel_address),
+            'qr_code' => optional($this->installation)->qr_code
         ];
     }
 
