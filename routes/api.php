@@ -71,5 +71,6 @@ Route::group(['namespace'=>'Api'], function(){
         Route::post('/report/app_menu_analysis', 'ReportController@appMenuAnalysis');
         Route::post('/report/api_analysis', 'ReportController@apiAnalysis');
         Route::get('/check_update', 'OnlineController@getOta');
+        Route::get('/version/download', 'OnlineController@versionDownload');
     });
 });

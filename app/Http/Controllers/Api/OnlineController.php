@@ -297,4 +297,9 @@ class OnlineController extends ApiController
             ]
         ]);
     }
+
+    public function versionDownload(Request $request)
+    {
+        return Storage::download($request->url);
+    }
 }
