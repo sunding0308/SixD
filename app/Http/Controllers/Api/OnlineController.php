@@ -293,7 +293,7 @@ class OnlineController extends ApiController
             'data' => [
                 'versionName' => $latestVersion->version_name,
                 'description' => $latestVersion->description,
-                'url' => env('APP_URL').'/api/version/download?url='.$latestVersion->url,
+                'url' => config('app.url').'/api/version/download?url='.$latestVersion->url,
             ]
         ]);
     }

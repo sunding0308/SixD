@@ -55,6 +55,11 @@
                                     <a href="{{ route('admin.version.download', ['url' => $version->url]) }}" class="btn btn-normal btn-m">
                                         <i class="fa fa-download"></i>
                                     </a>
+                                    <form method="POST" action="{{ route('admin.version.destroy', $version->id) }}" accept-charset="UTF-8" onsubmit="return ConfirmDelete()">
+                                        {{ method_field('DELETE') }}
+                                        {{ csrf_field() }}
+                                        <a href="#" onclick="$(this).closest('form').submit()" class="btn btn-normal btn-m delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
@@ -96,3 +101,12 @@
 
         </div><!-- .row -->
 @stop
+
+@push('foot-scripts')
+    <script>
+        function ConfirmDelete() {
+            var x = confirm('你确定要删除该版本吗？');
+            return (x) ? true : false;
+        }
+    </script>
+@endpush

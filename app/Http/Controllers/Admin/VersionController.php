@@ -23,7 +23,6 @@ class VersionController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->file('file'));
         $validator = Validator::make($request->all(), [
             'version_name' => 'required|unique:versions',
             'file' => 'required',
@@ -75,5 +74,17 @@ class VersionController extends Controller
     public function download(Request $request)
     {
         return Storage::download($request->url);
+    }
+
+    public function destroy(Version $version)
+    {
+        // delete
+        $version->delete();
+        Storage::deleteDirectory(pathinfo($version->url)['dirname']);
+
+        // redirect
+        session()->flash('success', '版本删除成功.');
+
+        return redirect()->route('admin.version.index');
     }
 }
