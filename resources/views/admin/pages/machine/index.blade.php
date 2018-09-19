@@ -26,8 +26,8 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.mac') }}</th>
-                            <th>{{ __('admin/machine.hot_water_remaining_time') }}(min)</th>
-                            <th>{{ __('admin/machine.cold_water_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.hot_water_remaining_time') }}(ml)</th>
+                            <th>{{ __('admin/machine.cold_water_remaining_time') }}(ml)</th>
                             <th>{{ __('admin/machine.air_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.oxygen_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.humidity_add_remaining_time') }}(min)</th>
@@ -59,7 +59,7 @@
                                         @endif
                                     </td>
                                     <td class="playlist-actions hp">
-                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->registration_id }}')">
+                                        <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->device }}')">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
                                         </a>
                                         <a href="{{ route('admin.machine.show', $machine->id) }}" class="btn btn-normal btn-m" title="详情">
@@ -116,14 +116,14 @@
 
 @push('js')
 <script>
-    function refresh(id, registrationId) {
+    function refresh(id, device) {
         $("#machine-"+id).html("<i class='fa fa-refresh fa-spin'></i>");
         $.ajax({
             type: "get",
             async : true,
             url: "/api/push_overage_signal",
             data: {
-                'registrationId' : registrationId
+                'device' : device
             },
             dataType: "json",
             success: function(result){

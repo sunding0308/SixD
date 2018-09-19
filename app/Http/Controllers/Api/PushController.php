@@ -8,7 +8,6 @@ use App\PushRecord;
 use GuzzleHttp\Client;
 use App\Services\IotService;
 use Illuminate\Http\Request;
-use App\Services\JPushService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
@@ -33,13 +32,11 @@ class PushController extends ApiController
     //水机使用状态
     const MACHINE_USE_STATUS_URL = self::BASE_URL . '/api/msale/sixdropsVipCodeExchange/findRedPackageQRcode.do';
 
-    private $jpush;
     private $iot;
     private $client;
     
-    public function __construct(JPushService $jpush, IotService $iot, Client $client)
+    public function __construct(IotService $iot, Client $client)
     {
-        $this->jpush = $jpush;
         $this->iot = $iot;
         $this->client = $client;
     }
@@ -49,52 +46,32 @@ class PushController extends ApiController
      */
     public function pushOverageSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, Machine::SIGNAL_OVERAGE);
-        // return $this->pushSignal(Machine::SIGNAL_OVERAGE, $request->device);
+        return $this->pushSignal(Machine::SIGNAL_OVERAGE, $request->device);
     }
 
     public function pushHardwareStatusSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, Machine::SIGNAL_HARDWARE_STATUS);
-        // return $this->pushSignal(Machine::SIGNAL_HARDWARE_STATUS, $request->device);
+        return $this->pushSignal(Machine::SIGNAL_HARDWARE_STATUS, $request->device);
     }
 
     public function pushRecordsSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, Machine::SIGNAL_RECORDS);
-        // return $this->pushSignal(Machine::SIGNAL_RECORDS, $request->device);
+        return $this->pushSignal(Machine::SIGNAL_RECORDS, $request->device);
     }
 
     public function pushEnvironmentSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, Machine::SIGNAL_ENVIROMENT);
-        // return $this->pushSignal(Machine::SIGNAL_ENVIROMENT, $request->device);
+        return $this->pushSignal(Machine::SIGNAL_ENVIROMENT, $request->device);
     }
 
     public function pushWaterQualityStatisticsSignal(Request $request)
     {
-        return $this->pushSignal($request->registrationId, Machine::SIGNAL_WATER_QUALITY_STATISTICS);
-        // return $this->pushSignal(Machine::SIGNAL_WATER_QUALITY_STATISTICS, $request->device);
+        return $this->pushSignal(Machine::SIGNAL_WATER_QUALITY_STATISTICS, $request->device);
     }
 
     public function pushRedpacketQrCodeSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
-        $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_REDPACKET, $pushed_at, $request->redpacket_qr_code);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            Log::info('Machine id: '.$machine->id.' pushed success!');
-            PushRecord::create([
-                'machine_id' => $machine->id,
-                'type' => 'redpacket',
-                'pushed_at' => $pushed_at,
-            ]);
-            return $this->responseSuccess();
-        } else {
-            Log::error('Machine id: '.$machine->id.' pushed fail!');
-            return $this->responseErrorWithMessage('网络糟糕，获取信息失败！');
-        }
-        /*
         $response = $this->iot->rrpc(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, flase, $request->redpacket_qr_code);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
@@ -103,7 +80,6 @@ class PushController extends ApiController
             Log::error(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送红包二维码到机器失败！');
         }
-        */
     }
 
     public function pushRedpacketReceivedSignal(Request $request)
@@ -135,14 +111,6 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_ACCOUT_TYPE, $pushed_at, null, null, [], $request->account_type, $request->is_same_person);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage('push to machine failed!');
-        }
-        /*
         $response = $this->iot->rrpc(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type, $request->is_same_person);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
@@ -151,7 +119,6 @@ class PushController extends ApiController
             Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送紧急账户类型到机器失败！');
         }
-        */
     }
 
     public function pushAccountType(Request $request)
@@ -166,14 +133,6 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_ACCOUT_TYPE, $pushed_at, null, null, [], $request->account_type);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            return $this->responseSuccess();
-        } else {
-            return $this->responseErrorWithMessage('push to machine failed!');
-        }
-        /*
         $response = $this->iot->rrpc(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
@@ -182,21 +141,8 @@ class PushController extends ApiController
             Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送账户类型到机器失败！');
         }
-        */
     }
 
-    private function pushSignal($registrationId, $sign)
-    {
-        if (!$registrationId) {
-            //push signal to machines every hour
-            $this->multiplePush($sign);
-        } else {
-            //push to machine by manual control
-            return $this->singlePush($registrationId, $sign);
-        }
-    }
-
-    /*
     private function pushSignal($sign, $device)
     {
         if (!$device) {
@@ -207,32 +153,9 @@ class PushController extends ApiController
             return $this->singlePush($sign, $device);
         }
     }
-    */
 
     private function multiplePush($sign)
     {
-        $registrationIds = Machine::pluck('registration_id');
-        foreach($registrationIds as $registrationId) {
-            $machine = Machine::where('registration_id', $registrationId)->first();
-            //心跳间隔超过30分钟，则认为机器未在线
-            if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
-                Log::error('Device '.$machine->device.' not online, not pushed!');
-            } else {
-                $pushed_at = Carbon::now()->timestamp;
-                $response = $this->jpush->push($registrationId, $sign, $pushed_at);
-                if ($response['http_code'] == static::CODE_SUCCESS) {
-                    Log::info('Registration id: '.$registrationId.' pushed success!');
-                    PushRecord::create([
-                        'machine_id' => $machine->id,
-                        'type' => $sign,
-                        'pushed_at' => $pushed_at,
-                    ]);
-                } else {
-                    Log::error('Registration id: '.$registrationId.' pushed fail!');
-                }
-            }
-        }
-        /*
         $devices = Machine::pluck('device');
         foreach($devices as $device) {
             $machine = Machine::where('devices', $devices)->first();
@@ -243,34 +166,8 @@ class PushController extends ApiController
                 Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             }
         }
-        */
     }
 
-    private function singlePush($registrationId, $sign)
-    {
-        $machine = Machine::where('registration_id', $registrationId)->first();
-        $pushed_at = Carbon::now()->timestamp;
-        $response = $this->jpush->push($registrationId, $sign, $pushed_at);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            Log::info('Registration id: '.$registrationId.' pushed success!');
-            PushRecord::create([
-                'machine_id' => $machine->id,
-                'type' => $sign,
-                'pushed_at' => $pushed_at,
-            ]);
-            return response()->json([
-                'http_code' => static::CODE_SUCCESS
-            ]);
-        } else {
-            Log::error('Registration id: '.$registrationId.' pushed fail!');
-            return response()->json([
-                'http_code' => static::CODE_ERROR,
-                'msg' => '网络糟糕，获取信息失败！'
-            ]);
-        }
-    }
-
-    /*
     private function singlePush($sign, $device)
     {
         $machine = Machine::where('device', $device)->first();
@@ -288,7 +185,6 @@ class PushController extends ApiController
             ]);
         }
     }
-    */
 
     /**
      * push to data cloud

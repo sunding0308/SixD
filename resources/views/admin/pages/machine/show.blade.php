@@ -48,7 +48,7 @@
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
                         <div class="title-button-header"><h5>{{ __('admin/machine.status') }}{{ __('admin/machine.explanation') }}</h5></div>
-                        <a href="javascript:;" id="status" class="btn btn-normal btn-m" onclick="refresh('status', '{{ $machine->registration_id }}')">
+                        <a href="javascript:;" id="status" class="btn btn-normal btn-m" onclick="refresh('status', '{{ $machine->device }}')">
                             <i class="fa fa-refresh" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -62,16 +62,16 @@
                             <div class="col-md-9 control-label t-a-l">{{ $machine->wifi_status }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.bluetooth_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->bluetooth_status }}</div>
-                            <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}(min)</label>
+                            <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}</label>
                             <div class="col-md-9 control-label t-a-l">
-                                热水：{{ secToMin($machine->hot_water_overage) }}
-                                凉水：{{ secToMin($machine->cold_water_overage) }}
-                                氧气：{{ secToMin($machine->oxygen_overage) }}
-                                空净：{{ secToMin($machine->air_overage) }}
-                                加湿：{{ secToMin($machine->humidity_add_overage) }}
-                                除湿：{{ secToMin($machine->humidity_minus_overage) }}
-                                儿童恒湿：{{ secToMin($machine->humidity_child_overage) }}
-                                成人恒湿：{{ secToMin($machine->humidity_adult_overage) }}
+                                热水：{{ secToMin($machine->hot_water_overage) }} ml
+                                凉水：{{ secToMin($machine->cold_water_overage) }} ml
+                                氧气：{{ secToMin($machine->oxygen_overage) }} min
+                                空净：{{ secToMin($machine->air_overage) }} min
+                                加湿：{{ secToMin($machine->humidity_add_overage) }} min
+                                除湿：{{ secToMin($machine->humidity_minus_overage) }} min
+                                儿童恒湿：{{ secToMin($machine->humidity_child_overage) }} min
+                                成人恒湿：{{ secToMin($machine->humidity_adult_overage) }} min
                             </div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.sterilizations') }}(h)</label>
                             <div class="col-md-9 control-label t-a-l">
@@ -97,7 +97,7 @@
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
                         <div class="title-button-header"><h5>{{ __('admin/machine.environment') }}{{ __('admin/machine.explanation') }}</h5></div>
-                        <a href="javascript:;" id="environment" class="btn btn-normal btn-m" onclick="refresh('environment', '{{ $machine->registration_id }}')">
+                        <a href="javascript:;" id="environment" class="btn btn-normal btn-m" onclick="refresh('environment', '{{ $machine->device }}')">
                             <i class="fa fa-refresh" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -260,7 +260,7 @@
 
 @push('js')
 <script>
-    function refresh(id, registrationId) {
+    function refresh(id, device) {
         $("#"+id).html("<i class='fa fa-refresh fa-spin'></i>");
         if (id == 'status') {
             var url = "/api/push_hardware_status_signal";
@@ -272,7 +272,7 @@
             async : true,
             url: url,
             data: {
-                'registrationId' : registrationId
+                'device' : device
             },
             dataType: "json",
             success: function(result){

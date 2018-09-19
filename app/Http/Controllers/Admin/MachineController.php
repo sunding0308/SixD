@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use App\PushRecord;
 use App\Services\IotService;
 use Illuminate\Http\Request;
-use App\Services\JPushService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -85,29 +84,9 @@ class MachineController extends Controller
         return Storage::download('public/' . $machine->device . '/' . $request->filename);
     }
 
-    public function cleanOverage(Request $request, Machine $machine, JPushService $jpush, IotService $iot)
+    public function cleanOverage(Request $request, Machine $machine, IotService $iot)
     {
-        if (floor((strtotime(Carbon::now())-strtotime($machine->updated_at))%86400/60) > 30) {
-            session()->flash('error', '设备未在线，请开启后尝试！');
-            return back();
-        }
         //push reset data to machine
-        $pushed_at = Carbon::now()->timestamp;
-        $response = $jpush->push($machine->registration_id, Machine::SIGNAL_RESET, $pushed_at, $machine->device, [0,0,0,0,0,0,0,0]);
-        if ($response['http_code'] == 200) {
-            PushRecord::create([
-                'machine_id' => $machine->id,
-                'type' => 'reset',
-                'pushed_at' => $pushed_at,
-            ]);
-            session()->flash('success', '清除余量成功.');
-            sleep(3);
-            return back();
-        } else {
-            session()->flash('error', '清除余量失败，请稍后再试！');
-            return back();
-        }
-        /*
         $response = $iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
         if ($response['Success']) {
             Machine::where('id',$machine->id)->update([
@@ -128,7 +107,6 @@ class MachineController extends Controller
             session()->flash('error', '清除余量失败，请稍后再试！');
             return back();
         }
-        */
     }
 
     private function paginate($items, $perPage = 15, $page = null, $options = [])

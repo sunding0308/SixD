@@ -8,7 +8,6 @@ use App\PushRecord;
 use GuzzleHttp\Client;
 use App\Services\IotService;
 use Illuminate\Http\Request;
-use App\Services\JPushService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
@@ -20,13 +19,11 @@ class TopupController extends ApiController
     //vip码兑换结果
     const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
 
-    private $jpush;
     private $iot;
     private $client;
     
-    public function __construct(JPushService $jpush, IotService $iot, Client $client)
+    public function __construct(IotService $iot, Client $client)
     {
-        $this->jpush = $jpush;
         $this->iot = $iot;
         $this->client = $client;
     }
@@ -38,10 +35,6 @@ class TopupController extends ApiController
         $machine = Machine::where('machine_id',$content->machine_id)->first();
         $hot_water_overage = $machine->hot_water_overage;
         $cold_water_overage = $machine->cold_water_overage;
-        /*
-        $hot_water_overage = $machine->hot_water_overage * Machine::HOT_WATER_FLOW / 60;
-        $cold_water_overage = $machine->cold_water_overage * Machine::COLD_WATER_FLOW / 60;
-        */
         $oxygen_overage = $machine->oxygen_overage;
         $air_overage = $machine->air_overage;
         $humidity_add_overage = $machine->humidity_add_overage;
@@ -64,16 +57,10 @@ class TopupController extends ApiController
             if (in_array($product->product_code, $productArr)) {
                 switch ($product->product_code) {
                 case Machine::CODE_HOT_WATER:
-                    $hot_water_overage += intval(($product->purchase_quantity * 60) / Machine::HOT_WATER_FLOW);
-                    /*
                     $hot_water_overage += $product->purchase_quantity;
-                    */
                     break;
                 case Machine::CODE_COLD_WATER:
-                    $cold_water_overage += intval(($product->purchase_quantity * 60) / Machine::COLD_WATER_FLOW);
-                    /*
                     $cold_water_overage += $product->purchase_quantity;
-                    */
                     break;
                 case Machine::CODE_AIR:
                     $air_overage += $product->purchase_quantity;
@@ -104,7 +91,6 @@ class TopupController extends ApiController
         } else {
             $sign = Machine::SIGNAL_TOPUP;
         }
-        /*
         $response = $this->iot->rrpc($sign, $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
@@ -133,44 +119,6 @@ class TopupController extends ApiController
         } else {
             Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送'.$sign.'到机器失败！');
-        }
-        */
-        $pushed_at = Carbon::now()->timestamp;
-        //push topup data to machine
-        $response = $this->jpush->push($machine->registration_id, $sign, $pushed_at, null, $machine->device, [
-            $hot_water_overage,
-            $cold_water_overage,
-            $oxygen_overage,
-            $air_overage,
-            $humidity_child_overage,
-            $humidity_adult_overage,
-            $humidity_add_overage,
-            $humidity_minus_overage,
-        ], null, true, $content->is_show_red_envelopes);
-        if ($response['http_code'] == static::CODE_SUCCESS) {
-            PushRecord::create([
-                'machine_id' => $machine->id,
-                'type' => $sign,
-                'pushed_at' => $pushed_at,
-            ]);
-
-            while(true) {
-                //10秒未收到机器回调则购买失败
-                if (floor((strtotime(Carbon::now())-$pushed_at)%86400%60) > 10) {
-                    return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
-                }
-                $pushRecord = PushRecord::where('machine_id', $machine->id)
-                ->where('type', $sign)
-                ->where('pushed_at', $pushed_at)
-                ->first();
-
-                if (!$pushRecord) {
-                    return $this->responseSuccess();
-                }
-            }
-        } else {
-            Log::error('Registration id: '.$machine->registration_id.' pushed fail!');
-            return $this->responseErrorWithMessage('网络糟糕，请稍后尝试！');
         }
     }
 
@@ -236,28 +184,8 @@ class TopupController extends ApiController
             }
 
             $machine = Machine::where('machine_id',$request->machine_id)->first();
-            $hot_water_overage = intval(($request->hot_water_overage * 60) / Machine::HOT_WATER_FLOW);
-            $cold_water_overage = intval(($request->cold_water_overage * 60) / Machine::COLD_WATER_FLOW);
-            /*
             $hot_water_overage = $request->hot_water_overage;
             $cold_water_overage = $request->cold_water_overage;
-            */
-            $pushed_at = Carbon::now()->timestamp;
-
-            //push reset data to machine
-            $response = $this->jpush->push($machine->registration_id, Machine::SIGNAL_RESET, $pushed_at, null, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
-            if ($response['http_code'] == static::CODE_SUCCESS) {
-                PushRecord::create([
-                    'machine_id' => $machine->id,
-                    'type' => 'reset',
-                    'pushed_at' => $pushed_at,
-                ]);
-                
-                return $this->responseSuccess();
-            } else {
-                return $this->responseErrorWithMessage('重置失败，请稍后尝试！');
-            }
-            /*
             $response = $this->iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
             if ($response['Success']) {
                 Log::info($sign.'--Device: '.$machine->device.' pushed success!');
@@ -278,7 +206,6 @@ class TopupController extends ApiController
                 Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
                 return $this->responseErrorWithMessage('推送重置数据到机器失败！');
             }
-            */
         } catch (\Exception $e) {
             Log::error('Device '.$machine->device.' reset error: '.$e->getMessage().' Line: '.$e->getLine());
         }
