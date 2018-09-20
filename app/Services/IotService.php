@@ -36,8 +36,7 @@ class IotService
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $response = $this->client->getAcsResponse($request);
-        Log::info($response->Success);
-        Log::info($response->ErrorMessage);
+        Log::info('Register status: '.$response->Success);
 
         if ($response->Success) {
             return [
@@ -64,8 +63,7 @@ class IotService
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $response = $this->client->getAcsResponse($request);
-        Log::info($response->Success);
-        Log::info($response->ErrorMessage);
+        Log::info('Query device by name status: '.$response->Success);
 
         if ($response->Success) {
             return [
