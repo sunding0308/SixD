@@ -6,6 +6,7 @@ include_once __DIR__.'/../Libs/aliyun-openapi-php-sdk/aliyun-php-sdk-core/Config
 use DefaultProfile;
 use DefaultAcsClient;
 use \Iot\Request\V20170420 as Iot;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class IotService
@@ -35,6 +36,8 @@ class IotService
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $response = $this->client->getAcsResponse($request);
+        Log::info($response->Success);
+        Log::info($response->ErrorMessage);
 
         if ($response->Success) {
             return [
@@ -61,6 +64,8 @@ class IotService
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $response = $this->client->getAcsResponse($request);
+        Log::info($response->Success);
+        Log::info($response->ErrorMessage);
 
         if ($response->Success) {
             return [
