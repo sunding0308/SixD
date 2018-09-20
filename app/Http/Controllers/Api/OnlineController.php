@@ -113,6 +113,9 @@ class OnlineController extends ApiController
     public function getUserRank(Request $request, Client $client)
     {
         $machine = Machine::where('device',$request->device)->first();
+        if (!$machine->machine_id) {
+            return $this->responseErrorWithMessage('设备未安装');
+        }
         //获取VIP码产品信息
         $exchangeResult = $client->request('GET', self::RANK_URL, [
             'query' => ['machineId' => $machine->machine_id]
