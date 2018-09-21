@@ -107,9 +107,9 @@ class IotService
             return [
                 "Success" => $response->Success,
                 "data" => [
-                    "device" => $payload['device'],
-                    "type" => $payload['type'],
-                    "overage" => $payload['overage'],
+                    "device" => $payload->device,
+                    "type" => $payload->type,
+                    "overage" => $payload->overage,
                 ]
             ];
         } else {
