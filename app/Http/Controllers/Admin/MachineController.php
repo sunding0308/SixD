@@ -88,6 +88,7 @@ class MachineController extends Controller
     {
         //push reset data to machine
         $response = $iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
+        dd($response);
         if ($response['Success']) {
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => $response['Success']['data']['overage'][0],
