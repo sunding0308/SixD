@@ -104,14 +104,14 @@ class TopupController extends ApiController
         if ($response['Success']) {
             Log::info($sign.'--Device: '.$machine->device.' pushed success!');
             Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $response['Success']['data']['overage'][0],
-                'cold_water_overage' => $response['Success']['data']['overage'][1],
-                'oxygen_overage' => $response['Success']['data']['overage'][2],
-                'air_overage' => $response['Success']['data']['overage'][3],
-                'humidity_child_overage' => $response['Success']['data']['overage'][4],
-                'humidity_adult_overage' => $response['Success']['data']['overage'][5],
-                'humidity_add_overage' => $response['Success']['data']['overage'][6],
-                'humidity_minus_overage' => $response['Success']['data']['overage'][7],
+                'hot_water_overage' => $response['data']['overage'][0],
+                'cold_water_overage' => $response['data']['overage'][1],
+                'oxygen_overage' => $response['data']['overage'][2],
+                'air_overage' => $response['data']['overage'][3],
+                'humidity_child_overage' => $response['data']['overage'][4],
+                'humidity_adult_overage' => $response['data']['overage'][5],
+                'humidity_add_overage' => $response['data']['overage'][6],
+                'humidity_minus_overage' => $response['data']['overage'][7],
             ]);
             Log::info('Device '.$machine->device.' '.$sign.' success!');
 
@@ -190,14 +190,14 @@ class TopupController extends ApiController
             if ($response['Success']) {
                 Log::info($sign.'--Device: '.$machine->device.' pushed success!');
                 Machine::where('id',$machine->id)->update([
-                    'hot_water_overage' => $response['Success']['data']['overage'][0],
-                    'cold_water_overage' => $response['Success']['data']['overage'][1],
-                    'oxygen_overage' => $response['Success']['data']['overage'][2],
-                    'air_overage' => $response['Success']['data']['overage'][3],
-                    'humidity_child_overage' => $response['Success']['data']['overage'][4],
-                    'humidity_adult_overage' => $response['Success']['data']['overage'][5],
-                    'humidity_add_overage' => $response['Success']['data']['overage'][6],
-                    'humidity_minus_overage' => $response['Success']['data']['overage'][7],
+                    'hot_water_overage' => $response['data']['overage'][0],
+                    'cold_water_overage' => $response['data']['overage'][1],
+                    'oxygen_overage' => $response['data']['overage'][2],
+                    'air_overage' => $response['data']['overage'][3],
+                    'humidity_child_overage' => $response['data']['overage'][4],
+                    'humidity_adult_overage' => $response['data']['overage'][5],
+                    'humidity_add_overage' => $response['data']['overage'][6],
+                    'humidity_minus_overage' => $response['data']['overage'][7],
                 ]);
                 Log::info('Device '.$machine->device.' reset success!');
 
