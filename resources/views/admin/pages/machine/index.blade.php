@@ -43,8 +43,8 @@
                             @foreach($machines as $machine)
                                 <tr>
                                     <td>{{ $machine->device }}</td>
-                                    <td>{{ secToMin($machine->hot_water_overage) }}</td>
-                                    <td>{{ secToMin($machine->cold_water_overage) }}</td>
+                                    <td>{{ $machine->hot_water_overage }}</td>
+                                    <td>{{ $machine->cold_water_overage }}</td>
                                     <td>{{ secToMin($machine->air_overage) }}</td>
                                     <td>{{ secToMin($machine->oxygen_overage) }}</td>
                                     <td>{{ secToMin($machine->humidity_add_overage) }}</td>
