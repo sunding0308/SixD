@@ -181,7 +181,7 @@ class PushController extends ApiController
             Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             return response()->json([
                 'http_code' => static::CODE_ERROR,
-                'msg' => '网络糟糕，获取信息失败！'
+                'msg' => '设备未在线，获取信息失败！'
             ]);
         }
     }
