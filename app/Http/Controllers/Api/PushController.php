@@ -72,7 +72,7 @@ class PushController extends ApiController
     public function pushRedpacketQrCodeSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
-        $response = $this->iot->rrpc(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, flase, $request->redpacket_qr_code);
+        $response = $this->iot->rrpc(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, false, $request->redpacket_qr_code);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
             return $this->responseSuccess();
