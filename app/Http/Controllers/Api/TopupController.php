@@ -118,7 +118,6 @@ class TopupController extends ApiController
             return $this->responseSuccess();
         } else {
             Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
-            Log::info($response);
             return $this->responseErrorWithMessage('推送'.$sign.'到机器失败！');
         }
     }
