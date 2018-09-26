@@ -85,7 +85,7 @@ class PushController extends ApiController
     public function pushRedpacketReceivedSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
-        return $this->pushSignal($machine->registration_id, Machine::SIGNAL_REDPACKET_RECEIVED);
+        return $this->pushSignal(Machine::SIGNAL_REDPACKET_RECEIVED, $machine->device);
     }
 
     public function pushAppMenuAnalysisSignal(Request $request)
