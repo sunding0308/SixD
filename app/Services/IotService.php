@@ -101,7 +101,6 @@ class IotService
         $request->setRequestBase64Byte($messageContent);
         $request->setTimeout(5000);
         $response = $this->client->getAcsResponse($request);
-        Log::info($response->Code);
 
         if ($response->Success) {
             $payload = json_decode(base64_decode($response->PayloadBase64Byte));
@@ -114,6 +113,7 @@ class IotService
                 ]
             ];
         } else {
+            Log::info($response->Code);
             return [
                 "Success" => $response->Success,
             ];
