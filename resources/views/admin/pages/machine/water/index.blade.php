@@ -1,18 +1,18 @@
 @extends('admin.layout')
 
 @push('title')
-设备列表
+水机列表
 @endpush
 
 @section('content')
     <div class="row">
 
         <header class="title-header col-md-12">
-            <h3 class="title">{{ __( 'admin/machine.machines') }}</h3>
+            <h3 class="title">{{ __( 'admin/machine.waters') }}</h3>
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.machines') }}</strong></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.waters') }}</strong></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">
@@ -25,7 +25,7 @@
 
                         <thead>
                         <tr>
-                            <th>{{ __('admin/machine.mac') }}</th>
+                            <th>{{ __('admin/machine.id') }}</th>
                             <th>{{ __('admin/machine.hot_water_remaining_time') }}(ml)</th>
                             <th>{{ __('admin/machine.cold_water_remaining_time') }}(ml)</th>
                             <th>{{ __('admin/machine.air_remaining_time') }}(min)</th>

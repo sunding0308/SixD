@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin/machine';
+    protected $redirectTo = '/admin/machine?type='.\App\Machine::TYPE_WATER;
 
     /**
      * Create a new controller instance.

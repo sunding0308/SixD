@@ -1,7 +1,7 @@
 <?php
 
 Route::get('/', function () {
-    return redirect()->route('admin.machine.index');
+    return redirect()->route('admin.machine.index', ['type' => \App\Machine::TYPE_WATER]);
 })->name('home');
 Route::resource('/machine', 'Admin\MachineController')->only('index', 'show');
 Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'], function () {

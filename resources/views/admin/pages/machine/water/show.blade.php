@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-设备详情
+水机详情
 @endpush
 
 @section('content')
@@ -10,7 +10,7 @@
         <div class="col-md-8 offset-md-2">
         <div class="form">
             <div class="title-header">
-                <a href="{{ route('admin.machine.index') }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
+                <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_WATER]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
                 <div class="title">{{ __('admin/machine.detail') }}</div>
             </div>
             @if($machine->hasAlarms())

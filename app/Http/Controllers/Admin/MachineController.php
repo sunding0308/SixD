@@ -21,51 +21,60 @@ class MachineController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $machines = Machine::paginate(10);
-        return view('admin.pages.machine.index', compact('machines'));
+        $machines = Machine::where('type', $request->type)->paginate(10);
+        if (Machine::TYPE_WATER == $request->type) {
+            return view('admin.pages.machine.water.index', compact('machines'));
+        } elseif (Machine::TYPE_VENDING == $request->type) {
+            return view('admin.pages.machine.vending.index', compact('machines'));
+        } else {
+            return view('admin.pages.machine.oxygen.index', compact('machines'));
+        }
     }
 
-    public function show(Machine $machine)
+    public function show(Request $request, Machine $machine)
     {
+        if (808 == $request->sign) {
+            return view('admin.pages.machine.vending.show');
+        }
         $machine->load('bluetoothRecords', 'sterilization', 'waterQualityStatistics', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
-        return view('admin.pages.machine.show', compact('machine'));
+        return view('admin.pages.machine.water.show', compact('machine'));
     }
 
     public function waterQualityStatistics(Request $request, Machine $machine)
     {
-        return view('admin.pages.machine.water_quality_statistics', compact('machine'));
+        return view('admin.pages.machine.water.water_quality_statistics', compact('machine'));
     }
 
     public function bluetoothRecords(Request $request, Machine $machine)
     {
         $bluetoothRecords = $machine->bluetoothRecords()->paginate(10);
-        return view('admin.pages.machine.bluetooth_records', compact('machine', 'bluetoothRecords'));
+        return view('admin.pages.machine.water.bluetooth_records', compact('machine', 'bluetoothRecords'));
     }
 
     public function waterRecords(Request $request, Machine $machine)
     {
         $waterRecords = $machine->waterRecords()->paginate(10);
-        return view('admin.pages.machine.water_records', compact('machine', 'waterRecords'));
+        return view('admin.pages.machine.water.water_records', compact('machine', 'waterRecords'));
     }
 
     public function airRecords(Request $request, Machine $machine)
     {
         $airRecords = $machine->airRecords()->paginate(10);
-        return view('admin.pages.machine.air_records', compact('machine', 'airRecords'));
+        return view('admin.pages.machine.water.air_records', compact('machine', 'airRecords'));
     }
 
     public function oxygenRecords(Request $request, Machine $machine)
     {
         $oxygenRecords = $machine->oxygenRecords()->paginate(10);
-        return view('admin.pages.machine.oxygen_records', compact('machine', 'oxygenRecords'));
+        return view('admin.pages.machine.water.oxygen_records', compact('machine', 'oxygenRecords'));
     }
 
     public function humidityRecords(Request $request, Machine $machine)
     {
         $humidityRecords = $machine->humidityRecords()->paginate(10);
-        return view('admin.pages.machine.humidity_records', compact('machine', 'humidityRecords'));
+        return view('admin.pages.machine.water.humidity_records', compact('machine', 'humidityRecords'));
     }
 
     public function debug(Request $request, Machine $machine)

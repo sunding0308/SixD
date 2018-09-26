@@ -16,9 +16,10 @@ class Machine extends Model
     const CODE_CHILD_CONSTANT_HUMIDITY = '006';
     const CODE_ADULT_CONSTANT_HUMIDITY = '007';
 
-    //water flow (ml)
-    const HOT_WATER_FLOW = 450;
-    const COLD_WATER_FLOW = 1000;
+    //type
+    const TYPE_WATER = 1;
+    const TYPE_VENDING = 2;
+    const TYPE_OXYGEN = 3;
 
     //signal
     const SIGNAL_TOPUP = 'topup';

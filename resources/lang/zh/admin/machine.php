@@ -7,8 +7,8 @@
  */
 
 return [
-    'machines' => '设备列表',
-    'mac' => 'MAC地址',
+    'waters' => '水机',
+    'id' => 'ID',
     'hot_water_remaining_time' => '热水',
     'cold_water_remaining_time' => '凉水',
     'air_remaining_time' => '空净',
@@ -74,7 +74,7 @@ return [
     'showing_from_to_oxygen_records' => '共:total个记录，当前:from-:to',
     'oxygen_time' => '开启时长',
     'showing_from_to_humidity_records' => '共:total个记录，当前:from-:to',
-    'type' => '种类',
+    'type' => '类型',
     'humidity_time' => '开启时长',
     'water_quality' => '水质变化',
     'raw_water' => '当前原水TDS值',
@@ -84,4 +84,11 @@ return [
 
     'showing_from_to_files' => '共:total个文件，当前:from-:to',
     'no_files' => '没有文件',
+
+
+
+    'vendings' => '自动售货机',
+
+
+    'oxygens' => '补氧机',
 ];
