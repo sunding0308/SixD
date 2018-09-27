@@ -35,6 +35,13 @@
                                     @include('partials.errors', ['err_type' => 'field','field' => 'version_name'])
                                 </div>
                             </div>
+                            <div class="form-group row{{ $errors->has('version_code') ? " has-danger" : "" }}">
+                                <label class="col-md-3 control-label">{{ __('admin/version.version_code') }}*</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="version_code" value="{{ old('version_code') }}" class="form-control">
+                                    @include('partials.errors', ['err_type' => 'field','field' => 'version_code'])
+                                </div>
+                            </div>
                             <div class="form-group row{{ $errors->has('description') ? " has-danger" : "" }}">
                                 <label class="col-md-3 control-label">{{ __('admin/version.description') }}</label>
                                 <div class="col-md-9">

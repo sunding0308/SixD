@@ -25,6 +25,7 @@ class VersionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'version_name' => 'required|unique:versions',
+            'version_code' => 'required|unique:versions',
             'file' => 'required',
         ],$this->messages());
 
@@ -32,13 +33,13 @@ class VersionController extends Controller
             return back()->withInput()->withErrors($validator);
         }
 
-        $versionCode = preg_replace("/[^0-9]/", '', $request->version_name);
+        $versionCode = $request->version_code;
         $latestVersionCode = optional(Version::latest()->first())->version_code;
 
         if ($latestVersionCode) {
             $validator->after(function ($validator) use ($versionCode, $latestVersionCode){
                 if ($versionCode < $latestVersionCode) {
-                    $validator->errors()->add('version_name', '版本号小于当前最新版本号');
+                    $validator->errors()->add('version_code', '版本代码小于当前最新版本代码');
                 }
             });
             
@@ -67,6 +68,8 @@ class VersionController extends Controller
         return [
             'version_name.required' => '版本号为必填项',
             'version_name.unique' => '版本号已存在',
+            'version_code.required' => '版本代码为必填项',
+            'version_code.unique' => '版本代码已存在',
             'file.required' => '文件为必填项',
         ];
     }

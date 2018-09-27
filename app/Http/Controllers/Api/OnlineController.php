@@ -284,7 +284,8 @@ class OnlineController extends ApiController
     public function getOta(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'versionName' => 'required'
+            'versionName' => 'required',
+            'versionCode' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -296,7 +297,7 @@ class OnlineController extends ApiController
             return $this->responseErrorWithMessage('版本库中还没有任何版本');
         }
         $latestVersionCode = $latestVersion->version_code;
-        $versionCode = preg_replace("/[^0-9]/", '', $request->versionName);
+        $versionCode = $request->versionCode;
         if ($versionCode >= $latestVersionCode) {
             return $this->responseErrorWithMessage('当前已是最新版本');
         }
@@ -304,6 +305,7 @@ class OnlineController extends ApiController
         return $this->responseSuccessWithExtrasAndMessage([
             'data' => [
                 'versionName' => $latestVersion->version_name,
+                'versionCode' => $latestVersion->version_code,
                 'description' => $latestVersion->description,
                 'url' => config('app.url').'/api/version/download?url='.$latestVersion->url,
             ]
