@@ -13,7 +13,7 @@ return [
     'vendings' => '微售货机',
     'oxygens' => '制氧机',
     'users' => '管理员列表',
-    'versions' => '版本列表',
+    'versions' => 'APP版本',
     'app_menu_analytics' => 'APP菜单分析',
     'api_analytics' => '接口分析',
 ];

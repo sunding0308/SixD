@@ -7,7 +7,7 @@
  */
 
 return [
-    'versions' => '版本列表',
+    'versions' => '共享一体机版本',
     'new_version' => '添加版本',
     'id' => 'ID',
     'version_name' => '版本号',
