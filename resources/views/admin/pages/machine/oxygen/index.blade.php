@@ -27,6 +27,7 @@
                         <tr>
                             <th>{{ __('admin/machine.id') }}</th>
                             <th>{{ __('admin/machine.2g_status') }}</th>
+                            <th>{{ __('admin/machine.firmware_version') }}</th>
                             <th>{{ __('admin/machine.oxygen_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
@@ -37,6 +38,7 @@
                             <tr>
                                 <td>35 931406 923302 3</td>
                                 <td>信号强</td>
+                                <td>-</td>
                                 <td>21600</td>
                                 <td>
                                     -

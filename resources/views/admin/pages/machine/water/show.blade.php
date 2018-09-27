@@ -54,6 +54,10 @@
                     </div>
                     <div class="ibox-content">
                         <div class="form-group row">
+                            <label class="col-md-3 control-label">{{ __('admin/machine.app_version') }}</label>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->app_version }}</div>
+                            <label class="col-md-3 control-label">{{ __('admin/machine.firmware_version') }}</label>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->firmware_version }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->status }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g4g_status') }}</label>

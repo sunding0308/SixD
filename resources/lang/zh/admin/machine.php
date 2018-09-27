@@ -25,6 +25,8 @@ return [
     'detail' => '设备详情',
     'status' => '状态',
     'explanation' => '（数据每小时刷新，可按键刷新）',
+    'app_version' => 'APP版本',
+    'firmware_version' => '固件版本',
     'current_status' => '当前状态',
     '2g4g_status' => '2G/4G',
     'wifi_status' => 'Wi-Fi',

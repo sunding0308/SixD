@@ -23,6 +23,8 @@
                     </div>
                     <div class="ibox-content">
                         <div class="form-group row">
+                            <label class="col-md-3 control-label">{{ __('admin/machine.firmware_version') }}</label>
+                            <div class="col-md-9 control-label t-a-l">-</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">当前正处于正常状态</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>

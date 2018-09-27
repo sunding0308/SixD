@@ -25,6 +25,7 @@ class OnlineController extends ApiController
         try {
             $validator = Validator::make($request->all(), [
                 'device' => 'required',
+                'type' => 'required',
                 'registration_id' => 'required',
             ]);
 
@@ -36,6 +37,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
+                    'type' => $request->type,
                     'machine_id' => '',
                     'registration_id' => $request->registration_id,
                     'status' => $request->hardware_status['machine_status'] ?: '',
@@ -57,7 +59,9 @@ class OnlineController extends ApiController
                     'humidity' => $request->environment['humidity'] ?? 0,
                     'pm2_5' => $request->environment['pm2_5'] ?? 0,
                     'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
+                    'app_version' => $request->app_version ?? '',
+                    'firmware_version' => $request->firmware_version ?? ''
                 ]);
                 Sterilization::create([
                     'machine_id' => $machine->id,
@@ -90,7 +94,9 @@ class OnlineController extends ApiController
                     'humidity' => $request->environment['humidity'] ?? 0,
                     'pm2_5' => $request->environment['pm2_5'] ?? 0,
                     'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0
+                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
+                    'app_version' => $request->app_version ?? '',
+                    'firmware_version' => $request->firmware_version ?? ''
                 ]);
                 Sterilization::where('machine_id',$machine->id)->update([
                     'machine_id' => $machine->id,
@@ -196,6 +202,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
+                    'type' => '',
                     'machine_id' => $request->machine_id,
                     'registration_id' => '',
                     'status' => '',
@@ -217,7 +224,9 @@ class OnlineController extends ApiController
                     'humidity' => 0,
                     'pm2_5' => 0,
                     'oxygen_concentration' => 0,
-                    'total_produce_water_time' => 0
+                    'total_produce_water_time' => 0,
+                    'app_version' => '',
+                    'firmware_version' => ''
                 ]);
                 Sterilization::create([
                     'machine_id' => $machine->id,
