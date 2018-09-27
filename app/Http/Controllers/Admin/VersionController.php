@@ -39,7 +39,7 @@ class VersionController extends Controller
         if ($latestVersionCode) {
             $validator->after(function ($validator) use ($versionCode, $latestVersionCode){
                 if ($versionCode < $latestVersionCode) {
-                    $validator->errors()->add('version_code', '版本代码小于当前最新版本代码');
+                    $validator->errors()->add('version_code', '版本代码小于当前最新版本代码:'.$latestVersionCode);
                 }
             });
             
