@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-自动售货机列表
+微售货机列表
 @endpush
 
 @section('content')

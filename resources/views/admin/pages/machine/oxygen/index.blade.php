@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-补氧机列表
+制氧机列表
 @endpush
 
 @section('content')
@@ -26,7 +26,7 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.id') }}</th>
-                            <th>{{ __('admin/machine.2g4g_status') }}</th>
+                            <th>{{ __('admin/machine.2g_status') }}</th>
                             <th>{{ __('admin/machine.oxygen_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>

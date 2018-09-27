@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-自动售货机详情
+微售货机详情
 @endpush
 
 @section('content')
@@ -25,7 +25,7 @@
                         <div class="form-group row">
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">当前正处于正常状态</div>
-                            <label class="col-md-3 control-label">{{ __('admin/machine.2g4g_status') }}</label>
+                            <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">信号强</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}</label>
                             <div class="col-md-9 control-label t-a-l">

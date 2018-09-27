@@ -7,7 +7,7 @@
  */
 
 return [
-    'waters' => '水机',
+    'waters' => '共享一体机',
     'id' => 'ID',
     'hot_water_remaining_time' => '热水',
     'cold_water_remaining_time' => '凉水',
@@ -87,8 +87,9 @@ return [
 
 
 
-    'vendings' => '自动售货机',
+    'vendings' => '微售货机',
+    '2g_status' => '2G',
 
 
-    'oxygens' => '补氧机',
+    'oxygens' => '制氧机',
 ];

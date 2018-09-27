@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-水机详情
+共享一体机详情
 @endpush
 
 @section('content')

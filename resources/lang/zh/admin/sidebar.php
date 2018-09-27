@@ -9,9 +9,9 @@
 return [
     'welcome' => '欢迎您!',
     'machines' => '设备列表',
-    'waters' => '水机列表',
-    'vendings' => '自动售货机列表',
-    'oxygens' => '补养机列表',
+    'waters' => '共享一体机',
+    'vendings' => '微售货机',
+    'oxygens' => '制氧机',
     'users' => '管理员列表',
     'versions' => '版本列表',
     'app_menu_analytics' => 'APP菜单分析',
