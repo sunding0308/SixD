@@ -74,8 +74,13 @@ class PushController extends ApiController
         $machine = Machine::where('machine_id', $request->machine_id)->first();
         $response = $this->iot->rrpcToWater(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, false, $request->redpacket_qr_code);
         if ($response['Success']) {
-            Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
-            return $this->responseSuccess();
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
+                return $this->responseSuccess();
+            } else {
+                Log::error(Machine::SIGNAL_REDPACKET.'--Error: '.$response['message']);
+                return $this->responseErrorWithMessage($response['message']);
+            }
         } else {
             Log::error(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送红包二维码到机器失败！');
@@ -113,8 +118,13 @@ class PushController extends ApiController
         $machine = Machine::where('machine_id',$request->machine_id)->first();
         $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type, $request->is_same_person);
         if ($response['Success']) {
-            Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
-            return $this->responseSuccess();
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
+                return $this->responseSuccess();
+            } else {
+                Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Error: '.$response['message']);
+                return $this->responseErrorWithMessage($response['message']);
+            }
         } else {
             Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送紧急账户类型到机器失败！');
@@ -135,8 +145,13 @@ class PushController extends ApiController
         $machine = Machine::where('machine_id',$request->machine_id)->first();
         $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type);
         if ($response['Success']) {
-            Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
-            return $this->responseSuccess();
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
+                return $this->responseSuccess();
+            } else {
+                Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Error: '.$response['message']);
+                return $this->responseErrorWithMessage($response['message']);
+            }
         } else {
             Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送账户类型到机器失败！');
@@ -161,7 +176,11 @@ class PushController extends ApiController
             $machine = Machine::where('devices', $devices)->first();
             $response = $this->iot->rrpcToWater($sign, $machine->device);
             if ($response['Success']) {
-                Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+                if (static::STATUS_SUCCESS == $response['status']) {
+                    Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+                } else {
+                    Log::error($sign.'--Error: '.$response['message']);
+                }
             } else {
                 Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             }
@@ -173,10 +192,14 @@ class PushController extends ApiController
         $machine = Machine::where('device', $device)->first();
         $response = $this->iot->rrpcToWater($sign, $machine->device);
         if ($response['Success']) {
-            Log::info($sign.'--Device: '.$machine->device.' pushed success!');
-            return response()->json([
-                'http_code' => static::CODE_SUCCESS
-            ]);
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+                return response()->json([
+                    'http_code' => static::CODE_SUCCESS
+                ]);
+            } else {
+                Log::error($sign.'--Error: '.$response['message']);
+            }
         } else {
             Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             return response()->json([

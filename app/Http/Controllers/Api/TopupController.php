@@ -33,14 +33,6 @@ class TopupController extends ApiController
         Log::info($request->content);
         $content = json_decode($request->content);
         $machine = Machine::where('machine_id',$content->machine_id)->first();
-        $hot_water_overage = $machine->hot_water_overage;
-        $cold_water_overage = $machine->cold_water_overage;
-        $oxygen_overage = $machine->oxygen_overage;
-        $air_overage = $machine->air_overage;
-        $humidity_add_overage = $machine->humidity_add_overage;
-        $humidity_minus_overage = $machine->humidity_minus_overage;
-        $humidity_child_overage = $machine->humidity_child_overage;
-        $humidity_adult_overage = $machine->humidity_adult_overage;
 
         $productArr = [
             Machine::CODE_HOT_WATER,
@@ -57,28 +49,28 @@ class TopupController extends ApiController
             if (in_array($product->product_code, $productArr)) {
                 switch ($product->product_code) {
                 case Machine::CODE_HOT_WATER:
-                    $hot_water_overage += $product->purchase_quantity;
+                    $hot_water_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_COLD_WATER:
-                    $cold_water_overage += $product->purchase_quantity;
+                    $cold_water_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_AIR:
-                    $air_overage += $product->purchase_quantity;
+                    $air_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_OXYGEN:
-                    $oxygen_overage += $product->purchase_quantity;
+                    $oxygen_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_HUMIDIFICATION:
-                    $humidity_add_overage += $product->purchase_quantity;
+                    $humidity_add_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_DEHUMIDIFICATION:
-                    $humidity_minus_overage += $product->purchase_quantity;
+                    $humidity_minus_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_CHILD_CONSTANT_HUMIDITY:
-                    $humidity_child_overage += $product->purchase_quantity;
+                    $humidity_child_overage = $product->purchase_quantity;
                     break;
                 case Machine::CODE_ADULT_CONSTANT_HUMIDITY:
-                    $humidity_adult_overage += $product->purchase_quantity;
+                    $humidity_adult_overage = $product->purchase_quantity;
                     break;
                 default:
                     break;
@@ -103,19 +95,24 @@ class TopupController extends ApiController
         ], null ,true, $content->is_show_red_envelopes);
         if ($response['Success']) {
             Log::info($sign.'--Device: '.$machine->device.' pushed success!');
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $response['data']['overage'][0],
-                'cold_water_overage' => $response['data']['overage'][1],
-                'oxygen_overage' => $response['data']['overage'][2],
-                'air_overage' => $response['data']['overage'][3],
-                'humidity_child_overage' => $response['data']['overage'][4],
-                'humidity_adult_overage' => $response['data']['overage'][5],
-                'humidity_add_overage' => $response['data']['overage'][6],
-                'humidity_minus_overage' => $response['data']['overage'][7],
-            ]);
-            Log::info('Device '.$machine->device.' '.$sign.' success!');
-
-            return $this->responseSuccess();
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Machine::where('id',$machine->id)->update([
+                    'hot_water_overage' => $response['data']['overage'][0],
+                    'cold_water_overage' => $response['data']['overage'][1],
+                    'oxygen_overage' => $response['data']['overage'][2],
+                    'air_overage' => $response['data']['overage'][3],
+                    'humidity_child_overage' => $response['data']['overage'][4],
+                    'humidity_adult_overage' => $response['data']['overage'][5],
+                    'humidity_add_overage' => $response['data']['overage'][6],
+                    'humidity_minus_overage' => $response['data']['overage'][7],
+                ]);
+                Log::info('Device '.$machine->device.' '.$sign.' success!');
+    
+                return $this->responseSuccess();
+            } else {
+                Log::error($sign.'--Error: '.$response['message']);
+                return $this->responseErrorWithMessage($response['message']);
+            }
         } else {
             Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             return $this->responseErrorWithMessage('推送'.$sign.'到机器失败！');
@@ -189,19 +186,24 @@ class TopupController extends ApiController
             $response = $this->iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
             if ($response['Success']) {
                 Log::info($sign.'--Device: '.$machine->device.' pushed success!');
-                Machine::where('id',$machine->id)->update([
-                    'hot_water_overage' => $response['data']['overage'][0],
-                    'cold_water_overage' => $response['data']['overage'][1],
-                    'oxygen_overage' => $response['data']['overage'][2],
-                    'air_overage' => $response['data']['overage'][3],
-                    'humidity_child_overage' => $response['data']['overage'][4],
-                    'humidity_adult_overage' => $response['data']['overage'][5],
-                    'humidity_add_overage' => $response['data']['overage'][6],
-                    'humidity_minus_overage' => $response['data']['overage'][7],
-                ]);
-                Log::info('Device '.$machine->device.' reset success!');
-
-                return $this->responseSuccess();
+                if (static::STATUS_SUCCESS == $response['status']) {
+                    Machine::where('id',$machine->id)->update([
+                        'hot_water_overage' => $response['data']['overage'][0],
+                        'cold_water_overage' => $response['data']['overage'][1],
+                        'oxygen_overage' => $response['data']['overage'][2],
+                        'air_overage' => $response['data']['overage'][3],
+                        'humidity_child_overage' => $response['data']['overage'][4],
+                        'humidity_adult_overage' => $response['data']['overage'][5],
+                        'humidity_add_overage' => $response['data']['overage'][6],
+                        'humidity_minus_overage' => $response['data']['overage'][7],
+                    ]);
+                    Log::info('Device '.$machine->device.' reset success!');
+    
+                    return $this->responseSuccess();
+                } else {
+                    Log::error($sign.'--Error: '.$response['message']);
+                    return $this->responseErrorWithMessage($response['message']);
+                }
             } else {
                 Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
                 return $this->responseErrorWithMessage('推送重置数据到机器失败！');

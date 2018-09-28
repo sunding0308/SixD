@@ -105,24 +105,29 @@ class MachineController extends Controller
         //push reset data to machine
         $response = $iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
         if ($response['Success']) {
-            Machine::where('id',$machine->id)->update([
-                'hot_water_overage' => $response['data']['overage'][0],
-                'cold_water_overage' => $response['data']['overage'][1],
-                'oxygen_overage' => $response['data']['overage'][2],
-                'air_overage' => $response['data']['overage'][3],
-                'humidity_add_overage' => $response['data']['overage'][4],
-                'humidity_minus_overage' => $response['data']['overage'][5],
-                'humidity_child_overage' => $response['data']['overage'][6],
-                'humidity_adult_overage' => $response['data']['overage'][7],
-            ]);
-            Log::info('Device '.$machine->device.' reset success!');
-            
-            session()->flash('success', '清除余量成功.');
-            return back();
+            if ('success' == $response['status']) {
+                Machine::where('id',$machine->id)->update([
+                    'hot_water_overage' => $response['data']['overage'][0],
+                    'cold_water_overage' => $response['data']['overage'][1],
+                    'oxygen_overage' => $response['data']['overage'][2],
+                    'air_overage' => $response['data']['overage'][3],
+                    'humidity_add_overage' => $response['data']['overage'][4],
+                    'humidity_minus_overage' => $response['data']['overage'][5],
+                    'humidity_child_overage' => $response['data']['overage'][6],
+                    'humidity_adult_overage' => $response['data']['overage'][7],
+                ]);
+                Log::info('Device '.$machine->device.' reset success!');
+                
+                session()->flash('success', '清除余量成功.');
+            } else {
+                Log::error(reset.'--Error: '.$response['message']);
+
+                session()->flash('error', '清除余量失败，请稍后再试！');
+            }
         } else {
             session()->flash('error', '清除余量失败，请稍后再试！');
-            return back();
         }
+        return back();
     }
 
     private function paginate($items, $perPage = 15, $page = null, $options = [])
