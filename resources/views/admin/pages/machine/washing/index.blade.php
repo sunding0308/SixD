@@ -1,18 +1,18 @@
 @extends('admin.layout')
 
 @push('title')
-微售货机列表
+清洗机列表
 @endpush
 
 @section('content')
     <div class="row">
 
         <header class="title-header col-md-12">
-            <h3 class="title">{{ __( 'admin/machine.vendings') }}</h3>
+            <h3 class="title">{{ __( 'admin/machine.washings') }}</h3>
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.vendings') }}</strong></a></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.washings') }}</strong></a></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">
@@ -26,14 +26,9 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.id') }}</th>
-                            <th>海飞丝洗发精A(包)</th>
-                            <th>海飞丝洗发精B(包)</th>
-                            <th>舒肤佳沐浴露(包)</th>
-                            <th>六神沐浴露(包)</th>
-                            <th>拿铁咖啡(包)</th>
-                            <th>雀巢咖啡(包)</th>
-                            <th>大益普洱茶(包)</th>
-                            <th>八马铁观音(包)</th>
+                            <th>{{ __('admin/machine.2g_status') }}</th>
+                            <th>{{ __('admin/machine.firmware_version') }}</th>
+                            <th>{{ __('admin/machine.washing_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -42,20 +37,15 @@
                         <tbody>
                             <tr>
                                 <td>35 931406 923302 3</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>0</td>
+                                <td>信号强</td>
+                                <td>-</td>
+                                <td>21600</td>
                                 <td>
-                                    <i class="fa fa-exclamation-triangle fa-2x"></i>
+                                    -
                                 </td>
                                 <td class="playlist-actions hp">
-                                    <a href="{{ route('admin.machine.show', [1, 'sign' => 808]) }}" class="btn btn-normal btn-m" title="详情">
-                                        <i class="fa fa-info"></i>
+                                    <a href="javascript:;" id="machine-1" class="btn btn-normal btn-m" title="刷新余量" onclick="">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i>
                                     </a>
                                     <a href="#" class="btn btn-normal btn-m" title="调试信息">
                                         <i class="fa fa-book"></i>
@@ -68,9 +58,9 @@
 
                     <div class="row">
                         <div class="col-5">
-                            共1个设备，当前1-1
-                            {{-- <div class="dataTables_info">
-                                @if ($machines->count()>0)
+                            <div class="dataTables_info">
+                                共1个设备，当前1-1
+                                {{-- @if ($machines->count()>0)
                                 {{
                                         __(
                                             'admin/machine.showing_from_to_machines',
@@ -83,8 +73,8 @@
                                     }}
                                 @else
                                     {{ __('admin/machine.no_machines') }}
-                                @endif
-                            </div> --}}
+                                @endif --}}
+                            </div>
                         </div>
 
                         {{-- <div class="col-7">
@@ -102,3 +92,40 @@
 
     </div><!-- .row -->
 @stop
+
+@push('js')
+<script>
+    function refresh(id, device) {
+        $("#machine-"+id).html("<i class='fa fa-refresh fa-spin'></i>");
+        $.ajax({
+            type: "get",
+            async : true,
+            url: "/api/push_overage_signal",
+            data: {
+                'device' : device
+            },
+            dataType: "json",
+            success: function(result){
+                // console.log(result.body[registrationId].status);
+                // console.log(result.http_code);
+                if (result.http_code == 200) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
+                } else {
+                    refreshed(id);
+                    alert(result.msg)
+                }
+            },
+            error: function(errmsg) {
+                refreshed(id);
+                console.log("Ajax获取服务器数据出错了！"+ errmsg.status + ' ' + errmsg.statusText);
+            }
+        });
+    }
+    
+    function refreshed(id) {
+        $("#machine-"+id).html("<i class='fa fa-refresh' aria-hidden='true'></i>");
+    }
+</script>
+@endpush

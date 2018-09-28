@@ -94,4 +94,11 @@ return [
 
 
     'oxygens' => '制氧机',
+
+
+    'washings' => '清洗机',
+    'washing_remaining_time' => '清洗',
+
+
+    'relenishments' => '补货柜',
 ];

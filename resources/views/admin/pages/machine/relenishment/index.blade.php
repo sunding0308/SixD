@@ -1,18 +1,18 @@
 @extends('admin.layout')
 
 @push('title')
-微售货机列表
+补货柜列表
 @endpush
 
 @section('content')
     <div class="row">
 
         <header class="title-header col-md-12">
-            <h3 class="title">{{ __( 'admin/machine.vendings') }}</h3>
+            <h3 class="title">{{ __( 'admin/machine.relenishments') }}</h3>
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.vendings') }}</strong></a></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.relenishments') }}</strong></a></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">
@@ -54,7 +54,7 @@
                                     <i class="fa fa-exclamation-triangle fa-2x"></i>
                                 </td>
                                 <td class="playlist-actions hp">
-                                    <a href="{{ route('admin.machine.show', [1, 'sign' => 808]) }}" class="btn btn-normal btn-m" title="详情">
+                                    <a href="{{ route('admin.machine.show', [1, 'sign' => 809]) }}" class="btn btn-normal btn-m" title="详情">
                                         <i class="fa fa-info"></i>
                                     </a>
                                     <a href="#" class="btn btn-normal btn-m" title="调试信息">

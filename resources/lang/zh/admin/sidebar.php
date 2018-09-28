@@ -12,6 +12,8 @@ return [
     'waters' => '共享一体机',
     'vendings' => '微售货机',
     'oxygens' => '制氧机',
+    'washings' => '清洗机',
+    'replenishments' => '补货柜',
     'users' => '管理员列表',
     'versions' => 'APP版本',
     'app_menu_analytics' => 'APP菜单分析',

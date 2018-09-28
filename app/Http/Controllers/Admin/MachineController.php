@@ -26,10 +26,14 @@ class MachineController extends Controller
         $machines = Machine::where('type', $request->type)->paginate(10);
         if (Machine::TYPE_WATER == $request->type) {
             return view('admin.pages.machine.water.index', compact('machines'));
-        } elseif (Machine::TYPE_VENDING == $request->type) {
+        } else if (Machine::TYPE_VENDING == $request->type) {
             return view('admin.pages.machine.vending.index', compact('machines'));
-        } else {
+        } else if (Machine::TYPE_OXYGEN == $request->type) {
             return view('admin.pages.machine.oxygen.index', compact('machines'));
+        } else if (Machine::TYPE_WASHING == $request->type) {
+            return view('admin.pages.machine.washing.index', compact('machines'));
+        } else if (Machine::TYPE_RELENISHMENT == $request->type) {
+            return view('admin.pages.machine.relenishment.index', compact('machines'));
         }
     }
 
@@ -37,6 +41,9 @@ class MachineController extends Controller
     {
         if (808 == $request->sign) {
             return view('admin.pages.machine.vending.show');
+        }
+        if (809 == $request->sign) {
+            return view('admin.pages.machine.relenishment.show');
         }
         $machine->load('bluetoothRecords', 'sterilization', 'waterQualityStatistics', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
         return view('admin.pages.machine.water.show', compact('machine'));

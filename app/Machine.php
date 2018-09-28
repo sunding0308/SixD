@@ -20,6 +20,8 @@ class Machine extends Model
     const TYPE_WATER = 1;
     const TYPE_VENDING = 2;
     const TYPE_OXYGEN = 3;
+    const TYPE_WASHING = 4;
+    const TYPE_RELENISHMENT = 5;
 
     //signal
     const SIGNAL_TOPUP = 'topup';

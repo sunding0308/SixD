@@ -12,14 +12,14 @@
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.oxygens') }}</strong></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.oxygens') }}</strong></a></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">
 
             <div class="ibox">
 
-                <div class="ibox-content playlist-list" style="width: 927px;">
+                <div class="ibox-content playlist-list">
 
                     <table class="table table-hover">
 

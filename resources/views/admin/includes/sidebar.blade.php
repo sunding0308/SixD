@@ -12,6 +12,8 @@
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_WATER]) }}">{{ __('admin/sidebar.waters') }}</a></li>
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING]) }}">{{ __('admin/sidebar.vendings') }}</a></li>
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_OXYGEN]) }}">{{ __('admin/sidebar.oxygens') }}</a></li>
+                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_WASHING]) }}">{{ __('admin/sidebar.washings') }}</a></li>
+                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_RELENISHMENT]) }}">{{ __('admin/sidebar.replenishments') }}</a></li>
                 </ul>
             </div>
         </li>

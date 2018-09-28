@@ -12,7 +12,7 @@
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.waters') }}</strong></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.waters') }}</strong></a></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">
