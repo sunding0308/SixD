@@ -96,7 +96,7 @@ class MachineController extends Controller
     public function cleanOverage(Request $request, Machine $machine, IotService $iot)
     {
         //push reset data to machine
-        $response = $iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
+        $response = $iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
         if ($response['Success']) {
             Machine::where('id',$machine->id)->update([
                 'hot_water_overage' => $response['data']['overage'][0],

@@ -91,7 +91,7 @@ class TopupController extends ApiController
         } else {
             $sign = Machine::SIGNAL_TOPUP;
         }
-        $response = $this->iot->rrpc($sign, $machine->device, [
+        $response = $this->iot->rrpcToWater($sign, $machine->device, [
             $hot_water_overage,
             $cold_water_overage,
             $oxygen_overage,
@@ -186,7 +186,7 @@ class TopupController extends ApiController
             $machine = Machine::where('machine_id',$request->machine_id)->first();
             $hot_water_overage = $request->hot_water_overage;
             $cold_water_overage = $request->cold_water_overage;
-            $response = $this->iot->rrpc(Machine::SIGNAL_RESET, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
+            $response = $this->iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [$hot_water_overage,$cold_water_overage,0,0,0,0,0,0]);
             if ($response['Success']) {
                 Log::info($sign.'--Device: '.$machine->device.' pushed success!');
                 Machine::where('id',$machine->id)->update([

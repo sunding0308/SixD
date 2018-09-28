@@ -72,7 +72,7 @@ class PushController extends ApiController
     public function pushRedpacketQrCodeSignal(Request $request)
     {
         $machine = Machine::where('machine_id', $request->machine_id)->first();
-        $response = $this->iot->rrpc(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, false, $request->redpacket_qr_code);
+        $response = $this->iot->rrpcToWater(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, false, $request->redpacket_qr_code);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
             return $this->responseSuccess();
@@ -90,12 +90,12 @@ class PushController extends ApiController
 
     public function pushAppMenuAnalysisSignal(Request $request)
     {
-        return $this->iot->rrpc(Machine::SIGNAL_APP_MENU_ANALYSIS, $request->device);
+        return $this->iot->rrpcToWater(Machine::SIGNAL_APP_MENU_ANALYSIS, $request->device);
     }
 
     public function pushApiAnalysisSignal(Request $request)
     {
-        return $this->iot->rrpc(Machine::SIGNAL_API_ANALYSIS, $request->device);
+        return $this->iot->rrpcToWater(Machine::SIGNAL_API_ANALYSIS, $request->device);
     }
 
     public function pushUrgentAccountType(Request $request)
@@ -111,7 +111,7 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $response = $this->iot->rrpc(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type, $request->is_same_person);
+        $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type, $request->is_same_person);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
             return $this->responseSuccess();
@@ -133,7 +133,7 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $response = $this->iot->rrpc(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type);
+        $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type);
         if ($response['Success']) {
             Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
             return $this->responseSuccess();
@@ -159,7 +159,7 @@ class PushController extends ApiController
         $devices = Machine::pluck('device');
         foreach($devices as $device) {
             $machine = Machine::where('devices', $devices)->first();
-            $response = $this->iot->rrpc($sign, $machine->device);
+            $response = $this->iot->rrpcToWater($sign, $machine->device);
             if ($response['Success']) {
                 Log::info($sign.'--Device: '.$machine->device.' pushed success!');
             } else {
@@ -171,7 +171,7 @@ class PushController extends ApiController
     private function singlePush($sign, $device)
     {
         $machine = Machine::where('device', $device)->first();
-        $response = $this->iot->rrpc($sign, $machine->device);
+        $response = $this->iot->rrpcToWater($sign, $machine->device);
         if ($response['Success']) {
             Log::info($sign.'--Device: '.$machine->device.' pushed success!');
             return response()->json([

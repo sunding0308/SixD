@@ -77,13 +77,12 @@ class IotService
     }
 
     /**
-     * Send rrpc request
+     * Send rrpc request to water
      * @param $productKey
      * @param $deviceName
      */
-    public function rrpc($sign, $deviceName, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false, $redpacket_qr_code=null)
+    public function rrpcToWater($sign, $deviceName, $overage=[], $account_type=null, $is_same_person=true, $show_redpacket=false, $redpacket_qr_code=null)
     {
-        $request = new Iot\RRpcRequest();
         //Base64 String
         $messageContent = base64_encode(json_encode([
             'message' => $sign,
@@ -96,6 +95,13 @@ class IotService
                 'redpacket_qr_code' => $redpacket_qr_code,
             ]
         ]));
+
+        return $this->rrpc($deviceName, $messageContent);
+    }
+
+    private function rrpc($deviceName, $messageContent)
+    {
+        $request = new Iot\RRpcRequest();
         $request->setProductKey($this->productKey);
         $request->setDeviceName($deviceName);
         $request->setRequestBase64Byte($messageContent);
