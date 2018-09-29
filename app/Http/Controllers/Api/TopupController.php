@@ -34,6 +34,15 @@ class TopupController extends ApiController
         $content = json_decode($request->content);
         $machine = Machine::where('machine_id',$content->machine_id)->first();
 
+        $hot_water_overage = 0;
+        $cold_water_overage = 0;
+        $air_overage = 0;
+        $oxygen_overage = 0;
+        $humidity_add_overage = 0;
+        $humidity_minus_overage = 0;
+        $humidity_child_overage = 0;
+        $humidity_adult_overage = 0;
+
         $productArr = [
             Machine::CODE_HOT_WATER,
             Machine::CODE_COLD_WATER,

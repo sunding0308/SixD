@@ -112,6 +112,8 @@ class IotService
             $payload = json_decode(base64_decode($response->PayloadBase64Byte));
             return [
                 "Success" => $response->Success,
+                "status" => optional($payload)->status,
+                "message" => optional($payload)->message,
                 "data" => [
                     "device" => optional($payload)->device,
                     "type" => optional($payload)->type,
