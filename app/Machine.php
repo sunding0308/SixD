@@ -34,6 +34,7 @@ class Machine extends Model
     const SIGNAL_WATER_QUALITY_STATISTICS = 'water_quality_statistics';
     const SIGNAL_REDPACKET = 'redpacket';
     const SIGNAL_REDPACKET_RECEIVED = 'redpacket_received';
+    const SIGNAL_INSTALLATION = 'installation';
     const SIGNAL_ACCOUT_TYPE = 'account_type';
     const SIGNAL_APP_MENU_ANALYSIS = 'app_menu_analysis';
     const SIGNAL_API_ANALYSIS = 'api_analysis';

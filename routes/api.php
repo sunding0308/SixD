@@ -30,6 +30,7 @@ Route::group(['namespace'=>'Api'], function(){
     Route::get('/push_records_signal', 'PushController@pushRecordsSignal');
     Route::post('/push_redpacket_qr_code', 'PushController@pushRedpacketQrCodeSignal');
     Route::post('/push_redpacket_received_signal', 'PushController@pushRedpacketReceivedSignal');
+    Route::post('/push_installation_completed_signal', 'PushController@pushInstallationCompletedSignal');
     Route::get('/push_app_menu_analysis_signal', 'PushController@pushAppMenuAnalysisSignal');
     Route::get('/push_api_analysis_signal', 'PushController@pushApiAnalysisSignal');
 

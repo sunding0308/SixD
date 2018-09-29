@@ -93,6 +93,24 @@ class PushController extends ApiController
         return $this->pushSignal(Machine::SIGNAL_REDPACKET_RECEIVED, $machine->device);
     }
 
+    public function pushInstallationCompletedSignal(Request $request)
+    {
+        $machine = Machine::where('machine_id', $request->machine_id)->first();
+        $response = $this->iot->rrpcToWater(Machine::SIGNAL_INSTALLATION, $machine->device, [], $request->account_type);
+        if ($response['Success']) {
+            if (static::STATUS_SUCCESS == $response['status']) {
+                Log::info(Machine::SIGNAL_INSTALLATION.'--Device: '.$machine->device.' pushed success!');
+                return $this->responseSuccess();
+            } else {
+                Log::error(Machine::SIGNAL_INSTALLATION.'--Error: '.$response['message']);
+                return $this->responseErrorWithMessage($response['message']);
+            }
+        } else {
+            Log::error(Machine::SIGNAL_INSTALLATION.'--Device: '.$machine->device.' pushed fail!');
+            return $this->responseErrorWithMessage('推送安装人员类型到机器失败！');
+        }
+    }
+
     public function pushAppMenuAnalysisSignal(Request $request)
     {
         return $this->iot->rrpcToWater(Machine::SIGNAL_APP_MENU_ANALYSIS, $request->device);

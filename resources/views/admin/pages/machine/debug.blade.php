@@ -15,7 +15,7 @@
             <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">文件列表</strong></p>
         </div><!-- .col-* -->
 
-        <div class="col-md-12">
+        <div class="col-md-12" style="width:830">
 
             <div class="ibox">
 
@@ -26,11 +26,6 @@
                         <thead>
                             <tr>
                                 <th>文件名</th>
-                                <th style="width: 17%;"></th>
-                                <th style="width: 17%;"></th>
-                                <th style="width: 17%;"></th>
-                                <th style="width: 17%;"></th>
-                                <th style="width: 17%;"></th>
                                 <th>{{ __('admin/machine.actions') }}</th>
                             </tr>
                         </thead>
@@ -39,11 +34,6 @@
                             @foreach($files as $file)
                                 <tr>
                                     <td>{{ basename($file) }}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                     <td class="playlist-actions hp">
                                         <a href="{{ route('admin.machine.debug.download', [$machine->id, basename($file)]) }}" class="btn btn-normal btn-m">
                                             <i class="fa fa-download"></i>
