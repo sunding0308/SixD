@@ -161,6 +161,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
+        DubboPhp\Client\DubboPhpClientServiceProvider::class
+
     ],
 
     /*
@@ -211,6 +213,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'DubboPhpClient'=>DubboPhp\Client\Facades\DubboPhpClient::class,
+        'DubboPhpClientFactory'=>DubboPhp\Client\Facades\DubboPhpClientFactory::class,
 
     ],
 
