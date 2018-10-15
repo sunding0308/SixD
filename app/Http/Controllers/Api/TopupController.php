@@ -163,13 +163,13 @@ class TopupController extends ApiController
 
         $machine = Machine::where('device',$request->device)->first();
         //兑换结果
-        $exchangeStatus = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
+        $exchangeResult = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
             'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
         ]);
         //处理获取的json
-        $exchangeStatus = json_decode((string)$exchangeStatus->getBody());
+        $exchangeResult = json_decode((string)$exchangeResult->getBody());
 
-        if ($exchangeStatus->status == static::CODE_STATUS_SUCCESS) {
+        if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
         }
 
