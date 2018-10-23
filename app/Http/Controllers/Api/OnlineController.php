@@ -25,7 +25,6 @@ class OnlineController extends ApiController
         try {
             $validator = Validator::make($request->all(), [
                 'device' => 'required',
-                'type' => 'required',
                 'registration_id' => 'required',
             ]);
 
@@ -37,7 +36,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
-                    'type' => $request->type,
+                    'type' => '',
                     'machine_id' => '',
                     'registration_id' => $request->registration_id,
                     'status' => $request->hardware_status['machine_status'] ?: '',
@@ -189,6 +188,7 @@ class OnlineController extends ApiController
                 'room' => 'required',
                 'machine_name' => 'required',
                 'machine_model' => 'required',
+                'machine_type' => 'required',
                 'installation_date' => 'required',
                 'production_date' => 'required',
                 'qr_code' => 'required'
@@ -202,7 +202,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
-                    'type' => '',
+                    'type' => $request->machine_type,
                     'machine_id' => $request->machine_id,
                     'registration_id' => '',
                     'status' => '',
@@ -239,6 +239,7 @@ class OnlineController extends ApiController
                 ]);
             } else {
                 Machine::where('id',$machine->id)->update([
+                    'type' => $request->machine_type,
                     'machine_id' => $request->machine_id
                 ]);
             }
