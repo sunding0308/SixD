@@ -99,6 +99,19 @@ class IotService
         return $this->rrpc($deviceName, $messageContent);
     }
 
+    /**
+     * Send rrpc request to test
+     * @param $productKey
+     * @param $deviceName
+     */
+    public function rrpcToTest($deviceName, $data)
+    {
+        //Base64 String
+        $messageContent = base64_encode($data);
+
+        return $this->rrpc($deviceName, $messageContent);
+    }
+
     private function rrpc($deviceName, $messageContent)
     {
         $request = new Iot\RRpcRequest();

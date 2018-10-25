@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+Route::get('/send','SendDataController@send')->name('send');
+Route::post('/post_send','SendDataController@postSend')->name('post_send');
