@@ -6,9 +6,9 @@ use App\Machine;
 use App\Version;
 use App\Installation;
 use App\Sterilization;
-use GuzzleHttp\Client;
 use App\Services\IotService;
 use Illuminate\Http\Request;
+use App\Services\DubboProxyService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +18,7 @@ use App\Http\Resources\MachineInfo as MachineInfoResource;
 class OnlineController extends ApiController
 {
     //机器、用户排名信息
-    const RANK_URL = 'https://tminiapps.sixdrops.com/outer/api/machine/machineRank/findMachineRank.do';
+    const RANK_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineRankService';
 
     public function online(Request $request)
     {
@@ -115,24 +115,20 @@ class OnlineController extends ApiController
         }
     }
 
-    public function getUserRank(Request $request, Client $client)
+    public function getUserRank(Request $request)
     {
         $machine = Machine::where('device',$request->device)->first();
         if (!$machine || !$machine->machine_id) {
             return $this->responseErrorWithMessage('设备未安装');
         }
         //获取VIP码产品信息
-        $exchangeResult = $client->request('GET', self::RANK_URL, [
-            'query' => ['machineId' => $machine->machine_id]
+        $service = DubboProxyService::getService(self::RANK_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
         ]);
-        //处理获取的json
-        $exchangeResult = json_decode((string)$exchangeResult->getBody());
+        $exchangeResult = $service->findMachineRank($machine->machine_id);
 
-        if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
-            return $this->responseSuccessWithExtrasAndMessage(['data' => $exchangeResult->data], $exchangeResult->msg);
-        } else {
-            return $this->responseErrorWithMessage($exchangeResult->msg);
-        }
+        return $this->responseSuccessWithExtrasAndMessage(['data' => $exchangeResult]);
     }
 
     public function getMachineInfo(Request $request)
