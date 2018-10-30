@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Machine;
 use Carbon\Carbon;
 use App\PushRecord;
-use GuzzleHttp\Client;
 use App\Services\IotService;
 use Illuminate\Http\Request;
+use App\Services\DubboProxyService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
@@ -15,17 +15,15 @@ use App\Http\Controllers\Api\ApiController;
 class TopupController extends ApiController
 {
     //vip码产品信息
-    const VIP_CODE_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchange.do';
+    const VIP_CODE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMsaleUserAssembleService';
     //vip码兑换结果
-    const VIP_CODE_RESULT_URL = 'https://tminiapps.sixdrops.com/outer/api/msale/sixdropsVipCodeExchange/findVipCodeExchangeStatus.do';
+    const VIP_CODE_RESULT_URL = 'com.sixdrops.outer.machinecloud.service.OuterMsaleUserAssembleService';
 
     private $iot;
-    private $client;
     
-    public function __construct(IotService $iot, Client $client)
+    public function __construct(IotService $iot)
     {
         $this->iot = $iot;
-        $this->client = $client;
     }
 
     public function topup(Request $request)
@@ -133,16 +131,19 @@ class TopupController extends ApiController
         try {
             $machine = Machine::where('device',$request->device)->first();
             //获取VIP码产品信息
-            $exchangeResult = $this->client->request('GET', self::VIP_CODE_URL, [
-                'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code]
+            $service = DubboProxyService::getService(self::VIP_CODE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
-            //处理获取的json
-            $exchangeResult = json_decode((string)$exchangeResult->getBody());
+            $response = $service->findVipCodeExchange(
+                $machine->machine_id,
+                $request->vip_code
+            );
 
-            if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
-                return $this->responseSuccessWithExtrasAndMessage(['data' => $exchangeResult->data], $exchangeResult->msg);
-            } else {
-                return $this->responseErrorWithMessage($exchangeResult->msg);
+            if (isset($response['error'])) {
+                return $this->responseErrorWithMessage($response['error']);
+            }else {
+                return $this->responseSuccessWithExtrasAndMessage(['data' => $response]);
             }
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' get vip product error: '.$e->getMessage().' Line: '.$e->getLine());
@@ -163,17 +164,31 @@ class TopupController extends ApiController
 
         $machine = Machine::where('device',$request->device)->first();
         //兑换结果
-        $exchangeResult = $this->client->request('GET', self::VIP_CODE_RESULT_URL, [
-            'query' => ['machineId' => $machine->machine_id, 'vipCode' => $request->vip_code, 'exchangeStatus' => $request->exchange_status]
+        $service = DubboProxyService::getService(self::VIP_CODE_RESULT_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
         ]);
-        //处理获取的json
-        $exchangeResult = json_decode((string)$exchangeResult->getBody());
+        $response = $service->findVipCodeExchangeStatus(
+            $machine->machine_id,
+            $request->vip_code,
+            "$request->exchange_status"
+        );
 
-        if ($exchangeResult->status == static::CODE_STATUS_SUCCESS) {
+        if ($response == 0) {
             return $this->responseSuccess();
+        } else if ($response == 1) {
+            return $this->responseErrorWithMessage('该VIP码已被使用过');
+        } else if ($response == 2) {
+            return $this->responseErrorWithMessage('该VIP码已过期失效');
+        } else if ($response == 3) {
+            return $this->responseErrorWithMessage('该VIP码无效');
+        } else if ($response == 4) {
+            return $this->responseErrorWithMessage('该VIP不能在该酒店使用');
+        } else if ($response == 5) {
+            return $this->responseErrorWithMessage('机器不存在');
+        } else {
+            return $this->responseErrorWithMessage('兑换失败');
         }
-
-        return $this->responseErrorWithMessage($exchangeResult->msg);
     }
 
     public function resetOverage(Request $request)

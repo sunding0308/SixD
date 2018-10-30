@@ -5,40 +5,37 @@ namespace App\Http\Controllers\Api;
 use App\Machine;
 use Carbon\Carbon;
 use App\PushRecord;
-use GuzzleHttp\Client;
 use App\Services\IotService;
 use Illuminate\Http\Request;
+use App\Services\DubboProxyService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 
 class PushController extends ApiController
 {
-    const BASE_URL = 'https://tminiapps.sixdrops.com/outer';
     //紧急服务申请
-    const URGENT_SERVICE_URL = self::BASE_URL . '/api/machine/urgentServiceTicket/urgentServiceTicketApply.do';
+    const URGENT_SERVICE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //紧急服务完成
-    const URGENT_SERVICE_COMPLETE_URL = self::BASE_URL . '/api/machine/urgentServiceTicket/urgentServiceTicketComplete.do';
+    const URGENT_SERVICE_COMPLETE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //普通服务内容
-    const ORDINARY_SERVICE_URL = self::BASE_URL . '/api/machine/ordinaryServiceTicket/pushOrdinaryServiceContent.do';
+    const ORDINARY_SERVICE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //单项服务完成
-    const SINGLE_ORDINARY_SERVICE_COMPLETE_URL = self::BASE_URL . '/api/machine/ordinaryServiceTicket/getOrdinaryServiceTicket.do';
+    const SINGLE_ORDINARY_SERVICE_COMPLETE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //普通服务完成
-    const ALL_ORDINARY_SERVICE_COMPLETE_URL = self::BASE_URL . '/api/machine/ordinaryServiceTicket/getOrdinaryServiceTicketComplete.do';
+    const ALL_ORDINARY_SERVICE_COMPLETE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //维护申请
-    const MAINTENANCE__URL = self::BASE_URL . '/api/machine/maintenanceTicket/maintenanceTicketApply.do';
+    const MAINTENANCE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //维护完成
-    const MAINTENANCE_COMPLETE_URL = self::BASE_URL . '/api/machine/maintenanceTicket/getMaintenanceTicketComplete.do';
-    //水机使用状态
-    const MACHINE_USE_STATUS_URL = self::BASE_URL . '/api/msale/sixdropsVipCodeExchange/findRedPackageQRcode.do';
+    const MAINTENANCE_COMPLETE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
+    //获取红包二维码
+    const RED_PACKAGE_QR_CODE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMsaleUserAssembleService';
 
     private $iot;
-    private $client;
     
-    public function __construct(IotService $iot, Client $client)
+    public function __construct(IotService $iot)
     {
         $this->iot = $iot;
-        $this->client = $client;
     }
 
     /**
@@ -247,33 +244,37 @@ class PushController extends ApiController
         $machine = Machine::with('installation')->where('device',$request->device)->first();
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
             //紧急服务申请
-            $response = $this->client->request('POST', self::URGENT_SERVICE_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'hotelName' => $machine->installation->hotel_name,
-                    'hotelId' => $machine->installation->hotel_code,
-                    'hotelAddress' => $machine->installation->hotel_address,
-                    'roomNo' => $machine->installation->room,
-                    'serviceContent' => $request->service_content
-                ]
+            $service = DubboProxyService::getService(self::URGENT_SERVICE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->modifyUrgentServiceTicketApply(
+                $machine->machine_id,
+                $machine->installation->hotel_name,
+                $machine->installation->hotel_code,
+                $machine->installation->hotel_address,
+                $machine->installation->room,
+                $request->service_content
+            );
         } else {
             //紧急服务完成
-            $response = $this->client->request('POST', self::URGENT_SERVICE_COMPLETE_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'serviceContent' => $request->service_content,
-                    'maintenanceStatus' => $request->maintenance_status
-                ]
+            $service = DubboProxyService::getService(self::URGENT_SERVICE_COMPLETE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->saveUrgentServiceTicketComplete(
+                $machine->machine_id,
+                $request->service_content,
+                $request->maintenance_status
+            );
         }
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
 
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
+        if ($response == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
+        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            return $this->responseErrorWithMessage('机器不存在');
         } else {
-            return $this->responseErrorWithMessage($response->msg);
+            return $this->responseErrorWithMessage();
         }
     }
 
@@ -293,29 +294,33 @@ class PushController extends ApiController
         $machine = Machine::where('device',$request->device)->first();        
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
             //普通服务申请
-            $response = $this->client->request('POST', self::ORDINARY_SERVICE_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'serviceContent' => $request->service_content
-                ]
+            $service = DubboProxyService::getService(self::ORDINARY_SERVICE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->modifyOuterMachineMaintenanceApply(
+                $machine->machine_id,
+                $request->service_content
+            );
         } else {
             //普通服务完成
-            $response = $this->client->request('POST', self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'serviceContent' => $request->service_content,
-                    'maintenanceStatus' => static::CODE_STATUS_COMPLETE
-                ]
+            $service = DubboProxyService::getService(self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->saveOrdinaryServiceTicketComplete(
+                $machine->machine_id,
+                $request->service_content,
+                "$request->maintenance_status"
+            );
         }
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
 
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
+        if ($response == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
+        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            return $this->responseErrorWithMessage('机器不存在');
         } else {
-            return $this->responseErrorWithMessage($response->msg);
+            return $this->responseErrorWithMessage();
         }
     }
 
@@ -333,20 +338,22 @@ class PushController extends ApiController
         }
 
         $machine = Machine::where('device',$request->device)->first(); 
-        $response = $this->client->request('POST', self::SINGLE_ORDINARY_SERVICE_COMPLETE_URL, [
-            'form_params' => [
-                'machineId' => $machine->machine_id,
-                'stepName' => $request->step_name,
-                'processStatus' => $request->process_status
-            ]
+        $service = DubboProxyService::getService(self::SINGLE_ORDINARY_SERVICE_COMPLETE_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
         ]);
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
+        $response = $service->modifyOuterMachineMaintenanceStep(
+            $machine->machine_id,
+            $request->step_name,
+            "$request->process_status"
+        );
 
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
+        if ($response == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
+        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            return $this->responseErrorWithMessage('机器不存在');
         } else {
-            return $this->responseErrorWithMessage($response->msg);
+            return $this->responseErrorWithMessage();
         }
     }
 
@@ -366,29 +373,33 @@ class PushController extends ApiController
         $machine = Machine::where('device',$request->device)->first(); 
         if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
             //维护申请
-            $response = $this->client->request('POST', self::MAINTENANCE__URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'serviceContent' => $request->service_content
-                ]
+            $service = DubboProxyService::getService(self::MAINTENANCE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->modifyMaintenanceTicketApply(
+                $machine->machine_id,
+                $request->service_content
+            );
         } else {
             //维护完成
-            $response = $this->client->request('POST', self::MAINTENANCE_COMPLETE_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'serviceContent' => $request->service_content,
-                    'maintenanceStatus' => $request->maintenance_status
-                ]
+            $service = DubboProxyService::getService(self::MAINTENANCE_COMPLETE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
+            $response = $service->saveMaintenanceTicketComplete(
+                $machine->machine_id,
+                $request->service_content,
+                "$request->maintenance_status"
+            );
         }
-        //处理获取的json
-        $response = json_decode((string)$response->getBody());
 
-        if ($response->status == static::CODE_STATUS_SUCCESS) {
+        if ($response == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
+        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            return $this->responseErrorWithMessage('机器不存在');
         } else {
-            return $this->responseErrorWithMessage($response->msg);
+            return $this->responseErrorWithMessage();
         }
     }
 
@@ -403,20 +414,19 @@ class PushController extends ApiController
                 return $this->responseErrorWithMessage($validator->errors()->first());
             }
     
-            $machine = Machine::where('device',$request->device)->first(); 
-            $response = $this->client->request('POST', self::MACHINE_USE_STATUS_URL, [
-                'form_params' => [
-                    'machineId' => $machine->machine_id,
-                    'useStatus' => 1
-                ]
+            $machine = Machine::where('device',$request->device)->first();
+            $service = DubboProxyService::getService(self::RED_PACKAGE_QR_CODE_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
             ]);
-            //处理获取的json
-            $response = json_decode((string)$response->getBody());
-    
-            if ($response->status == static::CODE_STATUS_SUCCESS) {
+            $response = $service->findRedPackageQRcode($machine->machine_id,"1");
+
+            if ($response == static::CODE_STATUS_SUCCESS) {
                 return $this->responseSuccess();
+            } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+                return $this->responseErrorWithMessage('机器不存在');
             } else {
-                return $this->responseErrorWithMessage($response->msg);
+                return $this->responseErrorWithMessage();
             }
         }
 }

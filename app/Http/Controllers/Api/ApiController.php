@@ -14,8 +14,9 @@ class ApiController extends Controller
     const STATUS_ERROR = 'error';
     const STATUS_SUCCESS = 'success';
 
-    const CODE_STATUS_ERROR = 1;
-    const CODE_STATUS_SUCCESS = 0;
+    const CODE_STATUS_ERROR = 0;
+    const CODE_STATUS_SUCCESS = 1;
+    const CODE_STATUS_MACHINE_NOT_EXIST = 3;
 
     const CODE_STATUS_NOT_COMPLETE = 1;
     const CODE_STATUS_COMPLETE = 2;
