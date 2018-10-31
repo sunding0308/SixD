@@ -115,6 +115,9 @@ class OnlineController extends ApiController
         }
     }
 
+    /**
+     * 暂时保留，机器已不调此接口
+     */
     public function getUserRank(Request $request)
     {
         $machine = Machine::where('device',$request->device)->first();

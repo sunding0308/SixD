@@ -15,6 +15,7 @@ class MachineInfo extends JsonResource
     public function toArray($request)
     {
         return [
+            'machine_id' => $this->machine_id,
             'city' => getProvince(optional($this->installation)->hotel_address),
             'hotel_address' => optional($this->installation)->hotel_address,
             'machine_name' => optional($this->installation)->machine_name,
