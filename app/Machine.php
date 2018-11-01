@@ -17,6 +17,7 @@ class Machine extends Model
     const CODE_ADULT_CONSTANT_HUMIDITY = '007';
 
     //type
+    const TYPE_UNDEFINED = 0;
     const TYPE_WATER = 1;
     const TYPE_VENDING = 2;
     const TYPE_OXYGEN = 3;

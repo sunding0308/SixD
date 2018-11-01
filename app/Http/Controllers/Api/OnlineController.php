@@ -36,7 +36,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
-                    'type' => '',
+                    'type' => Machine::TYPE_UNDEFINED,
                     'machine_id' => '',
                     'registration_id' => $request->registration_id,
                     'status' => $request->hardware_status['machine_status'] ?: '',
