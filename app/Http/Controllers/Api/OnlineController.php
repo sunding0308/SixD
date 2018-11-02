@@ -265,8 +265,43 @@ class OnlineController extends ApiController
 
     public function register(Request $request, IotService $iot)
     {
-        $response = $iot->registDevice($request->device);
-        return $this->responseSuccessWithExtrasAndMessage($response);
+        try {
+            $machine = Machine::where('device',$request->device)->first();
+            if (!$machine) {
+                $machine = Machine::create([
+                    'device' => $request->device,
+                    'type' => Machine::TYPE_UNDEFINED,
+                    'machine_id' => $request->device,
+                    'registration_id' => $request->device,
+                    'status' => '',
+                    'g_status' => '',
+                    'wifi_status' => '',
+                    'bluetooth_status' => '',
+                    'hot_water_overage' => 0,
+                    'cold_water_overage' => 0,
+                    'oxygen_overage' => 0,
+                    'air_overage' => 0,
+                    'humidity_add_overage' => 0,
+                    'humidity_minus_overage' => 0,
+                    'humidity_child_overage' => 0,
+                    'humidity_adult_overage' => 0,
+                    'filter1_lifespan' => '',
+                    'filter2_lifespan' => '',
+                    'filter3_lifespan' => '',
+                    'temperature' => 0,
+                    'humidity' => 0,
+                    'pm2_5' => 0,
+                    'oxygen_concentration' => 0,
+                    'total_produce_water_time' => 0,
+                    'app_version' => '',
+                    'firmware_version' => ''
+                ]);
+            }
+            $response = $iot->registDevice($request->device);
+            return $this->responseSuccessWithExtrasAndMessage($response);
+        } catch (\Exception $e) {
+            Log::error('Device '.$request->device.' register error: '.$e->getMessage().' Line: '.$e->getLine());
+        }
     }
 
     public function logfile(Request $request)
