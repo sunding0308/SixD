@@ -17,7 +17,6 @@ class Machine extends Model
     const CODE_ADULT_CONSTANT_HUMIDITY = '007';
 
     //type
-    const TYPE_UNDEFINED = 0;
     const TYPE_WATER = 1;
     const TYPE_VENDING = 2;
     const TYPE_OXYGEN = 3;
@@ -96,6 +95,11 @@ class Machine extends Model
     public function alarm()
     {
         return $this->hasOne(Alarm::class);
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(VendingMachineStock::class);
     }
 
     public function hasAlarms()

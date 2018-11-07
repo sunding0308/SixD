@@ -7,6 +7,7 @@ use App\Version;
 use App\Installation;
 use App\Sterilization;
 use App\Services\IotService;
+use App\VendingMachineStock;
 use Illuminate\Http\Request;
 use App\Services\DubboProxyService;
 use Illuminate\Support\Facades\Log;
@@ -33,70 +34,33 @@ class OnlineController extends ApiController
             }
 
             $machine = Machine::where('device',$request->device)->first();
-            if (!$machine) {
-                $machine = Machine::create([
-                    'device' => $request->device,
-                    'type' => Machine::TYPE_UNDEFINED,
-                    'machine_id' => '',
-                    'registration_id' => $request->registration_id,
-                    'status' => $request->hardware_status['machine_status'] ?: '',
-                    'g_status' => $request->hardware_status['g_status'] ?: '',
-                    'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
-                    'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
-                    'hot_water_overage' => $request->overage['hot_water_overage'] ?? 0,
-                    'cold_water_overage' => $request->overage['cold_water_overage'] ?? 0,
-                    'oxygen_overage' => $request->overage['oxygen_overage'] ?? 0,
-                    'air_overage' => $request->overage['air_overage'] ?? 0,
-                    'humidity_add_overage' => $request->overage['humidity_add_overage'] ?? 0,
-                    'humidity_minus_overage' => $request->overage['humidity_minus_overage'] ?? 0,
-                    'humidity_child_overage' => $request->overage['humidity_child_overage'] ?? 0,
-                    'humidity_adult_overage' => $request->overage['humidity_adult_overage'] ?? 0,
-                    'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
-                    'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
-                    'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
-                    'temperature' => $request->environment['temperature'] ?? 0,
-                    'humidity' => $request->environment['humidity'] ?? 0,
-                    'pm2_5' => $request->environment['pm2_5'] ?? 0,
-                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
-                    'app_version' => $request->app_version ?? '',
-                    'firmware_version' => $request->firmware_version ?? ''
-                ]);
-                Sterilization::create([
-                    'machine_id' => $machine->id,
-                    'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?? 0,
-                    'uv2' => $request->hardware_status['sterilization_time']['uv2'] ?? 0,
-                    'uv3' => $request->hardware_status['sterilization_time']['uv3'] ?? 0,
-                    'uv4' => $request->hardware_status['sterilization_time']['uv4'] ?? 0,
-                    'uv5' => $request->hardware_status['sterilization_time']['uv5'] ?? 0,
-                    'uv6' => $request->hardware_status['sterilization_time']['uv6'] ?? 0
-                ]);
-            } else {
-                Machine::where('id',$machine->id)->update([
-                    'registration_id' => $request->registration_id,
-                    'status' => $request->hardware_status['machine_status'] ?: '',
-                    'g_status' => $request->hardware_status['g_status'] ?: '',
-                    'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
-                    'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
-                    'hot_water_overage' => $request->overage['hot_water_overage'] ?? 0,
-                    'cold_water_overage' => $request->overage['cold_water_overage'] ?? 0,
-                    'oxygen_overage' => $request->overage['oxygen_overage'] ?? 0,
-                    'air_overage' => $request->overage['air_overage'] ?? 0,
-                    'humidity_add_overage' => $request->overage['humidity_add_overage'] ?? 0,
-                    'humidity_minus_overage' => $request->overage['humidity_minus_overage'] ?? 0,
-                    'humidity_child_overage' => $request->overage['humidity_child_overage'] ?? 0,
-                    'humidity_adult_overage' => $request->overage['humidity_adult_overage'] ?? 0,
-                    'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
-                    'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
-                    'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
-                    'temperature' => $request->environment['temperature'] ?? 0,
-                    'humidity' => $request->environment['humidity'] ?? 0,
-                    'pm2_5' => $request->environment['pm2_5'] ?? 0,
-                    'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
-                    'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
-                    'app_version' => $request->app_version ?? '',
-                    'firmware_version' => $request->firmware_version ?? ''
-                ]);
+            Machine::where('id',$machine->id)->update([
+                'registration_id' => $request->registration_id,
+                'status' => $request->hardware_status['machine_status'] ?: '',
+                'g_status' => $request->hardware_status['g_status'] ?: '',
+                'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
+                'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
+                'hot_water_overage' => $request->overage['hot_water_overage'] ?? 0,
+                'cold_water_overage' => $request->overage['cold_water_overage'] ?? 0,
+                'oxygen_overage' => $request->overage['oxygen_overage'] ?? 0,
+                'air_overage' => $request->overage['air_overage'] ?? 0,
+                'humidity_add_overage' => $request->overage['humidity_add_overage'] ?? 0,
+                'humidity_minus_overage' => $request->overage['humidity_minus_overage'] ?? 0,
+                'humidity_child_overage' => $request->overage['humidity_child_overage'] ?? 0,
+                'humidity_adult_overage' => $request->overage['humidity_adult_overage'] ?? 0,
+                'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
+                'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
+                'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
+                'temperature' => $request->environment['temperature'] ?? 0,
+                'humidity' => $request->environment['humidity'] ?? 0,
+                'pm2_5' => $request->environment['pm2_5'] ?? 0,
+                'oxygen_concentration' => $request->environment['oxygen_concentration'] ?? 0,
+                'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?? 0,
+                'app_version' => $request->app_version ?? '',
+                'firmware_version' => $request->firmware_version ?? ''
+            ]);
+
+            if ($machine->type == Machine::TYPE_WATER) {
                 Sterilization::where('machine_id',$machine->id)->update([
                     'machine_id' => $machine->id,
                     'uv1' => $request->hardware_status['sterilization_time']['uv1'] ?? 0,
@@ -270,7 +234,7 @@ class OnlineController extends ApiController
             if (!$machine) {
                 $machine = Machine::create([
                     'device' => $request->device,
-                    'type' => Machine::TYPE_UNDEFINED,
+                    'type' => $request->type,
                     'machine_id' => '',
                     'registration_id' => $request->device,
                     'status' => '',
@@ -296,6 +260,23 @@ class OnlineController extends ApiController
                     'app_version' => '',
                     'firmware_version' => ''
                 ]);
+                if ($machine->type == Machine::TYPE_WATER) {
+                    Sterilization::create([
+                        'machine_id' => $machine->id,
+                        'uv1' => 0,
+                        'uv2' => 0,
+                        'uv3' => 0,
+                        'uv4' => 0,
+                        'uv5' => 0,
+                        'uv6' => 0
+                    ]);
+                } else if ($machine->type == Machine::TYPE_VENDING) {
+                    foreach(config('vending') as $val) {
+                        array_push($val, $machine->id);
+                        array_push($val, 0);
+                        $this->createStock($val);
+                    }
+                }
             }
             $response = $iot->registDevice($request->device);
             return $this->responseSuccessWithExtrasAndMessage($response);
@@ -350,5 +331,16 @@ class OnlineController extends ApiController
     public function versionDownload(Request $request)
     {
         return Storage::download($request->url);
+    }
+
+    private function createStock($val)
+    {
+        VendingMachineStock::create([
+            'position' => $val[0],
+            'name' => $val[1],
+            'unit' => $val[2],
+            'machine_id' => $val[3],
+            'quantity' => $val[4]
+        ]);
     }
 }
