@@ -30,6 +30,8 @@ class PushController extends ApiController
     const MAINTENANCE_COMPLETE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
     //获取红包二维码
     const RED_PACKAGE_QR_CODE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMsaleUserAssembleService';
+    //更换备用箱
+    const REPLACE_CONTAINER_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
 
     private $iot;
     
@@ -403,30 +405,94 @@ class PushController extends ApiController
         }
     }
 
-        //水机使用状态
-        public function pushUseStatusToDataCloud(Request $request)
-        {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines'
-            ]);
-    
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-    
-            $machine = Machine::where('device',$request->device)->first();
-            $service = DubboProxyService::getService(self::RED_PACKAGE_QR_CODE_URL, [
-                'registry' => config('dubbo.registry'),
-                'version' => config('dubbo.version')
-            ]);
-            $response = $service->findRedPackageQRcode($machine->machine_id,"1");
+    //水机使用状态
+    public function pushUseStatusToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
 
-            if ($response == static::CODE_STATUS_SUCCESS) {
-                return $this->responseSuccess();
-            } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
-                return $this->responseErrorWithMessage('机器不存在');
-            } else {
-                return $this->responseErrorWithMessage();
-            }
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
         }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::RED_PACKAGE_QR_CODE_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        $response = $service->findRedPackageQRcode($machine->machine_id,"1");
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            return $this->responseErrorWithMessage('机器不存在');
+        } else {
+            return $this->responseErrorWithMessage();
+        }
+    }
+
+    //更换备用箱申请
+    public function pushReplaceContainerToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'position' => 'required',
+            'service_content' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::REPLACE_CONTAINER_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        $response = $service->applyReplaceContainerService(
+            $machine->machine_id,
+            $request->position,
+            $request->service_content
+        );
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage();
+        }
+    }
+
+    //更换备用箱完成
+    public function pushReplaceContainerCompleteToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'complete_status' => 'required',
+            'position_up' => 'required',
+            'position_down' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::REPLACE_CONTAINER_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        $response = $service->completeReplaceContainerService(
+            $machine->machine_id,
+            $request->complete_status,
+            $request->position_up,
+            $request->position_down
+        );
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage();
+        }
+    }
 }
