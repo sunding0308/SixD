@@ -44,11 +44,13 @@ Route::group(['namespace'=>'Api'], function(){
     Route::post('/push_use_status', 'PushController@pushUseStatusToDataCloud');
     Route::post('/push_replace_container', 'PushController@pushReplaceContainerToDataCloud');
     Route::post('/push_replace_container_complete', 'PushController@pushReplaceContainerCompleteToDataCloud');
+    Route::post('/push_replenishment', 'PushController@pushReplenishmentToDataCloud');
+    Route::post('/push_replenishment_complete', 'PushController@pushReplenishmentCompleteToDataCloud');
 
     /**
      * apis for andriod and data cloud
      */
-    Route::group(['middleware'=>'api_auth'], function(){
+    // Route::group(['middleware'=>'api_auth'], function(){
         // Route::get('/check_status', 'OnlineController@checkStatus');
         Route::post('/machine/register', 'OnlineController@register');
         // Route::post('/machine/installation', 'OnlineController@installation');
@@ -76,6 +78,6 @@ Route::group(['namespace'=>'Api'], function(){
         Route::get('/check_update', 'OnlineController@getOta');
         Route::post('/vending/stock_in', 'StockController@stockIn');
         Route::post('/vending/stock_out', 'StockController@stockOut');
-    });
+    // });
     Route::get('/version/download', 'OnlineController@versionDownload');
 });
