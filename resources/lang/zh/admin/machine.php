@@ -31,6 +31,7 @@ return [
     '2g4g_status' => '2G/4G',
     'wifi_status' => 'Wi-Fi',
     'overage' => '各功能余量',
+    'stock' => '库存',
     'sterilizations' => '杀菌灯开启总时长',
     'filter1_lifespan' => '滤芯1寿命',
     'filter2_lifespan' => '滤芯2寿命',

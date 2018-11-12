@@ -13,9 +13,13 @@
                 <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
                 <div class="title">{{ __('admin/machine.detail') }}</div>
             </div>
+            @if($machine->hasAlarms())
             <div class="alert alert-detail alert-danger" role="alert">
-                八马铁观音缺货
+                @if($machine->alarm->malfunction_code)
+                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="javacript:;" id="malfunction_code">「故障代码表」</a>
+                @endif
             </div>
+            @endif
             <form method="get" class="form-horizontal">
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
@@ -24,21 +28,21 @@
                     <div class="ibox-content">
                         <div class="form-group row">
                             <label class="col-md-3 control-label">{{ __('admin/machine.firmware_version') }}</label>
-                            <div class="col-md-9 control-label t-a-l">-</div>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->firmware_version ?: '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
-                            <div class="col-md-9 control-label t-a-l">当前正处于正常状态</div>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->status ?: '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>
-                            <div class="col-md-9 control-label t-a-l">信号强</div>
-                            <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}</label>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->g_status ?: '-' }}</div>
+                            <label class="col-md-3 control-label">{{ __('admin/machine.stock') }}</label>
                             <div class="col-md-9 control-label t-a-l">
-                                海飞丝洗发精A：2 包
-                                海飞丝洗发精B：2 包
-                                舒肤佳沐浴露：2 包
-                                六神沐浴露：1 包
-                                拿铁咖啡：2 包
-                                雀巢咖啡：2 包
-                                大益普洱茶：2 包
-                                八马铁观音：0 包
+                                海飞丝洗发精A：{{ $machine->stocks[0]->quantity }} 包<br>
+                                海飞丝洗发精B：{{ $machine->stocks[1]->quantity }} 包<br>
+                                舒肤佳沐浴露：{{ $machine->stocks[2]->quantity }} 包<br>
+                                六神沐浴露：{{ $machine->stocks[3]->quantity }} 包<br>
+                                拿铁咖啡：{{ $machine->stocks[4]->quantity }} 包<br>
+                                雀巢咖啡：{{ $machine->stocks[5]->quantity }} 包<br>
+                                大益普洱茶：{{ $machine->stocks[6]->quantity }} 包<br>
+                                八马铁观音：{{ $machine->stocks[7]->quantity }} 包<br>
                             </div>
                         </div>
                     </div>
@@ -47,5 +51,24 @@
         </div>
         </div>
     </div>
+    <div class="show">
+        <div class="overlay"></div>
+        <div class="img-show">
+            <span><i class="fa fa-close"></i></span>
+            <img src="/images/superadmin/code.jpeg">
+        </div>
+    </div>
 </div>
 @stop
+
+@push('js')
+<script>
+    $("#malfunction_code").click(function () {
+        $(".show").fadeIn();
+    });
+    
+    $("span, .overlay").click(function () {
+        $(".show").fadeOut();
+    });
+</script>
+@endpush

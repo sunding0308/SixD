@@ -23,7 +23,7 @@ class MachineController extends Controller
      */
     public function index(Request $request)
     {
-        $machines = Machine::where('type', $request->type)->paginate(10);
+        $machines = Machine::where('type', $request->type)->with('stocks')->paginate(10);
         if (Machine::TYPE_WATER == $request->type) {
             return view('admin.pages.machine.water.index', compact('machines'));
         } else if (Machine::TYPE_VENDING == $request->type) {
@@ -39,8 +39,8 @@ class MachineController extends Controller
 
     public function show(Request $request, Machine $machine)
     {
-        if (808 == $request->sign) {
-            return view('admin.pages.machine.vending.show');
+        if (Machine::TYPE_VENDING == $request->type) {
+            return view('admin.pages.machine.vending.show', compact('machine'));
         }
         if (809 == $request->sign) {
             return view('admin.pages.machine.relenishment.show');

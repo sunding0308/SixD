@@ -40,36 +40,38 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>35 931406 923302 3</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>2</td>
-                                <td>0</td>
-                                <td>
-                                    <i class="fa fa-exclamation-triangle fa-2x"></i>
-                                </td>
-                                <td class="playlist-actions hp">
-                                    <a href="{{ route('admin.machine.show', [1, 'sign' => 808]) }}" class="btn btn-normal btn-m" title="详情">
-                                        <i class="fa fa-info"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-normal btn-m" title="调试信息">
-                                        <i class="fa fa-book"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            @foreach($machines as $machine)
+                                <tr>
+                                    <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->device }}</td>
+                                    <td>{{ $machine->stocks[0]->quantity }}</td>
+                                    <td>{{ $machine->stocks[1]->quantity }}</td>
+                                    <td>{{ $machine->stocks[2]->quantity }}</td>
+                                    <td>{{ $machine->stocks[3]->quantity }}</td>
+                                    <td>{{ $machine->stocks[4]->quantity }}</td>
+                                    <td>{{ $machine->stocks[5]->quantity }}</td>
+                                    <td>{{ $machine->stocks[6]->quantity }}</td>
+                                    <td>{{ $machine->stocks[7]->quantity }}</td>
+                                    <td>
+                                        @if($machine->hasAlarms())
+                                            <i class="fa fa-exclamation-triangle fa-2x"></i>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="playlist-actions hp">
+                                        <a href="{{ route('admin.machine.show', ['machine' => $machine->id, 'type' => \App\Machine::TYPE_VENDING]) }}" class="btn btn-normal btn-m" title="详情">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
 
                     </table>
 
                     <div class="row">
                         <div class="col-5">
-                            共1个设备，当前1-1
-                            {{-- <div class="dataTables_info">
+                            <div class="dataTables_info">
                                 @if ($machines->count()>0)
                                 {{
                                         __(
@@ -84,14 +86,14 @@
                                 @else
                                     {{ __('admin/machine.no_machines') }}
                                 @endif
-                            </div> --}}
+                            </div>
                         </div>
 
-                        {{-- <div class="col-7">
+                        <div class="col-7">
                             <div class="dataTables_paginate paging_simple_numbers">
                                 {{ $machines->appends(request()->input())->links() }}
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
 
                 </div><!-- .ibox-content -->
