@@ -28,16 +28,16 @@
                     <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
                 @endif
                 @if($machine->alarm->water_shortage_alarm)
-                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                    <strong>•</strong> {{ $machine->alarm->water_shortage_alarm }}</br>
                 @endif
                 @if($machine->alarm->filter_anti_counterfeiting_alarm)
-                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                    <strong>•</strong> {{ $machine->alarm->filter_anti_counterfeiting_alarm }}</br>
                 @endif
                 @if($machine->alarm->slave_mobile_alarm)
-                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                    <strong>•</strong> {{ $machine->alarm->slave_mobile_alarm }}</br>
                 @endif
                 @if($machine->alarm->dehumidification_tank_full_water_alarm)
-                    <strong>•</strong> {{ $machine->alarm->filter_alarm }}</br>
+                    <strong>•</strong> {{ $machine->alarm->dehumidification_tank_full_water_alarm }}</br>
                 @endif
                 @if($machine->alarm->malfunction_code)
                     <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="javacript:;" id="malfunction_code">「故障代码表」</a>
