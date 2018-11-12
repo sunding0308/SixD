@@ -59,6 +59,9 @@
                                         @endif
                                     </td>
                                     <td class="playlist-actions hp">
+                                        @if(!$machine->machine_id)
+                                        未安装
+                                        @else
                                         <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->device }}')">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
                                         </a>
@@ -71,6 +74,7 @@
                                         <a href="{{ route('admin.machine.clean_overage', $machine->id) }}" class="btn btn-normal btn-m" title="清除余量">
                                             <i class="fa fa-eraser"></i>
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
