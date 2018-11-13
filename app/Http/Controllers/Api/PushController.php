@@ -268,8 +268,8 @@ class PushController extends ApiController
             ]);
             $response = $service->saveUrgentServiceTicketComplete(
                 $machine->machine_id,
-                $request->service_content,
-                $request->maintenance_status
+                "$request->service_content",
+                "$request->maintenance_status"
             );
         }
 
