@@ -46,6 +46,7 @@ Route::group(['namespace'=>'Api'], function(){
     Route::post('/push_replace_container_complete', 'PushController@pushReplaceContainerCompleteToDataCloud');
     Route::post('/push_replenishment', 'PushController@pushReplenishmentToDataCloud');
     Route::post('/push_replenishment_complete', 'PushController@pushReplenishmentCompleteToDataCloud');
+    Route::post('/push_vending_add_stock', 'PushController@pushVendingAddStockToDataCloud');
 
     /**
      * apis for andriod and data cloud

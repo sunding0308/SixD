@@ -32,6 +32,8 @@ class PushController extends ApiController
     const RED_PACKAGE_QR_CODE_URL = 'com.sixdrops.outer.machinecloud.service.OuterMsaleUserAssembleService';
     //更换备用箱
     const REPLACE_CONTAINER_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineMaintenanceApplyService';
+    //补仓
+    const REPLENISHMENT_URL = 'com.sixdrops.outer.machinecloud.service.OuterMachineOssService';
 
     private $iot;
     
@@ -470,7 +472,9 @@ class PushController extends ApiController
             'device' => 'required|exists:machines',
             'complete_status' => 'required',
             'position_up' => 'required',
-            'position_down' => 'required'
+            'serial_up' => 'required',
+            'position_down' => 'required',
+            'serial_down' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -486,7 +490,9 @@ class PushController extends ApiController
             $machine->machine_id,
             $request->complete_status,
             $request->position_up,
-            $request->position_down
+            $request->serial_up,
+            $request->position_down,
+            $request->serial_down
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
@@ -495,4 +501,99 @@ class PushController extends ApiController
             return $this->responseErrorWithMessage();
         }
     }
+
+    //发送补仓申请
+    public function pushReplenishmentToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'position' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::REPLENISHMENT_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        $response = $service->saveOuterMachineOssApply(
+            $machine->machine_id,
+            $request->position
+        );
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage();
+        }
+    }
+
+    //检测补货完成
+    public function pushReplenishmentCompleteToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'position' => 'required',
+            'serial' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::REPLENISHMENT_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        $response = $service->saveOuterMachineOssComplete(
+            $machine->machine_id,
+            $request->position,
+            $request->serial
+        );
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            return $this->responseSuccess();
+        } else {
+            return $this->responseErrorWithMessage();
+        }
+    }
+
+        //微售卖机加库存
+        public function pushVendingAddStockToDataCloud(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'position' => 'required',
+                'container_id' => 'required',
+                'container_position' => 'required',
+                'serial' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+    
+            $machine = Machine::where('device',$request->device)->first();
+            $service = DubboProxyService::getService(self::REPLENISHMENT_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
+            ]);
+            $response = $service->saveMachinePosition(
+                $machine->machine_id,
+                $request->position,
+                $request->container_id,
+                $request->container_position,
+                $request->serial
+            );
+    
+            if ($response == static::CODE_STATUS_SUCCESS) {
+                return $this->responseSuccess();
+            } else {
+                return $this->responseErrorWithMessage();
+            }
+        }
 }
