@@ -473,8 +473,7 @@ class PushController extends ApiController
             'complete_status' => 'required',
             'position_up' => 'required',
             'serial_up' => 'required',
-            'position_down' => 'required',
-            'serial_down' => 'required'
+            'position_down' => 'required'
         ]);
 
         if ($validator->fails()) {
