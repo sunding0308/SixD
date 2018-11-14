@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Machine;
 use App\Version;
-use App\Installation;
 use App\Sterilization;
 use App\Services\IotService;
 use App\VendingMachineStock;
@@ -110,121 +109,6 @@ class OnlineController extends ApiController
 
         $machine = Machine::where('device',$request->device)->first();
         return new MachineInfoResource($machine);
-    }
-
-    public function checkReserve(Request $request)
-    {
-        return $this->responseSuccessWithMessage('可购买');
-    }
-
-    public function checkStatus(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-
-            $machine = Machine::where('device',$request->device)->first();
-            if (!$machine) {
-                return $this->responseErrorWithMessage('非正常状态');
-            }
-
-            return $this->responseSuccessWithMessage('在线且数据正常');
-        } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' check status error: '.$e->getMessage().' Line: '.$e->getLine());
-        }
-    }
-
-    public function installation(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required',
-                'machine_id' => 'required',
-                'hotel_name' => 'required',
-                'hotel_code' => 'required',
-                'hotel_address' => 'required',
-                'room' => 'required',
-                'machine_name' => 'required',
-                'machine_model' => 'required',
-                'machine_type' => 'required',
-                'installation_date' => 'required',
-                'production_date' => 'required',
-                'qr_code' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-
-            $machine = Machine::where('device',$request->device)->first();
-            if (!$machine) {
-                $machine = Machine::create([
-                    'device' => $request->device,
-                    'type' => $request->machine_type,
-                    'machine_id' => $request->machine_id,
-                    'registration_id' => '',
-                    'status' => '',
-                    'g_status' => '',
-                    'wifi_status' => '',
-                    'bluetooth_status' => '',
-                    'hot_water_overage' => 0,
-                    'cold_water_overage' => 0,
-                    'oxygen_overage' => 0,
-                    'air_overage' => 0,
-                    'humidity_add_overage' => 0,
-                    'humidity_minus_overage' => 0,
-                    'humidity_child_overage' => 0,
-                    'humidity_adult_overage' => 0,
-                    'filter1_lifespan' => '',
-                    'filter2_lifespan' => '',
-                    'filter3_lifespan' => '',
-                    'temperature' => 0,
-                    'humidity' => 0,
-                    'pm2_5' => 0,
-                    'oxygen_concentration' => 0,
-                    'total_produce_water_time' => 0,
-                    'app_version' => '',
-                    'firmware_version' => ''
-                ]);
-                Sterilization::create([
-                    'machine_id' => $machine->id,
-                    'uv1' => 0,
-                    'uv2' => 0,
-                    'uv3' => 0,
-                    'uv4' => 0,
-                    'uv5' => 0,
-                    'uv6' => 0
-                ]);
-            } else {
-                Machine::where('id',$machine->id)->update([
-                    'type' => $request->machine_type,
-                    'machine_id' => $request->machine_id
-                ]);
-            }
-            Installation::updateOrCreate(
-                ['machine_id' => $machine->id],
-                [
-                    'hotel_name' => $request->hotel_name,
-                    'hotel_code' => $request->hotel_code,
-                    'hotel_address' => $request->hotel_address,
-                    'room' => $request->room,
-                    'machine_name' => $request->machine_name,
-                    'machine_model' => $request->machine_model,
-                    'installation_date' => $request->installation_date,
-                    'production_date' => $request->production_date,
-                    'qr_code' => $request->qr_code,
-                ]
-            );
-            Log::info('Device '.$request->device.' update installation success!');
-            return $this->responseSuccess();
-        } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' update installation error: '.$e->getMessage().' Line: '.$e->getLine());
-        }
     }
 
     public function register(Request $request, IotService $iot)

@@ -70,48 +70,6 @@ class PushController extends ApiController
         return $this->pushSignal(Machine::SIGNAL_WATER_QUALITY_STATISTICS, $request->device);
     }
 
-    public function pushRedpacketQrCodeSignal(Request $request)
-    {
-        $machine = Machine::where('machine_id', $request->machine_id)->first();
-        $response = $this->iot->rrpcToWater(Machine::SIGNAL_REDPACKET, $machine->device, [], null, true, false, $request->redpacket_qr_code);
-        if ($response['Success']) {
-            if (static::STATUS_SUCCESS == $response['status']) {
-                Log::info(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed success!');
-                return $this->responseSuccess();
-            } else {
-                Log::error(Machine::SIGNAL_REDPACKET.'--Error: '.$response['message']);
-                return $this->responseErrorWithMessage($response['message']);
-            }
-        } else {
-            Log::error(Machine::SIGNAL_REDPACKET.'--Device: '.$machine->device.' pushed fail!');
-            return $this->responseErrorWithMessage('推送红包二维码到机器失败！');
-        }
-    }
-
-    public function pushRedpacketReceivedSignal(Request $request)
-    {
-        $machine = Machine::where('machine_id', $request->machine_id)->first();
-        return $this->pushSignal(Machine::SIGNAL_REDPACKET_RECEIVED, $machine->device);
-    }
-
-    public function pushInstallationCompletedSignal(Request $request)
-    {
-        $machine = Machine::where('machine_id', $request->machine_id)->first();
-        $response = $this->iot->rrpcToWater(Machine::SIGNAL_INSTALLATION, $machine->device, [], $request->account_type);
-        if ($response['Success']) {
-            if (static::STATUS_SUCCESS == $response['status']) {
-                Log::info(Machine::SIGNAL_INSTALLATION.'--Device: '.$machine->device.' pushed success!');
-                return $this->responseSuccess();
-            } else {
-                Log::error(Machine::SIGNAL_INSTALLATION.'--Error: '.$response['message']);
-                return $this->responseErrorWithMessage($response['message']);
-            }
-        } else {
-            Log::error(Machine::SIGNAL_INSTALLATION.'--Device: '.$machine->device.' pushed fail!');
-            return $this->responseErrorWithMessage('推送安装人员类型到机器失败！');
-        }
-    }
-
     public function pushAppMenuAnalysisSignal(Request $request)
     {
         return $this->iot->rrpcToWater(Machine::SIGNAL_APP_MENU_ANALYSIS, $request->device);
@@ -120,61 +78,6 @@ class PushController extends ApiController
     public function pushApiAnalysisSignal(Request $request)
     {
         return $this->iot->rrpcToWater(Machine::SIGNAL_API_ANALYSIS, $request->device);
-    }
-
-    public function pushUrgentAccountType(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'machine_id' => 'required|exists:machines',
-            'account_type' => 'required',
-            'is_same_person' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type, $request->is_same_person);
-        if ($response['Success']) {
-            if (static::STATUS_SUCCESS == $response['status']) {
-                Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
-                return $this->responseSuccess();
-            } else {
-                Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Error: '.$response['message']);
-                return $this->responseErrorWithMessage($response['message']);
-            }
-        } else {
-            Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
-            return $this->responseErrorWithMessage('推送紧急账户类型到机器失败！');
-        }
-    }
-
-    public function pushAccountType(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'machine_id' => 'required|exists:machines',
-            'account_type' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $machine = Machine::where('machine_id',$request->machine_id)->first();
-        $response = $this->iot->rrpcToWater(Machine::SIGNAL_ACCOUT_TYPE, $machine->device, [], $request->account_type);
-        if ($response['Success']) {
-            if (static::STATUS_SUCCESS == $response['status']) {
-                Log::info(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed success!');
-                return $this->responseSuccess();
-            } else {
-                Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Error: '.$response['message']);
-                return $this->responseErrorWithMessage($response['message']);
-            }
-        } else {
-            Log::error(Machine::SIGNAL_ACCOUT_TYPE.'--Device: '.$machine->device.' pushed fail!');
-            return $this->responseErrorWithMessage('推送账户类型到机器失败！');
-        }
     }
 
     private function pushSignal($sign, $device)

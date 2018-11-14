@@ -6,16 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Machine extends Model
 {
-    //product code
-    const CODE_HOT_WATER = '001';
-    const CODE_COLD_WATER = '002';
-    const CODE_AIR = '003';
-    const CODE_OXYGEN = '008';
-    const CODE_HUMIDIFICATION = '005';
-    const CODE_DEHUMIDIFICATION = '004';
-    const CODE_CHILD_CONSTANT_HUMIDITY = '006';
-    const CODE_ADULT_CONSTANT_HUMIDITY = '007';
-
     //type
     const TYPE_WATER = 1;
     const TYPE_VENDING = 2;
@@ -26,18 +16,11 @@ class Machine extends Model
     const TYPE_RELENISHMENT = 8;
 
     //signal
-    const SIGNAL_TOPUP = 'topup';
-    const SIGNAL_VIP_TOPUP = 'vip_topup';
-    const SIGNAL_RESET = 'reset';
     const SIGNAL_OVERAGE = 'overage';
     const SIGNAL_HARDWARE_STATUS = 'hardware_status';
     const SIGNAL_RECORDS = 'records';
     const SIGNAL_ENVIROMENT = 'environment';
     const SIGNAL_WATER_QUALITY_STATISTICS = 'water_quality_statistics';
-    const SIGNAL_REDPACKET = 'redpacket';
-    const SIGNAL_REDPACKET_RECEIVED = 'redpacket_received';
-    const SIGNAL_INSTALLATION = 'installation';
-    const SIGNAL_ACCOUT_TYPE = 'account_type';
     const SIGNAL_APP_MENU_ANALYSIS = 'app_menu_analysis';
     const SIGNAL_API_ANALYSIS = 'api_analysis';
 
