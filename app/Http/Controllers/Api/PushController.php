@@ -253,12 +253,12 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->modifyUrgentServiceTicketApply(
-                $machine->machine_id,
-                $machine->installation->hotel_name,
-                $machine->installation->hotel_code,
-                $machine->installation->hotel_address,
-                $machine->installation->room,
-                $request->service_content
+                (string)$machine->machine_id,
+                (string)$machine->installation->hotel_name,
+                (string)$machine->installation->hotel_code,
+                (string)$machine->installation->hotel_address,
+                (string)$machine->installation->room,
+                (string)$request->service_content
             );
         } else {
             //紧急服务完成
@@ -267,9 +267,9 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->saveUrgentServiceTicketComplete(
-                $machine->machine_id,
-                "$request->service_content",
-                "$request->maintenance_status"
+                (string)$machine->machine_id,
+                (string)$request->service_content,
+                (string)$request->maintenance_status
             );
         }
 
@@ -303,8 +303,8 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->modifyOuterMachineMaintenanceApply(
-                $machine->machine_id,
-                $request->service_content
+                (string)$machine->machine_id,
+                (string)$request->service_content
             );
         } else {
             //普通服务完成
@@ -313,9 +313,9 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->saveOrdinaryServiceTicketComplete(
-                $machine->machine_id,
-                $request->service_content,
-                "$request->maintenance_status"
+                (string)$machine->machine_id,
+                (string)$request->service_content,
+                (string)$request->maintenance_status
             );
         }
 
@@ -347,9 +347,9 @@ class PushController extends ApiController
             'version' => config('dubbo.version')
         ]);
         $response = $service->modifyOuterMachineMaintenanceStep(
-            $machine->machine_id,
-            $request->step_name,
-            "$request->process_status"
+            (string)$machine->machine_id,
+            (string)$request->step_name,
+            (string)$request->process_status
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
@@ -382,8 +382,8 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->modifyMaintenanceTicketApply(
-                $machine->machine_id,
-                $request->service_content
+                (string)$machine->machine_id,
+                (string)$request->service_content
             );
         } else {
             //维护完成
@@ -392,9 +392,9 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->saveMaintenanceTicketComplete(
-                $machine->machine_id,
-                $request->service_content,
-                "$request->maintenance_status"
+                (string)$machine->machine_id,
+                (string)$request->service_content,
+                (string)$request->maintenance_status
             );
         }
 
@@ -423,7 +423,7 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
-        $response = $service->findRedPackageQRcode($machine->machine_id,"1");
+        $response = $service->findRedPackageQRcode((string)$machine->machine_id,(string)1);
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             return $this->responseSuccess();
@@ -453,9 +453,9 @@ class PushController extends ApiController
             'version' => config('dubbo.version')
         ]);
         $response = $service->applyReplaceContainerService(
-            $machine->machine_id,
+            (string)$machine->machine_id,
             $request->position,
-            $request->service_content
+            (string)$request->service_content
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
@@ -486,12 +486,12 @@ class PushController extends ApiController
             'version' => config('dubbo.version')
         ]);
         $response = $service->completeReplaceContainerService(
-            $machine->machine_id,
-            $request->complete_status,
+            (string)$machine->machine_id,
+            (string)$request->complete_status,
             $request->position_up,
-            $request->serial_up,
+            (string)$request->serial_up,
             $request->position_down,
-            $request->serial_down
+            (string)$request->serial_down
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
@@ -519,7 +519,7 @@ class PushController extends ApiController
             'version' => config('dubbo.version')
         ]);
         $response = $service->saveOuterMachineOssApply(
-            $machine->machine_id,
+            (string)$machine->machine_id,
             $request->position
         );
 
@@ -549,9 +549,9 @@ class PushController extends ApiController
             'version' => config('dubbo.version')
         ]);
         $response = $service->saveOuterMachineOssComplete(
-            $machine->machine_id,
+            (string)$machine->machine_id,
             $request->position,
-            $request->serial
+            (string)$request->serial
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
@@ -582,11 +582,11 @@ class PushController extends ApiController
                 'version' => config('dubbo.version')
             ]);
             $response = $service->saveMachinePosition(
-                $machine->machine_id,
+                (string)$machine->machine_id,
                 $request->position,
-                $request->container_id,
+                (string)$request->container_id,
                 $request->container_position,
-                $request->serial
+                (string)$request->serial
             );
     
             if ($response == static::CODE_STATUS_SUCCESS) {
