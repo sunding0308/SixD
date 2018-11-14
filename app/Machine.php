@@ -17,6 +17,7 @@ class Machine extends Model
 
     //signal
     const SIGNAL_OVERAGE = 'overage';
+    const SIGNAL_RESET = 'reset';
     const SIGNAL_HARDWARE_STATUS = 'hardware_status';
     const SIGNAL_RECORDS = 'records';
     const SIGNAL_ENVIROMENT = 'environment';
