@@ -61,6 +61,9 @@
                                     <td class="playlist-actions hp">
                                         @if(!$machine->machine_id)
                                         未安装
+                                        <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m" title="调试信息">
+                                            <i class="fa fa-book"></i>
+                                        </a>
                                         @else
                                         <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->device }}')">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
