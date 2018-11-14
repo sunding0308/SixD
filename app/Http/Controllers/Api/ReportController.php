@@ -24,23 +24,23 @@ class ReportController extends ApiController
             
             $machine = Machine::where('device',$request->device)->first();
             $machine->update([
-                'status' => $request->hardware_status['machine_status'] ?: '',
-                'g_status' => $request->hardware_status['g_status'] ?: '',
-                'wifi_status' => $request->hardware_status['wifi_status'] ?: '',
-                'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: '',
-                'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: '',
-                'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: '',
-                'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: '',
-                'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?: 0,
+                'status' => $request->hardware_status['machine_status'] ?: $machine->status,
+                'g_status' => $request->hardware_status['g_status'] ?: $machine->g_status,
+                'wifi_status' => $request->hardware_status['wifi_status'] ?: $machine->wifi_status,
+                'bluetooth_status' => $request->hardware_status['bluetooth_status'] ?: $machine->bluetooth_status,
+                'filter1_lifespan' => $request->hardware_status['filter1_lifespan'] ?: $machine->filter1_lifespan,
+                'filter2_lifespan' => $request->hardware_status['filter2_lifespan'] ?: $machine->filter2_lifespan,
+                'filter3_lifespan' => $request->hardware_status['filter3_lifespan'] ?: $machine->filter3_lifespan,
+                'total_produce_water_time' => $request->hardware_status['total_produce_water_time'] ?: $machine->total_produce_water_time,
             ]);
 
             $machine->sterilization()->update([
-                'uv1' => $request->sterilization_time['uv1'] ?: 0,
-                'uv2' => $request->sterilization_time['uv2'] ?: 0,
-                'uv3' => $request->sterilization_time['uv3'] ?: 0,
-                'uv4' => $request->sterilization_time['uv4'] ?: 0,
-                'uv5' => $request->sterilization_time['uv5'] ?: 0,
-                'uv6' => $request->sterilization_time['uv6'] ?: 0,
+                'uv1' => $request->sterilization_time['uv1'] ?: $machine->sterilization->uv1,
+                'uv2' => $request->sterilization_time['uv2'] ?: $machine->sterilization->uv2,
+                'uv3' => $request->sterilization_time['uv3'] ?: $machine->sterilization->uv3,
+                'uv4' => $request->sterilization_time['uv4'] ?: $machine->sterilization->uv4,
+                'uv5' => $request->sterilization_time['uv5'] ?: $machine->sterilization->uv5,
+                'uv6' => $request->sterilization_time['uv6'] ?: $machine->sterilization->uv6,
             ]);
 
             Log::info('Device '.$request->device.' update hardware status success!');
@@ -96,10 +96,10 @@ class ReportController extends ApiController
 
             $machine = Machine::where('device',$request->device)->first();
             $machine->update([
-                'temperature' => $request->temperature ?: 0,
-                'humidity' => $request->humidity ?: 0,
-                'pm2_5' => $request->pm2_5 ?: 0,
-                'oxygen_concentration' => $request->oxygen_concentration ?: 0,
+                'temperature' => $request->temperature ?: $machine->temperature,
+                'humidity' => $request->humidity ?: $machine->humidity,
+                'pm2_5' => $request->pm2_5 ?: $machine->pm2_5,
+                'oxygen_concentration' => $request->oxygen_concentration ?: $machine->oxygen_concentration,
             ]);
 
             Log::info('Device '.$request->device.' update environment success!');

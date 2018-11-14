@@ -139,7 +139,7 @@
                 if (result.http_code == 200) {
                     setTimeout(() => {
                         location.reload();
-                    }, 5000);
+                    }, 3000);
                 } else {
                     refreshed(id);
                     alert(result.msg)
