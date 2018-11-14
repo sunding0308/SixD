@@ -155,6 +155,15 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '紧急服务申请传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$machine->installation->hotel_name.','.
+                (string)$machine->installation->hotel_code.','.
+                (string)$machine->installation->hotel_address.','.
+                (string)$machine->installation->room.','.
+                (string)$request->service_content.')'
+            );
             $response = $service->modifyUrgentServiceTicketApply(
                 (string)$machine->machine_id,
                 (string)$machine->installation->hotel_name,
@@ -169,6 +178,12 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '紧急服务完成传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$request->service_content.','.
+                (string)$request->maintenance_status.')'
+            );
             $response = $service->saveUrgentServiceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
@@ -177,10 +192,13 @@ class PushController extends ApiController
         }
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('紧急服务返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            Log::error('紧急服务返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('紧急服务返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -205,6 +223,11 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '普通服务申请传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$request->service_content.')'
+            );
             $response = $service->modifyOuterMachineMaintenanceApply(
                 (string)$machine->machine_id,
                 (string)$request->service_content
@@ -215,6 +238,12 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '普通服务完成传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$request->service_content.','.
+                (string)$request->maintenance_status.')'
+            );
             $response = $service->saveOrdinaryServiceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
@@ -223,10 +252,13 @@ class PushController extends ApiController
         }
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('普通服务返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            Log::error('普通服务返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('普通服务返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -249,6 +281,12 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info(
+            '单项服务完成传入参数：('.
+            (string)$machine->machine_id.','.
+            (string)$request->step_name.','.
+            (string)$request->process_status.')'
+        );
         $response = $service->modifyOuterMachineMaintenanceStep(
             (string)$machine->machine_id,
             (string)$request->step_name,
@@ -256,10 +294,13 @@ class PushController extends ApiController
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('单项服务完成返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            Log::error('单项服务完成返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('单项服务完成返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -284,6 +325,11 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '维护申请传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$request->service_content.')'
+            );
             $response = $service->modifyMaintenanceTicketApply(
                 (string)$machine->machine_id,
                 (string)$request->service_content
@@ -294,6 +340,12 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '维护完成传入参数：('.
+                (string)$machine->machine_id.','.
+                (string)$request->service_content.','.
+                (string)$request->maintenance_status.')'
+            );
             $response = $service->saveMaintenanceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
@@ -302,10 +354,13 @@ class PushController extends ApiController
         }
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('维护返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            Log::error('维护返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('维护返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -326,13 +381,17 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
-        $response = $service->findRedPackageQRcode((string)$machine->machine_id,(string)1);
+        Log::info('获取红包二维码传入参数：('.(string)$machine->machine_id.','.(string)'1'.')');
+        $response = $service->findRedPackageQRcode((string)$machine->machine_id,(string)'1');
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('获取红包二维码返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+            Log::error('获取红包二维码返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('获取红包二维码返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -355,6 +414,12 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info(
+            '更换备用箱申请传入参数：('.
+            (string)$machine->machine_id.','.
+            $request->position.','.
+            (string)$request->service_content.')'
+        );
         $response = $service->applyReplaceContainerService(
             (string)$machine->machine_id,
             $request->position,
@@ -362,8 +427,10 @@ class PushController extends ApiController
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('更换备用箱申请返回响应：成功');
             return $this->responseSuccess();
         } else {
+            Log::error('更换备用箱申请返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -388,6 +455,15 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info(
+            '更换备用箱完成传入参数：('.
+            (string)$machine->machine_id.','.
+            (string)$request->complete_status.','.
+            $request->position_up.','.
+            (string)$request->serial_up.','.
+            $request->position_down.','.
+            (string)$request->serial_down.')'
+        );
         $response = $service->completeReplaceContainerService(
             (string)$machine->machine_id,
             (string)$request->complete_status,
@@ -398,8 +474,10 @@ class PushController extends ApiController
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('更换备用箱完成返回响应：成功');
             return $this->responseSuccess();
         } else {
+            Log::error('更换备用箱完成返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -421,14 +499,21 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info(
+            '发送补仓申请传入参数：('.
+            (string)$machine->machine_id.','.
+            $request->position.')'
+        );
         $response = $service->saveOuterMachineOssApply(
             (string)$machine->machine_id,
             $request->position
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('发送补仓申请返回响应：成功');
             return $this->responseSuccess();
         } else {
+            Log::error('发送补仓申请返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -451,6 +536,12 @@ class PushController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info(
+            '补货完成传入参数：('.
+            (string)$machine->machine_id.','.
+            $request->position.','.
+            (string)$request->serial.')'
+        );
         $response = $service->saveOuterMachineOssComplete(
             (string)$machine->machine_id,
             $request->position,
@@ -458,8 +549,10 @@ class PushController extends ApiController
         );
 
         if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('补货完成返回响应：成功');
             return $this->responseSuccess();
         } else {
+            Log::error('补货完成返回响应：失败');
             return $this->responseErrorWithMessage();
         }
     }
@@ -484,6 +577,14 @@ class PushController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info(
+                '微售卖机加库存传入参数：('.
+                (string)$machine->machine_id.','.
+                $request->position.','.
+                (string)$request->container_id.','.
+                $request->container_position.','.
+                (string)$request->serial.')'
+            );
             $response = $service->saveMachinePosition(
                 (string)$machine->machine_id,
                 $request->position,
@@ -493,8 +594,10 @@ class PushController extends ApiController
             );
     
             if ($response == static::CODE_STATUS_SUCCESS) {
+                Log::info('微售卖机加库存返回响应：成功');
                 return $this->responseSuccess();
             } else {
+                Log::error('微售卖机加库存返回响应：失败');
                 return $this->responseErrorWithMessage();
             }
         }

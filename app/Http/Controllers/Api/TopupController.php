@@ -41,11 +41,11 @@ class TopupController extends ApiController
             );
 
             if (isset($response['error'])) {
-                return $this->responseErrorWithMessage($response['error']);
                 Log::error('获取VIP产品返回响应：'.$response['error']);
+                return $this->responseErrorWithMessage($response['error']);
             }else {
+                Log::info('获取VIP产品返回响应：成功');
                 return $this->responseSuccessWithExtrasAndMessage(['data' => $response]);
-                Log::info('获取VIP产品返回响应：success');
             }
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' get vip product error: '.$e->getMessage().' Line: '.$e->getLine());
@@ -70,6 +70,7 @@ class TopupController extends ApiController
             'registry' => config('dubbo.registry'),
             'version' => config('dubbo.version')
         ]);
+        Log::info('兑换VIP产品传入参数：('.(string)$machine->machine_id.','.(string)$request->vip_code.','.(string)$request->exchange_status.')');
         $response = $service->findVipCodeExchangeStatus(
             (string)$machine->machine_id,
             (string)$request->vip_code,
@@ -77,18 +78,25 @@ class TopupController extends ApiController
         );
 
         if ($response == 0) {
+            Log::info('兑换VIP产品返回响应：成功');
             return $this->responseSuccess();
         } else if ($response == 1) {
+            Log::error('兑换VIP产品返回响应：该VIP码已被使用过');
             return $this->responseErrorWithMessage('该VIP码已被使用过');
         } else if ($response == 2) {
+            Log::error('兑换VIP产品返回响应：该VIP码已过期失效');
             return $this->responseErrorWithMessage('该VIP码已过期失效');
         } else if ($response == 3) {
+            Log::error('兑换VIP产品返回响应：该VIP码无效');
             return $this->responseErrorWithMessage('该VIP码无效');
         } else if ($response == 4) {
+            Log::error('兑换VIP产品返回响应：该VIP不能在该酒店使用');
             return $this->responseErrorWithMessage('该VIP不能在该酒店使用');
         } else if ($response == 5) {
+            Log::error('兑换VIP产品返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
+            Log::error('兑换VIP产品返回响应：兑换失败');
             return $this->responseErrorWithMessage('兑换失败');
         }
     }
