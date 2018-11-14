@@ -34,6 +34,7 @@ class TopupController extends ApiController
                 'registry' => config('dubbo.registry'),
                 'version' => config('dubbo.version')
             ]);
+            Log::info('获取VIP产品传入参数：('.(string)$machine->machine_id.','.(string)$request->vip_code.')');
             $response = $service->findVipCodeExchange(
                 (string)$machine->machine_id,
                 (string)$request->vip_code
@@ -41,8 +42,10 @@ class TopupController extends ApiController
 
             if (isset($response['error'])) {
                 return $this->responseErrorWithMessage($response['error']);
+                Log::error('获取VIP产品返回响应：'.$response['error']);
             }else {
                 return $this->responseSuccessWithExtrasAndMessage(['data' => $response]);
+                Log::info('获取VIP产品返回响应：success');
             }
         } catch (\Exception $e) {
             Log::error('Device '.$request->device.' get vip product error: '.$e->getMessage().' Line: '.$e->getLine());
