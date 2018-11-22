@@ -75,7 +75,7 @@
                                 <div class="form-group row{{ $errors->has('complete_status') ? " has-danger" : "" }} WS017 hidden">
                                     <label class="col-md-3 control-label">completeStatus*</label>
                                     <div class="col-md-9">
-                                        <input type="text" name="complete_status" value="2" class="form-control" disabled>
+                                        <input type="text" name="complete_status" value="2" class="form-control" readonly="readonly">
                                         @include('partials.errors', ['err_type' => 'field','field' => 'complete_status'])
                                     </div>
                                 </div>
