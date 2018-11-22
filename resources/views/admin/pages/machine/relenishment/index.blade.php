@@ -26,14 +26,14 @@
                         <thead>
                         <tr>
                             <th>{{ __('admin/machine.id') }}</th>
-                            <th>海飞丝洗发精A(包)</th>
-                            <th>海飞丝洗发精B(包)</th>
-                            <th>舒肤佳沐浴露(包)</th>
-                            <th>六神沐浴露(包)</th>
-                            <th>拿铁咖啡(包)</th>
+                            <th>海飞丝洗发露(包)</th>
+                            <th>潘婷洗发露(包)</th>
+                            <th>隆力奇沐浴露(包)</th>
+                            <th>亮莊沐浴露(包)</th>
+                            <th>美式浓缩咖啡(包)</th>
                             <th>雀巢咖啡(包)</th>
-                            <th>大益普洱茶(包)</th>
-                            <th>八马铁观音(包)</th>
+                            <th>立顿红茶(包)</th>
+                            <th>立顿绿茶(包)</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>

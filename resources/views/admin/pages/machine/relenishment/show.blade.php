@@ -31,14 +31,14 @@
                             <div class="col-md-9 control-label t-a-l">信号强</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.overage') }}</label>
                             <div class="col-md-9 control-label t-a-l">
-                                海飞丝洗发精A：2 包
-                                海飞丝洗发精B：2 包
-                                舒肤佳沐浴露：2 包
-                                六神沐浴露：1 包
-                                拿铁咖啡：2 包
+                                海飞丝洗发露：2 包
+                                潘婷洗发露：2 包
+                                隆力奇沐浴露：2 包
+                                亮莊沐浴露：1 包
+                                美式浓缩咖啡：2 包
                                 雀巢咖啡：2 包
-                                大益普洱茶：2 包
-                                八马铁观音：0 包
+                                立顿红茶：2 包
+                                立顿绿茶：0 包
                             </div>
                         </div>
                     </div>
