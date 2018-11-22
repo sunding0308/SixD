@@ -29,4 +29,9 @@ class SendDataController extends Controller
         }
         return back();
     }
+
+    public function api()
+    {
+        return view('api');
+    }
 }

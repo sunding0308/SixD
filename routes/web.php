@@ -19,3 +19,5 @@ Auth::routes();
 
 Route::get('/send','SendDataController@send')->name('send');
 Route::post('/post_send','SendDataController@postSend')->name('post_send');
+
+Route::get('/api','SendDataController@api')->name('api');
