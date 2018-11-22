@@ -71,7 +71,7 @@ class TopupController extends ApiController
             'version' => config('dubbo.version')
         ]);
         Log::info('兑换VIP产品传入参数：('.(string)$machine->machine_id.','.(string)$request->vip_code.','.(string)$request->exchange_status.')');
-        $response = $service->findVipCodeExchangeStatus(
+        $response = $service->executeFindVipCodeExchangeStatus(
             (string)$machine->machine_id,
             (string)$request->vip_code,
             (string)$request->exchange_status

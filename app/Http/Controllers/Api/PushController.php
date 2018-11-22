@@ -164,7 +164,7 @@ class PushController extends ApiController
                 (string)$machine->installation->room.','.
                 (string)$request->service_content.')'
             );
-            $response = $service->modifyUrgentServiceTicketApply(
+            $response = $service->executeModifyUrgentServiceTicketApply(
                 (string)$machine->machine_id,
                 (string)$machine->installation->hotel_name,
                 (string)$machine->installation->hotel_code,
@@ -184,7 +184,7 @@ class PushController extends ApiController
                 (string)$request->service_content.','.
                 (string)$request->maintenance_status.')'
             );
-            $response = $service->saveUrgentServiceTicketComplete(
+            $response = $service->executeSaveUrgentServiceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
                 (string)$request->maintenance_status
@@ -228,7 +228,7 @@ class PushController extends ApiController
                 (string)$machine->machine_id.','.
                 (string)$request->service_content.')'
             );
-            $response = $service->modifyOuterMachineMaintenanceApply(
+            $response = $service->executeModifyOuterMachineMaintenanceApply(
                 (string)$machine->machine_id,
                 (string)$request->service_content
             );
@@ -244,7 +244,7 @@ class PushController extends ApiController
                 (string)$request->service_content.','.
                 (string)$request->maintenance_status.')'
             );
-            $response = $service->saveOrdinaryServiceTicketComplete(
+            $response = $service->executeSaveOrdinaryServiceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
                 (string)$request->maintenance_status
@@ -287,7 +287,7 @@ class PushController extends ApiController
             (string)$request->step_name.','.
             (string)$request->process_status.')'
         );
-        $response = $service->modifyOuterMachineMaintenanceStep(
+        $response = $service->executeModifyOuterMachineMaintenanceStep(
             (string)$machine->machine_id,
             (string)$request->step_name,
             (string)$request->process_status
@@ -330,7 +330,7 @@ class PushController extends ApiController
                 (string)$machine->machine_id.','.
                 (string)$request->service_content.')'
             );
-            $response = $service->modifyMaintenanceTicketApply(
+            $response = $service->executeModifyMaintenanceTicketApply(
                 (string)$machine->machine_id,
                 (string)$request->service_content
             );
@@ -346,7 +346,7 @@ class PushController extends ApiController
                 (string)$request->service_content.','.
                 (string)$request->maintenance_status.')'
             );
-            $response = $service->saveMaintenanceTicketComplete(
+            $response = $service->executeSaveMaintenanceTicketComplete(
                 (string)$machine->machine_id,
                 (string)$request->service_content,
                 (string)$request->maintenance_status
@@ -420,7 +420,7 @@ class PushController extends ApiController
             $request->position.','.
             (string)$request->service_content.')'
         );
-        $response = $service->applyReplaceContainerService(
+        $response = $service->executeApplyReplaceContainerService(
             (string)$machine->machine_id,
             $request->position,
             (string)$request->service_content
@@ -464,7 +464,7 @@ class PushController extends ApiController
             $request->position_down.','.
             (string)$request->serial_down.')'
         );
-        $response = $service->completeReplaceContainerService(
+        $response = $service->executeCompleteReplaceContainerService(
             (string)$machine->machine_id,
             (string)$request->complete_status,
             $request->position_up,
@@ -504,7 +504,7 @@ class PushController extends ApiController
             (string)$machine->machine_id.','.
             $request->position.')'
         );
-        $response = $service->saveOuterMachineOssApply(
+        $response = $service->executeSaveOuterMachineOssApply(
             (string)$machine->machine_id,
             $request->position
         );
@@ -542,7 +542,7 @@ class PushController extends ApiController
             $request->position.','.
             (string)$request->serial.')'
         );
-        $response = $service->saveOuterMachineOssComplete(
+        $response = $service->executeSaveOuterMachineOssComplete(
             (string)$machine->machine_id,
             $request->position,
             (string)$request->serial
@@ -585,7 +585,7 @@ class PushController extends ApiController
                 $request->container_position.','.
                 (string)$request->serial.')'
             );
-            $response = $service->saveMachinePosition(
+            $response = $service->executeSaveMachinePosition(
                 (string)$machine->machine_id,
                 $request->position,
                 (string)$request->container_id,
