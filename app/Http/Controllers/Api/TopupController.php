@@ -77,22 +77,13 @@ class TopupController extends ApiController
             (string)$request->exchange_status
         );
 
-        if ($response == 0) {
+        if ($response == 1) {
             Log::info('兑换VIP产品返回响应：成功');
             return $this->responseSuccess();
-        } else if ($response == 1) {
-            Log::error('兑换VIP产品返回响应：该VIP码已被使用过');
-            return $this->responseErrorWithMessage('该VIP码已被使用过');
         } else if ($response == 2) {
-            Log::error('兑换VIP产品返回响应：该VIP码已过期失效');
-            return $this->responseErrorWithMessage('该VIP码已过期失效');
-        } else if ($response == 3) {
             Log::error('兑换VIP产品返回响应：该VIP码无效');
             return $this->responseErrorWithMessage('该VIP码无效');
-        } else if ($response == 4) {
-            Log::error('兑换VIP产品返回响应：该VIP不能在该酒店使用');
-            return $this->responseErrorWithMessage('该VIP不能在该酒店使用');
-        } else if ($response == 5) {
+        } else if ($response == 3) {
             Log::error('兑换VIP产品返回响应：机器不存在');
             return $this->responseErrorWithMessage('机器不存在');
         } else {
