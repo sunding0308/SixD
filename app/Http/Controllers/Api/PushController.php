@@ -197,14 +197,13 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('紧急服务返回响应：成功');
-            return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
             Log::error('紧急服务返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('紧急服务返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -261,14 +260,13 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('普通服务返回响应：成功');
-            return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
             Log::error('普通服务返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('普通服务返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -306,14 +304,13 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('单项服务完成返回响应：成功');
-            return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
             Log::error('单项服务完成返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('单项服务完成返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -370,14 +367,13 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('维护返回响应：成功');
-            return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
             Log::error('维护返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('维护返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -404,14 +400,13 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('获取红包二维码返回响应：成功');
-            return $this->responseSuccess();
         } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
             Log::error('获取红包二维码返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('获取红包二维码返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -449,11 +444,11 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('更换备用箱申请返回响应：成功');
-            return $this->responseSuccess();
         } else {
             Log::error('更换备用箱申请返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -499,11 +494,11 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('更换备用箱完成返回响应：成功');
-            return $this->responseSuccess();
         } else {
             Log::error('更换备用箱完成返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -538,11 +533,11 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('发送补仓申请返回响应：成功');
-            return $this->responseSuccess();
         } else {
             Log::error('发送补仓申请返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -580,11 +575,11 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('补货完成返回响应：成功');
-            return $this->responseSuccess();
         } else {
             Log::error('补货完成返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 
     /**
@@ -628,10 +623,10 @@ class PushController extends ApiController
 
         if ($response == static::CODE_STATUS_SUCCESS) {
             Log::info('微售卖机加库存返回响应：成功');
-            return $this->responseSuccess();
         } else {
             Log::error('微售卖机加库存返回响应：失败');
-            return $this->responseErrorWithMessage();
         }
+
+        return $this->responseSuccess();
     }
 }
