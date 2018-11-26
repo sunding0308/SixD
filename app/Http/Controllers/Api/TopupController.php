@@ -63,34 +63,39 @@ class TopupController extends ApiController
      */
     public function vipTopup(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
-            'vip_code' => 'required',
-            'exchange_status' => 'required'
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'vip_code' => 'required',
+                'exchange_status' => 'required'
+            ]);
 
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
 
-        $machine = Machine::where('device',$request->device)->first();
-        //兑换结果
-        $service = DubboProxyService::getService(self::VIP_CODE_RESULT_URL, [
-            'registry' => config('dubbo.registry'),
-            'version' => config('dubbo.version')
-        ]);
-        Log::info('兑换VIP产品传入参数：('.(string)$machine->machine_id.','.(string)$request->vip_code.','.(string)$request->exchange_status.')');
-        $response = $service->executeFindVipCodeExchangeStatus(
-            (string)$machine->machine_id,
-            (string)$request->vip_code,
-            (string)$request->exchange_status
-        );
+            $machine = Machine::where('device',$request->device)->first();
+            //兑换结果
+            $service = DubboProxyService::getService(self::VIP_CODE_RESULT_URL, [
+                'registry' => config('dubbo.registry'),
+                'version' => config('dubbo.version')
+            ]);
+            Log::info('兑换VIP产品传入参数：('.(string)$machine->machine_id.','.(string)$request->vip_code.','.(string)$request->exchange_status.')');
+            $response = $service->executeFindVipCodeExchangeStatus(
+                (string)$machine->machine_id,
+                (string)$request->vip_code,
+                (string)$request->exchange_status
+            );
 
-        if (isset($response) && $response) {
-            Log::info('兑换VIP产品返回响应：成功');
-            return $this->responseSuccess();
-        } else {
-            Log::error('兑换VIP产品返回响应：兑换失败');
+            if (isset($response) && $response) {
+                Log::info('兑换VIP产品返回响应：成功');
+                return $this->responseSuccess();
+            } else {
+                Log::error('兑换VIP产品返回响应：兑换失败');
+                return $this->responseErrorWithMessage('兑换失败');
+            }
+        } catch (\Exception $e) {
+            Log::error('兑换VIP产品返回响应：兑换失败'.$e->getMessage());
             return $this->responseErrorWithMessage('兑换失败');
         }
     }
