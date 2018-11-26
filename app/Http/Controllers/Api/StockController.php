@@ -32,7 +32,9 @@ class StockController extends ApiController
             foreach($request->products as $product) {
                 $stock = $machine->stocks()->where('position', $product['position'])->first();
                 $stock->quantity -= $product['quantity'];
-                $stock->save();
+                if ($stock->quantity >= 0) {
+                    $stock->save();
+                }
             }
 
             return $this->responseSuccess();
