@@ -213,57 +213,61 @@ class PushController extends ApiController
      */
     public function pushOrdinaryServiceToDataCloud(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'device' => 'required|exists:machines',
-            'service_content' => 'required',
-            'maintenance_status' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->responseErrorWithMessage($validator->errors()->first());
-        }
-
-        $machine = Machine::where('device',$request->device)->first();        
-        if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
-            //普通服务申请
-            $service = DubboProxyService::getService(self::ORDINARY_SERVICE_URL, [
-                'registry' => config('dubbo.registry'),
-                'version' => config('dubbo.version')
+        try {
+            $validator = Validator::make($request->all(), [
+                'device' => 'required|exists:machines',
+                'service_content' => 'required',
+                'maintenance_status' => 'required'
             ]);
-            Log::info(
-                '普通服务申请传入参数：('.
-                (string)$machine->machine_id.','.
-                (string)$request->service_content.')'
-            );
-            $response = $service->executeModifyOuterMachineMaintenanceApply(
-                (string)$machine->machine_id,
-                (string)$request->service_content
-            );
-        } else {
-            //普通服务完成
-            $service = DubboProxyService::getService(self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
-                'registry' => config('dubbo.registry'),
-                'version' => config('dubbo.version')
-            ]);
-            Log::info(
-                '普通服务完成传入参数：('.
-                (string)$machine->machine_id.','.
-                (string)$request->service_content.','.
-                (string)$request->maintenance_status.')'
-            );
-            $response = $service->executeSaveOrdinaryServiceTicketComplete(
-                (string)$machine->machine_id,
-                (string)$request->service_content,
-                (string)$request->maintenance_status
-            );
-        }
 
-        if ($response == static::CODE_STATUS_SUCCESS) {
-            Log::info('普通服务返回响应：成功');
-        } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
-            Log::error('普通服务返回响应：机器不存在');
-        } else {
-            Log::error('普通服务返回响应：失败');
+            if ($validator->fails()) {
+                return $this->responseErrorWithMessage($validator->errors()->first());
+            }
+
+            $machine = Machine::where('device',$request->device)->first();        
+            if ($request->maintenance_status == static::CODE_STATUS_NOT_COMPLETE) {
+                //普通服务申请
+                $service = DubboProxyService::getService(self::ORDINARY_SERVICE_URL, [
+                    'registry' => config('dubbo.registry'),
+                    'version' => config('dubbo.version')
+                ]);
+                Log::info(
+                    '普通服务申请传入参数：('.
+                    (string)$machine->machine_id.','.
+                    (string)$request->service_content.')'
+                );
+                $response = $service->executeModifyOuterMachineMaintenanceApply(
+                    (string)$machine->machine_id,
+                    (string)$request->service_content
+                );
+            } else {
+                //普通服务完成
+                $service = DubboProxyService::getService(self::ALL_ORDINARY_SERVICE_COMPLETE_URL, [
+                    'registry' => config('dubbo.registry'),
+                    'version' => config('dubbo.version')
+                ]);
+                Log::info(
+                    '普通服务完成传入参数：('.
+                    (string)$machine->machine_id.','.
+                    (string)$request->service_content.','.
+                    (string)$request->maintenance_status.')'
+                );
+                $response = $service->executeSaveOrdinaryServiceTicketComplete(
+                    (string)$machine->machine_id,
+                    (string)$request->service_content,
+                    (string)$request->maintenance_status
+                );
+            }
+
+            if ($response == static::CODE_STATUS_SUCCESS) {
+                Log::info('普通服务返回响应：成功');
+            } else if ($response == static::CODE_STATUS_MACHINE_NOT_EXIST) {
+                Log::error('普通服务返回响应：机器不存在');
+            } else {
+                Log::error('普通服务返回响应：失败');
+            }
+        } catch (\Exception $e) {
+            Log::error('普通服务返回响应：'.$e->getMessage());
         }
 
         return $this->responseSuccess();
