@@ -135,7 +135,11 @@ class PushController extends ApiController
      * push to data cloud
      */
 
-    //紧急服务
+    /**
+     * SJY018
+     * SJY021
+     * 紧急服务
+     */
     public function pushUrgentServiceToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -203,7 +207,11 @@ class PushController extends ApiController
         }
     }
 
-    //普通服务内容
+    /**
+     * SJY018
+     * SJY021
+     * 普通服务内容
+     */
     public function pushOrdinaryServiceToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -263,7 +271,10 @@ class PushController extends ApiController
         }
     }
 
-    //单项服务完成
+    /**
+     * SJY020
+     * 单项服务完成
+     */
     public function pushSingleOrdinaryServiceCompleteToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -305,7 +316,11 @@ class PushController extends ApiController
         }
     }
 
-    //维护
+    /**
+     * SJY025
+     * SJY029
+     * 维护
+     */
     public function pushMaintenanceToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -365,7 +380,10 @@ class PushController extends ApiController
         }
     }
 
-    //水机使用状态
+    /**
+     * HB001
+     * 获取红包二维码
+     */
     public function pushUseStatusToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -396,7 +414,10 @@ class PushController extends ApiController
         }
     }
 
-    //更换备用箱申请
+    /**
+     * WS013
+     * 更换备用箱申请
+     */
     public function pushReplaceContainerToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -435,7 +456,10 @@ class PushController extends ApiController
         }
     }
 
-    //更换备用箱完成
+    /**
+     * WS017
+     * 更换备用箱完成
+     */
     public function pushReplaceContainerCompleteToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -482,7 +506,10 @@ class PushController extends ApiController
         }
     }
 
-    //发送补仓申请
+    /**
+     * WS006
+     * 发送补仓申请
+     */
     public function pushReplenishmentToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -518,7 +545,10 @@ class PushController extends ApiController
         }
     }
 
-    //检测补货完成
+    /**
+     * WS010
+     * 检测补货完成
+     */
     public function pushReplenishmentCompleteToDataCloud(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -557,48 +587,51 @@ class PushController extends ApiController
         }
     }
 
-        //微售卖机加库存
-        public function pushVendingAddStockToDataCloud(Request $request)
-        {
-            $validator = Validator::make($request->all(), [
-                'device' => 'required|exists:machines',
-                'position' => 'required',
-                'container_id' => 'required',
-                'container_position' => 'required',
-                'serial' => 'required'
-            ]);
-    
-            if ($validator->fails()) {
-                return $this->responseErrorWithMessage($validator->errors()->first());
-            }
-    
-            $machine = Machine::where('device',$request->device)->first();
-            $service = DubboProxyService::getService(self::REPLENISHMENT_URL, [
-                'registry' => config('dubbo.registry'),
-                'version' => config('dubbo.version')
-            ]);
-            Log::info(
-                '微售卖机加库存传入参数：('.
-                (string)$machine->machine_id.','.
-                $request->position.','.
-                (string)$request->container_id.','.
-                $request->container_position.','.
-                (string)$request->serial.')'
-            );
-            $response = $service->executeSaveMachinePosition(
-                (string)$machine->machine_id,
-                $request->position,
-                (string)$request->container_id,
-                $request->container_position,
-                (string)$request->serial
-            );
-    
-            if ($response == static::CODE_STATUS_SUCCESS) {
-                Log::info('微售卖机加库存返回响应：成功');
-                return $this->responseSuccess();
-            } else {
-                Log::error('微售卖机加库存返回响应：失败');
-                return $this->responseErrorWithMessage();
-            }
+    /**
+     * WS019
+     * 微售卖机加库存
+     */
+    public function pushVendingAddStockToDataCloud(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines',
+            'position' => 'required',
+            'container_id' => 'required',
+            'container_position' => 'required',
+            'serial' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
         }
+
+        $machine = Machine::where('device',$request->device)->first();
+        $service = DubboProxyService::getService(self::REPLENISHMENT_URL, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+        Log::info(
+            '微售卖机加库存传入参数：('.
+            (string)$machine->machine_id.','.
+            $request->position.','.
+            (string)$request->container_id.','.
+            $request->container_position.','.
+            (string)$request->serial.')'
+        );
+        $response = $service->executeSaveMachinePosition(
+            (string)$machine->machine_id,
+            $request->position,
+            (string)$request->container_id,
+            $request->container_position,
+            (string)$request->serial
+        );
+
+        if ($response == static::CODE_STATUS_SUCCESS) {
+            Log::info('微售卖机加库存返回响应：成功');
+            return $this->responseSuccess();
+        } else {
+            Log::error('微售卖机加库存返回响应：失败');
+            return $this->responseErrorWithMessage();
+        }
+    }
 }

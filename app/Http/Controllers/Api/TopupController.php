@@ -25,6 +25,11 @@ class TopupController extends ApiController
         $this->iot = $iot;
     }
 
+
+    /**
+     * SJY034
+     * 获取VIP码产品信息
+     */
     public function getVipProduct(Request $request)
     {
         try {
@@ -52,6 +57,10 @@ class TopupController extends ApiController
         }
     }
 
+    /**
+     * SJY035
+     * 兑换结果
+     */
     public function vipTopup(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -77,15 +86,9 @@ class TopupController extends ApiController
             (string)$request->exchange_status
         );
 
-        if ($response == 1) {
+        if (isset($response) && $response) {
             Log::info('兑换VIP产品返回响应：成功');
             return $this->responseSuccess();
-        } else if ($response == 2) {
-            Log::error('兑换VIP产品返回响应：该VIP码无效');
-            return $this->responseErrorWithMessage('该VIP码无效');
-        } else if ($response == 3) {
-            Log::error('兑换VIP产品返回响应：机器不存在');
-            return $this->responseErrorWithMessage('机器不存在');
         } else {
             Log::error('兑换VIP产品返回响应：兑换失败');
             return $this->responseErrorWithMessage('兑换失败');
