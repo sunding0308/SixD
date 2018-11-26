@@ -85,6 +85,7 @@ class TopupController extends ApiController
             (string)$request->vip_code,
             (string)$request->exchange_status
         );
+        Log::info('兑换VIP产品返回响应值：'.$response);
 
         if (isset($response) && $response) {
             Log::info('兑换VIP产品返回响应：成功');
