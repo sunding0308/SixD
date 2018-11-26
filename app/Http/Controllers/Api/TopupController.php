@@ -87,9 +87,15 @@ class TopupController extends ApiController
                 (string)$request->exchange_status
             );
 
-            if (isset($response) && $response) {
+            if ($response == 1) {
                 Log::info('兑换VIP产品返回响应：成功');
                 return $this->responseSuccess();
+            } else if ($response == 2) {
+                Log::error('兑换VIP产品返回响应：该VIP码无效');
+                return $this->responseErrorWithMessage('该VIP码无效');
+            } else if ($response == 3) {
+                Log::error('兑换VIP产品返回响应：机器不存在');
+                return $this->responseErrorWithMessage('机器不存在');
             } else {
                 Log::error('兑换VIP产品返回响应：兑换失败');
                 return $this->responseErrorWithMessage('兑换失败');
