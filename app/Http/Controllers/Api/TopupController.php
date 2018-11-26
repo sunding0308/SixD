@@ -95,7 +95,7 @@ class TopupController extends ApiController
                 return $this->responseErrorWithMessage('兑换失败');
             }
         } catch (\Exception $e) {
-            Log::error('兑换VIP产品返回响应：兑换失败'.$e->getMessage());
+            Log::error('兑换VIP产品返回响应：'.$e->getMessage());
             return $this->responseErrorWithMessage('兑换失败');
         }
     }
