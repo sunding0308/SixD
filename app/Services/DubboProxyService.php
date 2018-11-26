@@ -126,7 +126,7 @@ class DubboProxyService
     private function invoke($provider, $method, $args)
     {
         $fh = fsockopen($provider['host'], $provider['port']);
-        $timeout = isset($provider['options']['default_timeout']) ? $provider['options']['default_timeout']/1000 : 5;
+        $timeout = isset($provider['options']['timeout']) ? $provider['options']['timeout']/1000 : 5;
         stream_set_blocking($fh, 0);
         stream_set_write_buffer($fh, 0);
         stream_set_timeout($fh, $timeout);
@@ -155,7 +155,7 @@ class DubboProxyService
                 $output[] = rtrim($buffer);
             } else {
                 $num++;
-                if ($num > 1000000) {
+                if ($num > 10000000) {
                     trigger_error('dubbo.noResponse', E_USER_ERROR);
                     break;
                 }
