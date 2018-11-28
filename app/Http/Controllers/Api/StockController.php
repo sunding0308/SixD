@@ -17,8 +17,8 @@ class StockController extends ApiController
                 return $this->responseNotFoundWithMessage('Machine not found');
             }
             foreach($request->products as $product) {
-                $stock = $machine->stocks()->where('position', $product['position'])->first();
-                $stock->quantity += $product['quantity'];
+                $stock = $machine->stocks()->where('position', $product['pos'])->first();
+                $stock->quantity += $product['q'];
                 $stock->save();
             }
 
@@ -36,8 +36,8 @@ class StockController extends ApiController
                 return $this->responseNotFoundWithMessage('Machine not found');
             }
             foreach($request->products as $product) {
-                $stock = $machine->stocks()->where('position', $product['position'])->first();
-                $stock->quantity -= $product['quantity'];
+                $stock = $machine->stocks()->where('position', $product['pos'])->first();
+                $stock->quantity -= $product['q'];
                 if ($stock->quantity >= 0) {
                     $stock->save();
                 }
