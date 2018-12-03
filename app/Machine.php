@@ -86,6 +86,26 @@ class Machine extends Model
         return $this->hasMany(VendingMachineStock::class);
     }
 
+    public function washingTime()
+    {
+        return $this->hasOne(WashingMachineTime::class);
+    }
+
+    public function shoeboxTime()
+    {
+        return $this->hasOne(ShoeboxTime::class);
+    }
+
+    public function toiletLidTime()
+    {
+        return $this->hasOne(ToiletLidTime::class);
+    }
+
+    public function relenishmentPosition()
+    {
+        return $this->hasMany(Relenishment::class);
+    }
+
     public function hasAlarms()
     {
         if(!optional($this->alarm)->position_change_alarm
