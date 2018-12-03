@@ -106,31 +106,85 @@ class MachineController extends Controller
 
     public function cleanOverage(Request $request, Machine $machine, IotService $iot)
     {
-        //push reset data to machine
-        $response = $iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
-        if ($response['Success']) {
-            if ('success' == $response['status']) {
+        if ($machine->type == Machine::TYPE_OXYGEN) {
+            $response = $iot->rrpcForClear($machine->device);
+            if ($response->Success) {
                 Machine::where('id',$machine->id)->update([
-                    'hot_water_overage' => $response['data']['overage'][0],
-                    'cold_water_overage' => $response['data']['overage'][1],
-                    'oxygen_overage' => $response['data']['overage'][2],
-                    'air_overage' => $response['data']['overage'][3],
-                    'humidity_add_overage' => $response['data']['overage'][4],
-                    'humidity_minus_overage' => $response['data']['overage'][5],
-                    'humidity_child_overage' => $response['data']['overage'][6],
-                    'humidity_adult_overage' => $response['data']['overage'][7],
+                    'oxygen_overage' => 0
                 ]);
                 Log::info('Device '.$machine->device.' reset success!');
                 
                 session()->flash('success', '清除余量成功.');
             } else {
-                Log::error(reset.'--Error: '.$response['message']);
-
+                session()->flash('error', '清除余量失败，请稍后再试！');
+            }
+        } else if ($machine->type == Machine::TYPE_WASHING) {
+            $response = $iot->rrpcForClear($machine->device);
+            if ($response->Success) {
+                $machine->washingTime->update([
+                    'used_time' => 0,
+                    'remain_time' => 0,
+                ]);
+                Log::info('Device '.$machine->device.' reset success!');
+                
+                session()->flash('success', '清除余量成功.');
+            } else {
+                session()->flash('error', '清除余量失败，请稍后再试！');
+            }
+        } else if ($machine->type == Machine::TYPE_SHOEBOX) {
+            $response = $iot->rrpcForClear($machine->device);
+            if ($response->Success) {
+                $machine->shoeboxTime->update([
+                    'used_time' => 0,
+                    'remain_time' => 0,
+                ]);
+                Log::info('Device '.$machine->device.' reset success!');
+                
+                session()->flash('success', '清除余量成功.');
+            } else {
+                session()->flash('error', '清除余量失败，请稍后再试！');
+            }
+        } else if ($machine->type == Machine::TYPE_TOILET_LID) {
+            $response = $iot->rrpcForClear($machine->device);
+            if ($response->Success) {
+                $machine->toiletLidTime->update([
+                    'used_time' => 0,
+                    'remain_time' => 0,
+                ]);
+                Log::info('Device '.$machine->device.' reset success!');
+                
+                session()->flash('success', '清除余量成功.');
+            } else {
                 session()->flash('error', '清除余量失败，请稍后再试！');
             }
         } else {
-            session()->flash('error', '清除余量失败，请稍后再试！');
+            //push reset data to machine
+            $response = $iot->rrpcToWater(Machine::SIGNAL_RESET, $machine->device, [0,0,0,0,0,0,0,0]);
+            if ($response['Success']) {
+                if ('success' == $response['status']) {
+                    Machine::where('id',$machine->id)->update([
+                        'hot_water_overage' => $response['data']['overage'][0],
+                        'cold_water_overage' => $response['data']['overage'][1],
+                        'oxygen_overage' => $response['data']['overage'][2],
+                        'air_overage' => $response['data']['overage'][3],
+                        'humidity_add_overage' => $response['data']['overage'][4],
+                        'humidity_minus_overage' => $response['data']['overage'][5],
+                        'humidity_child_overage' => $response['data']['overage'][6],
+                        'humidity_adult_overage' => $response['data']['overage'][7],
+                    ]);
+                    Log::info('Device '.$machine->device.' reset success!');
+                    
+                    session()->flash('success', '清除余量成功.');
+                } else {
+                    Log::error(reset.'--Error: '.$response['message']);
+
+                    session()->flash('error', '清除余量失败，请稍后再试！');
+                }
+            } else {
+                session()->flash('error', '清除余量失败，请稍后再试！');
+            }
         }
+
         return back();
     }
 

@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @push('title')
-清洗机列表
+杀菌马桶盖列表
 @endpush
 
 @section('content')
@@ -36,24 +36,40 @@
                         </thead>
 
                         <tbody>
+                            @foreach($machines as $machine)
                             <tr>
-                                <td>35 931406 923302 3</td>
-                                <td>信号强</td>
-                                <td>-</td>
-                                <td>0</td>
-                                <td>21600</td>
+                                <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->device }}</td>
+                                <td>{{ $machine->g_status ?: '-' }}</td>
+                                <td>{{ $machine->firmware_version ?: '-' }}</td>
+                                <td>{{ $machine->toiletLidTime->used_time }}</td>
+                                <td>{{ $machine->toiletLidTime->remain_time }}</td>
                                 <td>
-                                    -
+                                    @if($machine->hasAlarms())
+                                        <i class="fa fa-exclamation-triangle fa-2x"></i>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td class="playlist-actions hp">
-                                    <a href="javascript:;" id="machine-1" class="btn btn-normal btn-m" title="刷新余量" onclick="">
-                                        <i class="fa fa-refresh" aria-hidden="true"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-normal btn-m" title="调试信息">
+                                    @if(!$machine->machine_id)
+                                    未安装
+                                    <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m" title="调试信息">
                                         <i class="fa fa-book"></i>
                                     </a>
+                                    @else
+                                    <a href="javascript:;" id="machine-{{ $machine->id }}" class="btn btn-normal btn-m" title="刷新余量" onclick="refresh('{{ $machine->id }}', '{{ $machine->device }}')">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{ route('admin.machine.debug', $machine->id) }}" class="btn btn-normal btn-m" title="调试信息">
+                                        <i class="fa fa-book"></i>
+                                    </a>
+                                    <a href="{{ route('admin.machine.clean_overage', $machine->id) }}" class="btn btn-normal btn-m" title="清除余量">
+                                        <i class="fa fa-eraser"></i>
+                                    </a>
+                                    @endif
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
 
                     </table>
@@ -61,8 +77,7 @@
                     <div class="row">
                         <div class="col-5">
                             <div class="dataTables_info">
-                                共1个设备，当前1-1
-                                {{-- @if ($machines->count()>0)
+                                @if ($machines->count()>0)
                                 {{
                                         __(
                                             'admin/machine.showing_from_to_machines',
@@ -75,15 +90,15 @@
                                     }}
                                 @else
                                     {{ __('admin/machine.no_machines') }}
-                                @endif --}}
+                                @endif
                             </div>
                         </div>
 
-                        {{-- <div class="col-7">
+                        <div class="col-7">
                             <div class="dataTables_paginate paging_simple_numbers">
                                 {{ $machines->appends(request()->input())->links() }}
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
 
                 </div><!-- .ibox-content -->

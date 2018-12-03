@@ -96,6 +96,40 @@ class IotService
             ]
         ]));
 
+        $response = $this->rrpc($deviceName, $messageContent);
+
+        if ($response->Success) {
+            $payload = json_decode(base64_decode($response->PayloadBase64Byte));
+            return [
+                "Success" => $response->Success,
+                "status" => optional($payload)->status,
+                "message" => optional($payload)->message,
+                "data" => [
+                    "device" => optional($payload)->device,
+                    "type" => optional($payload)->type,
+                    "overage" => optional($payload)->overage,
+                ]
+            ];
+        } else {
+            Log::info($response->Code);
+            return [
+                "Success" => $response->Success,
+            ];
+        }
+    }
+
+    /**
+     * Send rrpc request to oxygen and washing
+     * @param $productKey
+     * @param $deviceName
+     */
+    public function rrpcForClear($deviceName)
+    {
+        //Base64 String
+        $messageContent = base64_encode(json_encode([
+            'opt' => 'clear'
+        ]));
+
         return $this->rrpc($deviceName, $messageContent);
     }
 
@@ -121,23 +155,6 @@ class IotService
         $request->setTimeout(5000);
         $response = $this->client->getAcsResponse($request);
 
-        if ($response->Success) {
-            $payload = json_decode(base64_decode($response->PayloadBase64Byte));
-            return [
-                "Success" => $response->Success,
-                "status" => optional($payload)->status,
-                "message" => optional($payload)->message,
-                "data" => [
-                    "device" => optional($payload)->device,
-                    "type" => optional($payload)->type,
-                    "overage" => optional($payload)->overage,
-                ]
-            ];
-        } else {
-            Log::info($response->Code);
-            return [
-                "Success" => $response->Success,
-            ];
-        }
+        return $response;
     }
 }
