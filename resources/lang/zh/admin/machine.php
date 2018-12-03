@@ -97,9 +97,14 @@ return [
     'oxygens' => '制氧机',
 
 
-    'washings' => '清洗机',
-    'washing_remaining_time' => '清洗',
+    'washings' => '杀菌清洗机',
+    'uesd_time' => '已用时间',
+    'remaining_time' => '剩余时间',
 
 
     'relenishments' => '补货柜',
+
+    'shoebox' => '杀菌鞋柜',
+
+    'toilet_lid' => '杀菌马桶盖',
 ];

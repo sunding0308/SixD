@@ -12,6 +12,6 @@ class ShoeboxTime extends Model
      * @var array
      */
     protected $fillable = [
-        'machine_id', 'overage'
+        'machine_id', 'used_time', 'remain_time'
     ];
 }

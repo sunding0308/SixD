@@ -8,11 +8,11 @@
     <div class="row">
 
         <header class="title-header col-md-12">
-            <h3 class="title">{{ __( 'admin/machine.washings') }}</h3>
+            <h3 class="title">{{ __( 'admin/machine.shoebox') }}</h3>
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.washings') }}</strong></a></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">{{ __( 'admin/machine.shoebox') }}</strong></a></p>
         </div><!-- .col-* -->
 
         <div class="col-md-12">

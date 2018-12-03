@@ -11,9 +11,11 @@
                 <ul class="list-unstyled">
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_WATER]) }}">{{ __('admin/sidebar.waters') }}</a></li>
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING]) }}">{{ __('admin/sidebar.vendings') }}</a></li>
+                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_RELENISHMENT]) }}">{{ __('admin/sidebar.replenishments') }}</a></li>
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_OXYGEN]) }}">{{ __('admin/sidebar.oxygens') }}</a></li>
                     <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_WASHING]) }}">{{ __('admin/sidebar.washings') }}</a></li>
-                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_RELENISHMENT]) }}">{{ __('admin/sidebar.replenishments') }}</a></li>
+                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_SHOEBOX]) }}">{{ __('admin/sidebar.shoebox') }}</a></li>
+                    <li><a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_TOILET_LID]) }}">{{ __('admin/sidebar.toilet_lid') }}</a></li>
                 </ul>
             </div>
         </li>

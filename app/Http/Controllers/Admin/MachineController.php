@@ -34,6 +34,10 @@ class MachineController extends Controller
             return view('admin.pages.machine.washing.index', compact('machines'));
         } else if (Machine::TYPE_RELENISHMENT == $request->type) {
             return view('admin.pages.machine.relenishment.index', compact('machines'));
+        } else if (Machine::TYPE_SHOEBOX == $request->type) {
+            return view('admin.pages.machine.shoebox.index', compact('machines'));
+        } else if (Machine::TYPE_TOILET_LID == $request->type) {
+            return view('admin.pages.machine.toilet_lid.index', compact('machines'));
         }
     }
 

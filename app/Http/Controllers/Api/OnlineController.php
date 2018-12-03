@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Machine;
 use App\Version;
+use App\ShoeboxTime;
+use App\Relenishment;
 use App\Sterilization;
+use App\ToiletLidTime;
+use App\WashingMachineTime;
 use App\Services\IotService;
 use App\VendingMachineStock;
 use Illuminate\Http\Request;
@@ -160,6 +164,32 @@ class OnlineController extends ApiController
                         array_push($val, 0);
                         $this->createStock($val);
                     }
+                } else if ($machine->type == Machine::TYPE_RELENISHMENT) {
+                    foreach(range(1, 16) as $position) {
+                        Relenishment::create([
+                            'machine_id' => $machine->id,
+                            'position' => $position,
+                            'serial' => ''
+                        ]);
+                    }
+                } else if($machine->type == Machine::TYPE_WASHING) {
+                    WashingMachineTime::create([
+                        'machine_id' => $machine->id,
+                        'used_time' => 0,
+                        'remain_time' => 0
+                    ]);
+                } else if($machine->type == Machine::TYPE_SHOEBOX) {
+                    ShoeboxTime::create([
+                        'machine_id' => $machine->id,
+                        'used_time' => 0,
+                        'remain_time' => 0
+                    ]);
+                } else if($machine->type == Machine::TYPE_TOILET_LID) {
+                    ToiletLidTime::create([
+                        'machine_id' => $machine->id,
+                        'used_time' => 0,
+                        'remain_time' => 0
+                    ]);
                 }
             }
             $response = $iot->registDevice($request->device);
