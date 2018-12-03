@@ -143,7 +143,12 @@ class IotService
         //Base64 String
         $messageContent = base64_encode($data);
 
-        return $this->rrpc($deviceName, $messageContent);
+        $response = $this->rrpc($deviceName, $messageContent);
+
+        print_r($response);
+        if ($response->Success) {
+            print_r(base64_decode($response->PayloadBase64Byte));
+        }
     }
 
     private function rrpc($deviceName, $messageContent)
