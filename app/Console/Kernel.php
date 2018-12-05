@@ -39,6 +39,8 @@ class Kernel extends ConsoleKernel
                  ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushWaterQualityStatisticsSignal')
                  ->daily();
+
+        $schedule->command('handle:message')->everyMinute();
     }
 
     /**
