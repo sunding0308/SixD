@@ -90,12 +90,13 @@ class MachineController extends Controller
 
     public function debug(Request $request, Machine $machine)
     {
-        $files = $this->paginate(
-            collect(Storage::files('public/' . $machine->device))
-                ->sortByDesc(function ($file) {
-                    return pathinfo($file, PATHINFO_FILENAME);
-                })
-            , 10);
+        // $files = $this->paginate(
+        //     collect(Storage::files('public/' . $machine->device))
+        //         ->sortByDesc(function ($file) {
+        //             return pathinfo($file, PATHINFO_FILENAME);
+        //         })
+        //     , 10);
+        $files = $this->paginate(Storage::files('public/' . $machine->device), 10);
         return view('admin.pages.machine.debug', compact('machine', 'files'));
     }
 
