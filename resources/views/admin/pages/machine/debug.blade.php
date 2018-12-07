@@ -12,10 +12,10 @@
         </header>
 
         <div class="col-4">
-            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">文件列表</strong></p>
+            <p class="brdcrmb"><a class="brdcrmb-item"><strong class="brdcrmb-item">文件列表</strong></a></p>
         </div><!-- .col-* -->
 
-        <div class="col-md-12" style="width:830">
+        <div class="col-md-12">
 
             <div class="ibox">
 
