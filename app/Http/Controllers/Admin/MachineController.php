@@ -96,7 +96,7 @@ class MachineController extends Controller
                     return pathinfo($file, PATHINFO_FILENAME);
                 })
             , 10);
-        $files->withPath(env('APP_URL').'/admin/machine/1/debug');
+        $files->withPath(env('APP_URL').'/admin/machine/'.$machine->id.'/debug');
         return view('admin.pages.machine.debug', compact('machine', 'files'));
     }
 
