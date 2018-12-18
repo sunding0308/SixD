@@ -23,11 +23,45 @@ class MachineController extends Controller
      */
     public function index(Request $request)
     {
-        $machines = Machine::where('type', $request->type)->with('stocks')->paginate(10);
+        $search = $request->input('search');
+        $alarm = $request->input('alarm');
+
+        $machines = Machine::where('type', $request->type)
+            ->with('stocks')
+            ->withCount(['alarm' => function ($query) {
+                $query->where('position_change_alarm', '<>', '')
+                ->orWhere('service_alarm_status', '<>', '')
+                ->orWhere('sterilization_alarm', '<>', '')
+                ->orWhere('filter_alarm', '<>', '')
+                ->orWhere('water_shortage_alarm', '<>', '')
+                ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
+                ->orWhere('slave_mobile_alarm', '<>', '')
+                ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
+                ->orWhere('malfunction_code', '<>', '');
+            }])
+            ->when($search, function ($query) use ($search) {
+                return $query->whereHas('installation', function($q) use ($search) {
+                    $q->where('room', 'like', '%'.$search.'%');
+                });
+            })
+            ->when($alarm, function ($query) {
+                return $query->whereHas('alarm', function($q) {
+                    $q->where('position_change_alarm', '<>', '')
+                    ->orWhere('service_alarm_status', '<>', '')
+                    ->orWhere('sterilization_alarm', '<>', '')
+                    ->orWhere('filter_alarm', '<>', '')
+                    ->orWhere('water_shortage_alarm', '<>', '')
+                    ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
+                    ->orWhere('slave_mobile_alarm', '<>', '')
+                    ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
+                    ->orWhere('malfunction_code', '<>', '');
+                });
+            })
+            ->paginate(10);
         if (Machine::TYPE_WATER == $request->type) {
             return view('admin.pages.machine.water.index', compact('machines'));
         } else if (Machine::TYPE_VENDING == $request->type) {
-            return view('admin.pages.machine.vending.index', compact('machines'));
+            return view('admin.pages.machine.vending.index', compact('machines', 'search', 'alarm'));
         } else if (Machine::TYPE_OXYGEN == $request->type) {
             return view('admin.pages.machine.oxygen.index', compact('machines'));
         } else if (Machine::TYPE_WASHING == $request->type) {
@@ -90,12 +124,12 @@ class MachineController extends Controller
 
     public function debug(Request $request, Machine $machine)
     {
-        $files = $this->paginate(
-            collect(Storage::files('public/' . $machine->device))
-                ->sortByDesc(function ($file) {
-                    return pathinfo($file, PATHINFO_FILENAME);
-                })
-            , 10);
+        $filenames = Storage::files('public/' . $machine->device);
+        foreach($filenames as $filename) {
+            $fileCreationDate = Storage::lastModified($filename);
+            $arr[pathinfo($filename, PATHINFO_FILENAME)] = $fileCreationDate;
+        }
+        $files = $this->paginate(collect($arr)->sortBy('desc'), 10);
         $files->withPath(env('APP_URL').'/admin/machine/'.$machine->id.'/debug');
         return view('admin.pages.machine.debug', compact('machine', 'files'));
     }

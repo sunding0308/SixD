@@ -31,7 +31,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach($files as $file)
+                            @foreach($files as $file => $date)
                                 <tr>
                                     <td>{{ basename($file) }}</td>
                                     <td class="playlist-actions hp">
