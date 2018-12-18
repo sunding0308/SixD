@@ -203,6 +203,7 @@ class OnlineController extends ApiController
     {
         try {
             $base_path = $request['device'] . '/'; //存放目录
+            Log::info('Log file name: '.$request->file('file')->getClientOriginalName());
             Storage::disk('public')->putFileAs($base_path, $request->file('file'), $request->file('file')->getClientOriginalName());
             return $this->responseSuccess();
         } catch (\Exception $e) {
