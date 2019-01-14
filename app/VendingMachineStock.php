@@ -24,4 +24,6 @@ class VendingMachineStock extends Model
     const POSITION_SIX = 6;
     const POSITION_SEVEN = 7;
     const POSITION_EIGHT = 8;
+
+    const MAX_STOCK = 2;
 }
