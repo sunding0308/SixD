@@ -12,7 +12,7 @@ class VendingMachineStock extends Model
      * @var array
      */
     protected $fillable = [
-        'machine_id', 'position', 'name', 'quantity', 'unit'
+        'machine_id', 'position', 'total_stock_in', 'total_stock_out', 'name', 'quantity', 'unit'
     ];
 
     //position
