@@ -441,7 +441,6 @@ label.btn-file-input div {
 
 .show{
     z-index: 999;
-    display: none;
 }
 .show .overlay{
     width: 100%;

@@ -23,10 +23,12 @@ class MachineController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $hotel = $request->input('hotel');
+        $room = $request->input('room');
         $alarm = $request->input('alarm');
 
         $machines = Machine::where('type', $request->type)
+            ->with('installation')
             ->with('stocks')
             ->withCount(['alarm' => function ($query) {
                 $query->where('position_change_alarm', '<>', '')
@@ -39,9 +41,14 @@ class MachineController extends Controller
                 ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
                 ->orWhere('malfunction_code', '<>', '');
             }])
-            ->when($search, function ($query) use ($search) {
-                return $query->whereHas('installation', function($q) use ($search) {
-                    $q->where('room', 'like', '%'.$search.'%');
+            ->when($hotel, function ($query) use ($hotel) {
+                return $query->whereHas('installation', function($q) use ($hotel) {
+                    $q->where('hotel_name', $hotel);
+                });
+            })
+            ->when($room, function ($query) use ($room) {
+                return $query->whereHas('installation', function($q) use ($room) {
+                    $q->where('room', 'like', '%'.$room.'%');
                 });
             })
             ->when($alarm, function ($query) {
@@ -61,7 +68,8 @@ class MachineController extends Controller
         if (Machine::TYPE_WATER == $request->type) {
             return view('admin.pages.machine.water.index', compact('machines'));
         } else if (Machine::TYPE_VENDING == $request->type) {
-            return view('admin.pages.machine.vending.index', compact('machines', 'search', 'alarm'));
+            $hotelNames = array_filter(array_unique($machines->pluck('installation.hotel_name')->toArray()));
+            return view('admin.pages.machine.vending.index', compact('machines', 'hotelNames', 'hotel', 'room', 'alarm'));
         } else if (Machine::TYPE_OXYGEN == $request->type) {
             return view('admin.pages.machine.oxygen.index', compact('machines'));
         } else if (Machine::TYPE_WASHING == $request->type) {

@@ -35,14 +35,14 @@
                             <div class="col-md-9 control-label t-a-l">{{ $machine->g_status ?: '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.stock') }}</label>
                             <div class="col-md-9 control-label t-a-l">
-                                海飞丝洗发露：{{ $machine->stocks[0]->quantity }} 包<br>
-                                潘婷洗发露：{{ $machine->stocks[1]->quantity }} 包<br>
-                                隆力奇沐浴露：{{ $machine->stocks[2]->quantity }} 包<br>
-                                亮莊沐浴露：{{ $machine->stocks[3]->quantity }} 包<br>
-                                美式浓缩咖啡：{{ $machine->stocks[4]->quantity }} 包<br>
-                                雀巢咖啡：{{ $machine->stocks[5]->quantity }} 包<br>
-                                立顿红茶：{{ $machine->stocks[6]->quantity }} 包<br>
-                                立顿绿茶：{{ $machine->stocks[7]->quantity }} 包<br>
+                                1：{{ $machine->stocks[0]->quantity }} 包<br>
+                                2：{{ $machine->stocks[1]->quantity }} 包<br>
+                                3：{{ $machine->stocks[2]->quantity }} 包<br>
+                                4：{{ $machine->stocks[3]->quantity }} 包<br>
+                                5：{{ $machine->stocks[4]->quantity }} 包<br>
+                                6：{{ $machine->stocks[5]->quantity }} 包<br>
+                                7：{{ $machine->stocks[6]->quantity }} 包<br>
+                                8：{{ $machine->stocks[7]->quantity }} 包<br>
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,9 @@
 return [
     'waters' => '共享一体机',
     'id' => 'ID',
+    'hotel_name' => '酒店',
     'room_no' => '房间号',
+    'hotel_filter' => '酒店筛选',
     'hot_water_remaining_time' => '热水',
     'cold_water_remaining_time' => '凉水',
     'air_remaining_time' => '空净',
@@ -94,7 +96,8 @@ return [
     'vendings' => '微售货机',
     'alarming' => '报警中',
     'search_room' => '搜索房间号',
-    'keywords' => '关键字',
+    'hotel' => '酒店',
+    'room' => '房间号',
     '2g_status' => '2G',
 
 

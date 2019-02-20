@@ -21,13 +21,21 @@
                         <div class="right-panel">
                             {!! Form::open(['url'=>route('admin.machine.index'),'method'=>'GET']) !!}
                             <div class="status-float">
-                                <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING, 'alarm' => 'true', 'search' => $search]) }}" class="btn btn-normal m-r">{{ __('admin/machine.alarming') }} <span class="label label-license">{{ $machines->sum('alarm_count') }}</span></a>
+                                <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING, 'alarm' => 'true', 'hotel' => $hotel, 'room' => $room]) }}" class="btn btn-normal m-r">{{ __('admin/machine.alarming') }} <span class="label label-license">{{ $machines->sum('alarm_count') }}</span></a>
+                            </div>
+                            <div class="status-float">
+                                <a href="#" class="btn btn-normal dropdown-toggle m-r" data-toggle="dropdown">{{ __('admin/machine.hotel_filter') }} <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                <ul class="dropdown-menu">
+                                    @foreach($hotelNames as $hotelName)
+                                        <li><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&alarm='.$alarm.'&hotel='.$hotelName.'&room='.$room }}">{{ $hotelName }}</a></li>
+                                    @endforeach
+                                </ul>
                             </div>
                             <div class="input-group">
-                                @foreach(request()->except('search') as $key=>$value)
+                                @foreach(request()->except('room') as $key=>$value)
                                     {!! Form::hidden($key, $value) !!}
                                 @endforeach
-                                <input type="text" placeholder="{{ __('admin/machine.search_room') }}" class="input-sm form-control" name="search" value="{{ request()->query('search') }}">
+                                <input type="text" placeholder="{{ __('admin/machine.search_room') }}" class="input-sm form-control" name="room" value="{{ request()->query('room') }}">
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-sm btn-normal"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 </span>
@@ -36,11 +44,14 @@
                         </div>
                     </div>
                     <div class="col-md-12 search-result">
-                        @if($search)
-                            {{ __('admin/machine.keywords') }} <div class="search-result-info filter-margin-right"><span class="search-result-text">{{ $search }} </span><span class="search-close"><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&alarm='.$alarm }}"><i class="fa fa-times" aria-hidden="true"></i></a></span></div>
+                        @if($hotel)
+                            {{ __('admin/machine.hotel') }} <div class="search-result-info filter-margin-right"><span class="search-result-text">{{ $hotel }} </span><span class="search-close"><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&alarm='.$alarm.'&room='.$room }}"><i class="fa fa-times" aria-hidden="true"></i></a></span></div>
+                        @endif
+                        @if($room)
+                            {{ __('admin/machine.room') }} <div class="search-result-info filter-margin-right"><span class="search-result-text">{{ $room }} </span><span class="search-close"><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&alarm='.$alarm.'&hotel='.$hotel }}"><i class="fa fa-times" aria-hidden="true"></i></a></span></div>
                         @endif
                         @if($alarm)
-                            {{ __('admin/machine.status') }} <div class="search-result-info filter-margin-right"><span class="search-result-text">{{ __('admin/machine.alarming') }} </span><span class="search-close"><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&search='.$search }}"><i class="fa fa-times" aria-hidden="true"></i></a></span></div>
+                            {{ __('admin/machine.status') }} <div class="search-result-info filter-margin-right"><span class="search-result-text">{{ __('admin/machine.alarming') }} </span><span class="search-close"><a href="{{ url()->current(). '?type='.\App\Machine::TYPE_VENDING.'&hotel='.$hotel.'&room='.$room }}"><i class="fa fa-times" aria-hidden="true"></i></a></span></div>
                         @endif
                     </div>
                 </div>
@@ -53,6 +64,7 @@
 
                         <thead>
                         <tr>
+                            <th>{{ __('admin/machine.hotel_name') }}</th>
                             <th>{{ __('admin/machine.room_no') }}</th>
                             <th>1</th>
                             <th>2</th>
@@ -70,6 +82,7 @@
                         <tbody>
                             @foreach($machines as $machine)
                                 <tr>
+                                    <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->installation ? $machine->installation->hotel_name : '-' }}</td>
                                     <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->installation ? $machine->installation->room : '-' }}</td>
                                     <td>{{ $machine->stocks[0]->quantity }}</td>
                                     <td>{{ $machine->stocks[1]->quantity }}</td>
