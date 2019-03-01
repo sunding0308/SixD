@@ -137,7 +137,8 @@ class MachineController extends Controller
             $fileCreationDate = Storage::lastModified($filename);
             $arr[pathinfo($filename, PATHINFO_FILENAME)] = $fileCreationDate;
         }
-        $files = $this->paginate(collect($arr)->sortBy('desc'), 10);
+        arsort($arr);
+        $files = $this->paginate(collect($arr), 10);
         $files->withPath(env('APP_URL').'/admin/machine/'.$machine->id.'/debug');
         return view('admin.pages.machine.debug', compact('machine', 'files'));
     }
