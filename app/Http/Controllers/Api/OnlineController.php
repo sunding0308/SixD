@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Machine;
 use App\Version;
+use Carbon\Carbon;
 use App\ShoeboxTime;
 use App\Relenishment;
 use App\Sterilization;
@@ -203,7 +204,7 @@ class OnlineController extends ApiController
     {
         try {
             $base_path = $request['device'] . '/'; //存放目录
-            Storage::disk('public')->putFileAs($base_path, $request->file('file'), $request->file('file')->getClientOriginalName());
+            Storage::disk('public')->putFileAs($base_path, $request->file('file'), Carbon::now()->timestamp . '-' . $request->file('file')->getClientOriginalName());
             return $this->responseSuccess();
         } catch (\Exception $e) {
             Log::error('Device '.$request['device'].' file upload error: '.$e->getMessage().' Line: '.$e->getLine());
