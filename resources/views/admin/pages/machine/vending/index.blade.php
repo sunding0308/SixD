@@ -84,14 +84,14 @@
                                 <tr>
                                     <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->installation ? $machine->installation->hotel_name : '-' }}</td>
                                     <td @if(!$machine->machine_id)style="color:red"@endif>{{ $machine->installation ? $machine->installation->room : '-' }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[0]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[1]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[2]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[3]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[4]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[5]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[6]->quantity : 0 }}</td>
-                                    <td>{{ $machine->stocks ? $machine->stocks[7]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[0]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[1]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[2]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[3]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[4]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[5]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[6]->quantity : 0 }}</td>
+                                    <td>{{ count($machine->stocks) ? $machine->stocks[7]->quantity : 0 }}</td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>
