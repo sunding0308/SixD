@@ -255,7 +255,9 @@ class OnlineController extends ApiController
             'name' => $val[1],
             'unit' => $val[2],
             'machine_id' => $val[3],
-            'quantity' => $val[4]
+            'quantity' => $val[4],
+            'total_stock_in' => 0,
+            'total_stock_out' => 0,
         ]);
     }
 }
