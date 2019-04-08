@@ -19,8 +19,12 @@ class StockController extends ApiController
             }
             foreach($request->products as $product) {
                 $stock = $machine->stocks()->where('position', $product['pos'])->first();
-                $stock->quantity += $product['q'];
-                $stock->total_stock_in += VendingMachineStock::MAX_STOCK - $stock->quantity;
+                $count = $product['q'];
+                if ($stock->quantity + $count > VendingMachineStock::MAX_STOCK) {
+                    $count = VendingMachineStock::MAX_STOCK - $stock->quantity;
+                }
+                $stock->quantity += $count;
+                $stock->total_stock_in += $count;
                 $stock->save();
             }
 
@@ -39,11 +43,14 @@ class StockController extends ApiController
             }
             foreach($request->products as $product) {
                 $stock = $machine->stocks()->where('position', $product['pos'])->first();
-                $stock->quantity -= $product['q'];
-                $stock->total_stock_out += VendingMachineStock::MAX_STOCK - $stock->quantity;
-                if ($stock->quantity >= 0) {
-                    $stock->save();
+                $count = $product['q'];
+                if ($stock->quantity - $count < 0 ) {
+                    $count = $stock->quantity;
                 }
+
+                $stock->quantity -= $count;
+                $stock->total_stock_out += $count;
+                $stock->save();
             }
 
             return $this->responseSuccess();
