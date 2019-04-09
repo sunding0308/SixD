@@ -28,6 +28,7 @@ class MachineController extends Controller
         $alarm = $request->input('alarm');
 
         $machines = Machine::where('type', $request->type)
+            ->whereHas('installation')
             ->with('installation')
             ->with('stocks')
             ->withCount(['alarm' => function ($query) {
