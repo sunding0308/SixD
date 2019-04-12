@@ -252,7 +252,7 @@
         </div>
         </div>
     </div>
-    <div class="show">
+    <div class="show" style="display: none;">
         <div class="overlay"></div>
         <div class="img-show">
             <span><i class="fa fa-close"></i></span>

@@ -23,14 +23,12 @@
             <form method="get" class="form-horizontal">
                 <div class="ibox">
                     <div class="ibox-title title-with-button">
-                        <div class="title-button-header"><h5>{{ __('admin/machine.status') }}{{ __('admin/machine.explanation') }}</h5></div>
+                        <div class="title-button-header"><h5>{{ __('admin/machine.status') }}</h5></div>
                     </div>
                     <div class="ibox-content">
                         <div class="form-group row">
-                            <label class="col-md-3 control-label">{{ __('admin/machine.firmware_version') }}</label>
-                            <div class="col-md-9 control-label t-a-l">{{ $machine->firmware_version ?: '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
-                            <div class="col-md-9 control-label t-a-l">{{ $machine->status ?: '-' }}</div>
+                            <div class="col-md-9 control-label t-a-l">在线</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $machine->g_status ?: '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.stock') }}</label>
@@ -51,7 +49,7 @@
         </div>
         </div>
     </div>
-    <div class="show">
+    <div class="show" style="display: none;">
         <div class="overlay"></div>
         <div class="img-show">
             <span><i class="fa fa-close"></i></span>
