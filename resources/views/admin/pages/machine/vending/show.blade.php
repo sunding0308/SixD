@@ -16,7 +16,7 @@
             @if($machine->hasAlarms())
             <div class="alert alert-detail alert-danger" role="alert">
                 @if($machine->alarm->malfunction_code)
-                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }}<a href="javacript:;" id="malfunction_code">「故障代码表」</a>
+                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }} 电机故障
                 @endif
             </div>
             @endif
