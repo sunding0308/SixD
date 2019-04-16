@@ -84,10 +84,12 @@ class MachineController extends Controller
         }
     }
 
-    public function show(Request $request, Machine $machine)
+    public function show(Request $request, Machine $machine, IotService $iot)
     {
         if (Machine::TYPE_VENDING == $request->type) {
-            return view('admin.pages.machine.vending.show', compact('machine'));
+            $response = $iot->rrpcToVending($machine->device);
+
+            return view('admin.pages.machine.vending.show', compact('machine', 'response'));
         }
         if (809 == $request->sign) {
             return view('admin.pages.machine.relenishment.show');

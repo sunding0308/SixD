@@ -28,9 +28,9 @@
                     <div class="ibox-content">
                         <div class="form-group row">
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
-                            <div class="col-md-9 control-label t-a-l">在线</div>
+                            <div class="col-md-9 control-label t-a-l">{{ $response['Success'] ? '在线' : '离线' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>
-                            <div class="col-md-9 control-label t-a-l">{{ $machine->g_status ?: '-' }}</div>
+                            <div class="col-md-9 control-label t-a-l">{{ $response['Success'] ? $response['signal'] : '-' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.stock') }}</label>
                             <div class="col-md-9 control-label t-a-l">
                                 1：{{ $machine->stocks[0]->quantity }} 包<br>

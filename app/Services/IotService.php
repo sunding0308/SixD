@@ -119,6 +119,32 @@ class IotService
     }
 
     /**
+     * Send rrpc request to vending
+     */
+    public function rrpcToVending($deviceName)
+    {
+        //Base64 String
+        $messageContent = base64_encode(json_encode([
+            'message' => 'status'
+        ]));
+
+        $response = $this->rrpc($deviceName, $messageContent);
+
+        if ($response->Success) {
+            $payload = json_decode(base64_decode($response->PayloadBase64Byte));
+            return [
+                "Success" => $response->Success,
+                "signal" => optional($payload)->signal
+            ];
+        } else {
+            Log::info($response->Code);
+            return [
+                "Success" => $response->Success,
+            ];
+        }
+    }
+
+    /**
      * Send rrpc request to oxygen and washing
      * @param $productKey
      * @param $deviceName
