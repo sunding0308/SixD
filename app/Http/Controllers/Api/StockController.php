@@ -43,7 +43,11 @@ class StockController extends ApiController
             }
             foreach($request->products as $product) {
                 $stock = $machine->stocks()->where('position', $product['pos'])->first();
-                $count = $product['q'];
+                if (array_key_exists('q', $product)) {
+                    $count = $product['q'];
+                } else {
+                    $count = $product['quantity'];
+                }
                 if ($stock->quantity - $count < 0 ) {
                     $count = $stock->quantity;
                 }
@@ -55,7 +59,7 @@ class StockController extends ApiController
 
             return $this->responseSuccess();
         } catch (\Exception $e) {
-            Log::error('Device '.$request->device.' stock in error: '.$e->getMessage().' Line: '.$e->getLine());
+            Log::error('Device '.$request->device.' stock out error: '.$e->getMessage().' Line: '.$e->getLine());
         }
     }
 }
