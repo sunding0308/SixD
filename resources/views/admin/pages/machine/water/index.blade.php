@@ -34,6 +34,7 @@
                             <th>{{ __('admin/machine.humidity_minus_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.humidity_child_remaining_time') }}(min)</th>
                             <th>{{ __('admin/machine.humidity_adult_remaining_time') }}(min)</th>
+                            <th>{{ __('admin/machine.device_status') }}</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -51,6 +52,11 @@
                                     <td>{{ secToMin($machine->humidity_minus_overage) }}</td>
                                     <td>{{ secToMin($machine->humidity_child_overage) }}</td>
                                     <td>{{ secToMin($machine->humidity_adult_overage) }}</td>
+                                    <td>
+                                        <span class="{{ $machineStatus[$machine->device]->Status == 'ONLINE'?'label-normal':'label-danger' }}">
+                                        {{ __('admin/machine.device_'.strtolower($machineStatus[$machine->device]->Status)) }}
+                                        </span>
+                                    </td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>

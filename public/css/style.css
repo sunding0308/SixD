@@ -812,6 +812,18 @@ a.check-link:hover {
     padding: 2px 8px;
 }
 
+.label-danger {
+    border: 1px solid #ba0133;
+    color: #ba0133;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.label-normal {
+    border: 1px solid #1c84c6;
+    color: #1c84c6;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
 
 .playlist-title a {
     font-size: 14px;

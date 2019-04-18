@@ -21,7 +21,7 @@ class MachineController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, IotService $iot)
     {
         $hotel = $request->input('hotel');
         $room = $request->input('room');
@@ -66,21 +66,33 @@ class MachineController extends Controller
                 });
             })
             ->paginate(10);
+
+        $machineIds = array_map(function($machine){
+            return $machine->device;
+        }, $machines->items());
+        $result = $iot->BatchGetDeviceState($machineIds);
+        $machineStatus = [];
+        if ($result['success']) {
+            foreach ($result['DeviceStatusList']->DeviceStatus as $status) {
+                $machineStatus[$status->DeviceName] = $status;
+            }
+        }
+
         if (Machine::TYPE_WATER == $request->type) {
-            return view('admin.pages.machine.water.index', compact('machines'));
+            return view('admin.pages.machine.water.index', compact('machines', 'machineStatus'));
         } else if (Machine::TYPE_VENDING == $request->type) {
             $hotelNames = array_filter(array_unique($machines->pluck('installation.hotel_name')->toArray()));
-            return view('admin.pages.machine.vending.index', compact('machines', 'hotelNames', 'hotel', 'room', 'alarm'));
+            return view('admin.pages.machine.vending.index', compact('machines','machineStatus', 'hotelNames', 'hotel', 'room', 'alarm'));
         } else if (Machine::TYPE_OXYGEN == $request->type) {
-            return view('admin.pages.machine.oxygen.index', compact('machines'));
+            return view('admin.pages.machine.oxygen.index', compact('machines','machineStatus'));
         } else if (Machine::TYPE_WASHING == $request->type) {
-            return view('admin.pages.machine.washing.index', compact('machines'));
+            return view('admin.pages.machine.washing.index', compact('machines','machineStatus'));
         } else if (Machine::TYPE_RELENISHMENT == $request->type) {
-            return view('admin.pages.machine.relenishment.index', compact('machines'));
+            return view('admin.pages.machine.relenishment.index', compact('machines','machineStatus'));
         } else if (Machine::TYPE_SHOEBOX == $request->type) {
-            return view('admin.pages.machine.shoebox.index', compact('machines'));
+            return view('admin.pages.machine.shoebox.index', compact('machines','machineStatus'));
         } else if (Machine::TYPE_TOILET_LID == $request->type) {
-            return view('admin.pages.machine.toilet_lid.index', compact('machines'));
+            return view('admin.pages.machine.toilet_lid.index', compact('machines','machineStatus'));
         }
     }
 

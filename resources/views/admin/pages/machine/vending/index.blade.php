@@ -74,6 +74,7 @@
                             <th>6</th>
                             <th>7</th>
                             <th>8</th>
+                            <th>{{ __('admin/machine.device_status') }}</th>
                             <th>{{ __('admin/machine.alarm_status') }}</th>
                             <th>{{ __('admin/machine.actions') }}</th>
                         </tr>
@@ -92,6 +93,11 @@
                                     <td>{{ count($machine->stocks) ? $machine->stocks[5]->quantity : 0 }}</td>
                                     <td>{{ count($machine->stocks) ? $machine->stocks[6]->quantity : 0 }}</td>
                                     <td>{{ count($machine->stocks) ? $machine->stocks[7]->quantity : 0 }}</td>
+                                    <td>
+                                        <span class="{{ $machineStatus[$machine->device]->Status == 'ONLINE'?'label-normal':'label-danger' }}">
+                                        {{ __('admin/machine.device_'.strtolower($machineStatus[$machine->device]->Status)) }}
+                                        </span>
+                                    </td>
                                     <td>
                                         @if($machine->hasAlarms())
                                             <i class="fa fa-exclamation-triangle fa-2x"></i>

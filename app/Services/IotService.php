@@ -76,6 +76,32 @@ class IotService
         }
     }
 
+
+    /**
+     * Batch check device state
+     * @param $deviceIds
+     * @return array
+     */
+    public function BatchGetDeviceState($deviceIds)
+    {
+        $request = new Iot\BatchGetDeviceStateRequest();
+        $request->setProductKey($this->productKey);
+        $request->setDeviceNames($deviceIds);
+        $response = $this->client->getAcsResponse($request);
+        Log::info('Batch Query device state: '.$response->Success);
+
+        if ($response->Success) {
+            return [
+                "success" => $response->Success,
+                "DeviceStatusList" => $response->DeviceStatusList
+            ];
+        }
+        return [
+            "success" => $response->Success,
+            "ErrorMessage" => $response->ErrorMessage
+        ];
+    }
+
     /**
      * Send rrpc request to water
      * @param $productKey
