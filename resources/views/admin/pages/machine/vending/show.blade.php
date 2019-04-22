@@ -27,6 +27,8 @@
                     </div>
                     <div class="ibox-content">
                         <div class="form-group row">
+                            <label class="col-md-3 control-label">{{ __('admin/machine.machine_id') }}</label>
+                            <div class="col-md-9 control-label t-a-l">{{ $machine->device }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.current_status') }}</label>
                             <div class="col-md-9 control-label t-a-l">{{ $response['Success'] ? '在线' : '离线' }}</div>
                             <label class="col-md-3 control-label">{{ __('admin/machine.2g_status') }}</label>

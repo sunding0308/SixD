@@ -9,6 +9,7 @@
 return [
     'waters' => '共享一体机',
     'id' => 'ID',
+    'machine_id' => '机器ID',
     'hotel_name' => '酒店',
     'room_no' => '房间号',
     'hotel_filter' => '酒店筛选',
