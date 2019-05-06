@@ -79,7 +79,7 @@ class HandleMessage extends Command
                 }
                 break;
             case 'stock_out':
-                Log::debug(self::LOG_TAG.'stock in');
+                Log::debug(self::LOG_TAG.'stock out');
                 $machine->load('stocks');
                 foreach($message->products as $product) {
                     $stock = $machine->stocks->where('position', $product->pos)->first();
