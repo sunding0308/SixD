@@ -14,7 +14,7 @@ class UpdateMessageTable extends Migration
     public function up()
     {
         Schema::table('messages', function (Blueprint $table) {
-            $table->integer('device_name')->unsigned()->index()->after('id');
+            $table->string('device_name')->after('id');
             $table->dropSoftDeletes();
         });
     }
