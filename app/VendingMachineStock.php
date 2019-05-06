@@ -26,4 +26,30 @@ class VendingMachineStock extends Model
     const POSITION_EIGHT = 8;
 
     const MAX_STOCK = 2;
+
+    /**
+     * Stock in with count, ignore if exceed max stock, update total stock in
+     * @param $count
+     */
+    public function in($count)
+    {
+        if ($this->quantity + $count > self::MAX_STOCK) {
+            $count = self::MAX_STOCK - $this->quantity;
+        }
+        $this->quantity += $count;
+        $this->total_stock_in += $count;
+    }
+
+    /**
+     * Stock out with count, ignore if out of stock, update total stock out
+     * @param $count
+     */
+    public function out($count)
+    {
+        if ($this->quantity - $count < 0 ) {
+            $count = $this->quantity;
+        }
+        $this->quantity -= $count;
+        $this->total_stock_out += $count;
+    }
 }
