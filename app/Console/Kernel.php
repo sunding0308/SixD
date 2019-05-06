@@ -27,8 +27,6 @@ class Kernel extends ConsoleKernel
         /**
          * push signal to machine
          */
-        $schedule->call('\App\Http\Controllers\Api\PushController@pushAlarmsSignal')
-                 ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushOverageSignal')
                  ->hourly();
         $schedule->call('\App\Http\Controllers\Api\PushController@pushHardwareStatusSignal')
