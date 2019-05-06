@@ -84,7 +84,7 @@ class HandleMessage extends Command
                 foreach($message->products as $product) {
                     $stock = $machine->stocks->where('position', $product->pos)->first();
                     if ($stock) {
-                        $stock->out($product->q);
+                        $stock->out($product->quantity);        //stock out using quantity not q
                         $stock->save();
                     }
                 }
