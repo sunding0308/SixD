@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Machine;
 use App\Message;
-use App\VendingMachineStock;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
