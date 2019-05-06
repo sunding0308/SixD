@@ -89,6 +89,21 @@ class HandleMessage extends Command
                     }
                 }
                 break;
+            case 'alarm':
+                Log::debug(self::LOG_TAG.'alarm');
+                $alarm = $machine->alarm;
+                if ($alarm) {
+                    $alarm->update([
+                        'malfunction_code' => $message->malfunction_code ?: '',
+                    ]);
+                    $alarm->touch();
+                } else {
+                    $machine->alarm()->create([
+                        'machine_id' => $machine->id,
+                        'malfunction_code' => $message->malfunction_code ?: '',
+                    ]);
+                }
+                break;
             default:
                 break;
         }
