@@ -70,11 +70,13 @@ class MachineController extends Controller
         $machineIds = array_map(function($machine){
             return $machine->device;
         }, $machines->items());
-        $result = $iot->BatchGetDeviceState($machineIds);
         $machineStatus = [];
-        if ($result['success']) {
-            foreach ($result['DeviceStatusList']->DeviceStatus as $status) {
-                $machineStatus[$status->DeviceName] = $status;
+        if (!empty($machineIds)) {
+            $result = $iot->BatchGetDeviceState($machineIds);
+            if ($result['success']) {
+                foreach ($result['DeviceStatusList']->DeviceStatus as $status) {
+                    $machineStatus[$status->DeviceName] = $status;
+                }
             }
         }
 
