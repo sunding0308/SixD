@@ -96,15 +96,17 @@ class PushController extends ApiController
         $devices = Machine::pluck('device');
         foreach($devices as $device) {
             $machine = Machine::where('devices', $devices)->first();
-            $response = $this->iot->rrpcToWater($sign, $machine->device);
-            if ($response['Success']) {
-                if (static::STATUS_SUCCESS == $response['status']) {
-                    Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+            if ($machine) {
+                $response = $this->iot->rrpcToWater($sign, $machine->device);
+                if ($response['Success']) {
+                    if (static::STATUS_SUCCESS == $response['status']) {
+                        Log::info($sign.'--Device: '.$machine->device.' pushed success!');
+                    } else {
+                        Log::error($sign.'--Error: '.$response['message']);
+                    }
                 } else {
-                    Log::error($sign.'--Error: '.$response['message']);
+                    Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
                 }
-            } else {
-                Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             }
         }
     }
