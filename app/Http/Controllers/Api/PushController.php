@@ -95,7 +95,7 @@ class PushController extends ApiController
     {
         $devices = Machine::pluck('device');
         foreach($devices as $device) {
-            $machine = Machine::where('devices', $devices)->first();
+            $machine = Machine::where('device', $device)->first();
             if ($machine) {
                 $response = $this->iot->rrpcToWater($sign, $machine->device);
                 if ($response['Success']) {
