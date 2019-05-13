@@ -93,20 +93,17 @@ class PushController extends ApiController
 
     private function multiplePush($sign)
     {
-        $devices = Machine::pluck('device');
-        foreach($devices as $device) {
-            $machine = Machine::where('device', $device)->first();
-            if ($machine) {
-                $response = $this->iot->rrpcToWater($sign, $machine->device);
-                if ($response['Success']) {
-                    if (static::STATUS_SUCCESS == $response['status']) {
-                        Log::info($sign.'--Device: '.$machine->device.' pushed success!');
-                    } else {
-                        Log::error($sign.'--Error: '.$response['message']);
-                    }
+        $machines = Machine::all();
+        foreach($machines as $machine) {
+            $response = $this->iot->rrpcToWater($sign, $machine->device);
+            if ($response['Success']) {
+                if (static::STATUS_SUCCESS == $response['status']) {
+                    Log::info($sign.'--Device: '.$machine->device.' pushed success!');
                 } else {
-                    Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
+                    Log::error($sign.'--Error: '.$response['message']);
                 }
+            } else {
+                Log::error($sign.'--Device: '.$machine->device.' pushed fail!');
             }
         }
     }
