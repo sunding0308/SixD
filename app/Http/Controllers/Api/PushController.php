@@ -93,7 +93,7 @@ class PushController extends ApiController
 
     private function multiplePush($sign)
     {
-        $machines = Machine::all();
+        $machines = Machine::where('type', Machine::TYPE_WATER)->get();
         foreach($machines as $machine) {
             $response = $this->iot->rrpcToWater($sign, $machine->device);
             if ($response['Success']) {
