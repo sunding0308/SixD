@@ -48,7 +48,7 @@ class Machine extends Model
 
     public function installation()
     {
-        return $this->hasOne(Installation::class);
+        return $this->hasOne(Installation::class)->latest("updated_at");
     }
 
     public function waterRecords()
