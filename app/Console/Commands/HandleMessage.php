@@ -49,7 +49,7 @@ class HandleMessage extends Command
                 switch ($message->machine->type) {
                     case Machine::TYPE_VENDING:
                         Log::debug(self::LOG_TAG.'vending machine['.$message->machine->device.'] '. $message->body);
-                        $this->vendingHandleMessage($message->machine, $message->body);
+                        $this->vendingHandleMessage($message);
                         break;
                     default:
                         break;
@@ -62,14 +62,15 @@ class HandleMessage extends Command
     }
 
 
-    private function vendingHandleMessage($machine, $message)
+    private function vendingHandleMessage($message)
     {
-        $message = json_decode($message);
-        switch ($message->message) {
+        $machine = $message->machine;
+        $body = json_decode($message->body);
+        switch ($body->message) {
             case 'stock_in':
                 Log::debug(self::LOG_TAG.'stock in');
                 $machine->load('stocks');
-                foreach($message->products as $product) {
+                foreach($body->products as $product) {
                     $stock = $machine->stocks->where('position', $product->pos)->first();
                     if ($stock) {
                         $stock->in($product->q);
@@ -80,7 +81,7 @@ class HandleMessage extends Command
             case 'stock_out':
                 Log::debug(self::LOG_TAG.'stock out');
                 $machine->load('stocks');
-                foreach($message->products as $product) {
+                foreach($body->products as $product) {
                     $stock = $machine->stocks->where('position', $product->pos)->first();
                     if ($stock) {
                         $stock->out($product->quantity);        //stock out using quantity not q
@@ -90,18 +91,54 @@ class HandleMessage extends Command
                 break;
             case 'alarm':
                 Log::debug(self::LOG_TAG.'alarm');
+                $machine->load('alarm');
                 $alarm = $machine->alarm;
                 if ($alarm) {
-                    $alarm->update([
-                        'malfunction_code' => $message->malfunction_code ?: '',
-                    ]);
-                    $alarm->touch();
+                    $codes = explode(',', $alarm->malfunction_code);
+                    $codes[] = $body->malfunction_code;
+                    $codes = array_unique($codes);
+                    $alarm->malfunction_code = implode(',', $codes);
+                    $alarm->save();
                 } else {
                     $machine->alarm()->create([
-                        'machine_id' => $machine->id,
-                        'malfunction_code' => $message->malfunction_code ?: '',
+                        'malfunction_code' => $body->malfunction_code ?: '',
                     ]);
                 }
+                $machine->alarmHistories()->create([
+                    'malfunction_code' => $body->malfunction_code ?: '',
+                    'created_at' => $message->created_at,
+                    'updated_at' => $message->updated_at,
+                ]);
+                break;
+            case 'alarm_clear':
+                Log::debug(self::LOG_TAG.'alarm_clear');
+                $machine->load('alarm');
+                $alarm = $machine->alarm;
+                if ($alarm) {
+                    $codes = explode(',', $alarm->malfunction_code);
+                    if (($key = array_search($body->malfunction_code, $codes)) !== false) {
+                        unset($codes[$key]);
+                        $alarm->malfunction_code = implode(',', $codes);
+                        $alarm->malfunction_code = trim($alarm->malfunction_code, ',');
+                        $alarm->save();
+                    }
+                }
+                if ($body->malfunction_code == 'e2') {
+                    /* Special for e2: 2G error, this error won't generate alarm when happened,
+                     * so we need create it here
+                     */
+                    $machine->alarmHistories()->create([
+                        'malfunction_code' => $body->malfunction_code ?: '',
+                        'created_at' => $message->created_at,
+                        'updated_at' => $message->updated_at,
+                    ]);
+                }
+                $machine->alarmHistories()->create([
+                    'malfunction_code' => $body->malfunction_code ?: '',
+                    'cleared' => 1,
+                    'created_at' => $message->created_at,
+                    'updated_at' => $message->updated_at,
+                ]);
                 break;
             default:
                 break;

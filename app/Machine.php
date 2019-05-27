@@ -81,6 +81,11 @@ class Machine extends Model
         return $this->hasOne(Alarm::class);
     }
 
+    public function alarmHistories()
+    {
+        return $this->hasMany(AlarmHistory::class);
+    }
+
     public function stocks()
     {
         return $this->hasMany(VendingMachineStock::class);

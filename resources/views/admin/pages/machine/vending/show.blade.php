@@ -10,13 +10,26 @@
         <div class="col-md-8 offset-md-2">
         <div class="form">
             <div class="title-header">
-                <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
-                <div class="title">{{ __('admin/machine.detail') }}</div>
+                <div class="min-menu row">
+                    <div class="col-md-3">
+                        <div class="title">{{ __('admin/machine.detail') }}</div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="right-panel">
+                            <div class="status-float">
+                            <a href="{{ route('admin.machine.alarm.history', $machine->id) }}" class="btn btn-normal m-r">{{ __('admin/machine.alarm_history') }}</a>
+                            </div>
+                            <div class="status-float">
+                                <a href="{{ route('admin.machine.index', ['type' => \App\Machine::TYPE_VENDING]) }}" class="btn btn-normal btn-m">{{ __('admin/machine.back') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             @if($machine->hasAlarms())
             <div class="alert alert-detail alert-danger" role="alert">
-                @if($machine->alarm->malfunction_code)
-                    <strong>•</strong> 设备故障代码:{{ $machine->alarm->malfunction_code }} 电机故障
+                @if($machine->alarm->malfunction_code == 'e4')
+                    <strong>•</strong>电机故障(E4)
                 @endif
             </div>
             @endif

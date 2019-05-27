@@ -109,7 +109,7 @@
                                         @if(!$machine->machine_id)
                                         未安装
                                         @else
-                                        <a href="{{ route('admin.machine.show', ['machine' => $machine->id, 'type' => \App\Machine::TYPE_VENDING]) }}" class="btn btn-normal btn-m" title="详情">
+                                        <a href="{{ route('admin.machine.show', ['machine' => $machine->id]) }}" class="btn btn-normal btn-m" title="详情">
                                             <i class="fa fa-info"></i>
                                         </a>
                                         @endif

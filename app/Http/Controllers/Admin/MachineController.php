@@ -100,16 +100,25 @@ class MachineController extends Controller
 
     public function show(Request $request, Machine $machine, IotService $iot)
     {
-        if (Machine::TYPE_VENDING == $request->type) {
-            $response = $iot->rrpcToVending($machine->device);
-
-            return view('admin.pages.machine.vending.show', compact('machine', 'response'));
-        }
+        /* TODO: just for test only
+         */
         if (809 == $request->sign) {
             return view('admin.pages.machine.relenishment.show');
         }
-        $machine->load('bluetoothRecords', 'sterilization', 'waterQualityStatistics', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
-        return view('admin.pages.machine.water.show', compact('machine'));
+
+        switch($machine->type) {
+            case Machine::TYPE_VENDING:
+                $response = $iot->rrpcToVending($machine->device);
+                return view('admin.pages.machine.vending.show', compact('machine', 'response'));
+            case Machine::TYPE_RELENISHMENT:
+                return view('admin.pages.machine.relenishment.show', compact('machine', 'response'));
+            case Machine::TYPE_WATER:
+                $machine->load('bluetoothRecords', 'sterilization', 'waterQualityStatistics', 'waterRecords', 'airRecords', 'oxygenRecords', 'humidityRecords');
+                return view('admin.pages.machine.water.show', compact('machine'));
+            default:
+                break;
+        }
+        abort(404);
     }
 
     public function waterQualityStatistics(Request $request, Machine $machine)
@@ -145,6 +154,12 @@ class MachineController extends Controller
     {
         $humidityRecords = $machine->humidityRecords()->paginate(10);
         return view('admin.pages.machine.water.humidity_records', compact('machine', 'humidityRecords'));
+    }
+
+    public function alarmHistory(Request $request, Machine $machine)
+    {
+        $alarmHistories = $machine->alarmHistories()->latest()->paginate(10);
+        return view('admin.pages.machine.alarm_history', compact('machine', 'alarmHistories'));
     }
 
     public function debug(Request $request, Machine $machine)

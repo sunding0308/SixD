@@ -14,6 +14,7 @@ Route::group(['prefix' => '/machine', 'as' => 'machine.', 'namespace' => 'Admin'
     Route::get('/{machine}/debug', 'MachineController@debug')->name('debug');
     Route::get('/{machine}/debug/{filename}/download', 'MachineController@debugDownload')->name('debug.download');
     Route::get('/{machine}/clean_overage', 'MachineController@cleanOverage')->name('clean_overage');
+    Route::get('/{machine}/alarm_history', 'MachineController@alarmHistory')->name('alarm.history');
 });
 Route::resource('/user', 'Admin\UserController')->except('show');
 Route::resource('/version', 'Admin\VersionController')->except('show', 'edit', 'update');

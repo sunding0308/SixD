@@ -824,6 +824,12 @@ a.check-link:hover {
     padding: 2px 6px;
     border-radius: 4px;
 }
+.label-success {
+    border: 1px solid #179e83;
+    color: #179e83;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
 
 .playlist-title a {
     font-size: 14px;
