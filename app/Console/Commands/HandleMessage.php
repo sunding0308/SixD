@@ -129,8 +129,8 @@ class HandleMessage extends Command
                      */
                     $machine->alarmHistories()->create([
                         'malfunction_code' => $body->malfunction_code ?: '',
-                        'created_at' => $message->created_at,
-                        'updated_at' => $message->updated_at,
+                        'created_at' => $message->created_at->subSecond(),
+                        'updated_at' => $message->updated_at->subSecond(),
                     ]);
                 }
                 $machine->alarmHistories()->create([
