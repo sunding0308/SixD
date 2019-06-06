@@ -53,9 +53,15 @@
                                     <td>{{ secToMin($machine->humidity_child_overage) }}</td>
                                     <td>{{ secToMin($machine->humidity_adult_overage) }}</td>
                                     <td>
+                                        @if (array_key_exists($machine->device, $machineStatus))
                                         <span class="{{ $machineStatus[$machine->device]->Status == 'ONLINE'?'label-normal':'label-danger' }}">
                                         {{ __('admin/machine.device_'.strtolower($machineStatus[$machine->device]->Status)) }}
                                         </span>
+                                        @else
+                                        <span class="label-danger">
+                                        {{ __('admin/machine.device_offline') }}
+                                        </span>
+                                        @endif
                                     </td>
                                     <td>
                                         @if($machine->hasAlarms())
