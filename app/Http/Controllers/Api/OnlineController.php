@@ -260,4 +260,11 @@ class OnlineController extends ApiController
             'total_stock_out' => 0,
         ]);
     }
+
+    public function settings(Request $request)
+    {
+        $this->setStatusCode(200);
+        //return $this->response(['enable' => 1, 'disable_at' => Carbon::now()->addDay(1)->timestamp]);
+        return $this->response(['enable' => 0]);
+    }
 }
