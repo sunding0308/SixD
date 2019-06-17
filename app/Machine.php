@@ -13,6 +13,7 @@ class Machine extends Model
     const TYPE_WASHING = 4;
     const TYPE_SHOEBOX = 5;
     const TYPE_TOILET_LID = 6;
+    const TYPE_POWER_SWITCH = 7;
     const TYPE_RELENISHMENT = 8;
 
     //signal

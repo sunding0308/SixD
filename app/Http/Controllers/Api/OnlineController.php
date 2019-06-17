@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Machine;
+use App\MachinePowerSwitch;
 use App\Version;
 use Carbon\Carbon;
 use App\ShoeboxTime;
@@ -263,8 +264,26 @@ class OnlineController extends ApiController
 
     public function settings(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'device' => 'required|exists:machines'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseErrorWithMessage($validator->errors()->first());
+        }
+
+        $machine = MachinePowerSwitch::where('device',$request->device)->first();
+        if (!$machine) {
+            return $this->responseNotFoundWithMessage();
+        }
+
         $this->setStatusCode(200);
-        //return $this->response(['enable' => 1, 'disable_at' => Carbon::now()->addDay(1)->timestamp]);
-        return $this->response(['enable' => 0]);
+        if (!$machine->data) {
+            return $this->response(['enable' => 0]);
+        } else if ($machine->data->disabled_at > Carbon::now()) {
+            return $this->response(['enable' => 1, 'disable_at' => $machine->data->disabled_at->timestamp]);
+        } else {
+            return $this->response(['enable' => 0]);
+        }
     }
 }
