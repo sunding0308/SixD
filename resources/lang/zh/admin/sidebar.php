@@ -16,6 +16,7 @@ return [
     'replenishments' => '补货柜',
     'shoebox' => '杀菌鞋柜',
     'toilet_lid' => '杀菌马桶盖',
+    'power_switch' => '物联开关',
     'users' => '管理员列表',
     'versions' => 'APP版本',
     'app_menu_analytics' => 'APP菜单分析',

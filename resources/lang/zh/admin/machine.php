@@ -123,4 +123,6 @@ return [
     'shoebox' => '杀菌鞋柜',
 
     'toilet_lid' => '杀菌马桶盖',
+
+    'power_switch' => '物联开关'
 ];

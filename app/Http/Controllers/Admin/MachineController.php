@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Machine;
+use App\MachinePowerSwitch;
 use Carbon\Carbon;
 use App\PushRecord;
 use App\Services\IotService;
@@ -27,45 +28,51 @@ class MachineController extends Controller
         $room = $request->input('room');
         $alarm = $request->input('alarm');
 
-        $machines = Machine::where('type', $request->type)
-            ->whereHas('installation')
-            ->with('installation')
-            ->with('stocks')
-            ->withCount(['alarm' => function ($query) {
-                $query->where('position_change_alarm', '<>', '')
-                ->orWhere('service_alarm_status', '<>', '')
-                ->orWhere('sterilization_alarm', '<>', '')
-                ->orWhere('filter_alarm', '<>', '')
-                ->orWhere('water_shortage_alarm', '<>', '')
-                ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
-                ->orWhere('slave_mobile_alarm', '<>', '')
-                ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
-                ->orWhere('malfunction_code', '<>', '');
-            }])
-            ->when($hotel, function ($query) use ($hotel) {
-                return $query->whereHas('installation', function($q) use ($hotel) {
-                    $q->where('hotel_name', $hotel);
-                });
-            })
-            ->when($room, function ($query) use ($room) {
-                return $query->whereHas('installation', function($q) use ($room) {
-                    $q->where('room', 'like', '%'.$room.'%');
-                });
-            })
-            ->when($alarm, function ($query) {
-                return $query->whereHas('alarm', function($q) {
-                    $q->where('position_change_alarm', '<>', '')
-                    ->orWhere('service_alarm_status', '<>', '')
-                    ->orWhere('sterilization_alarm', '<>', '')
-                    ->orWhere('filter_alarm', '<>', '')
-                    ->orWhere('water_shortage_alarm', '<>', '')
-                    ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
-                    ->orWhere('slave_mobile_alarm', '<>', '')
-                    ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
-                    ->orWhere('malfunction_code', '<>', '');
-                });
-            })
-            ->paginate(10);
+        if ($request->type == Machine::TYPE_POWER_SWITCH) {
+            $machines = MachinePowerSwitch::with('data')
+                ->paginate(10);
+        } else {
+            $machines = Machine::where('type', $request->type)
+                ->whereHas('installation')
+                ->with('installation')
+                ->with('stocks')
+                ->withCount(['alarm' => function ($query) {
+                    $query->where('position_change_alarm', '<>', '')
+                        ->orWhere('service_alarm_status', '<>', '')
+                        ->orWhere('sterilization_alarm', '<>', '')
+                        ->orWhere('filter_alarm', '<>', '')
+                        ->orWhere('water_shortage_alarm', '<>', '')
+                        ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
+                        ->orWhere('slave_mobile_alarm', '<>', '')
+                        ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
+                        ->orWhere('malfunction_code', '<>', '');
+                }])
+                ->when($hotel, function ($query) use ($hotel) {
+                    return $query->whereHas('installation', function($q) use ($hotel) {
+                        $q->where('hotel_name', $hotel);
+                    });
+                })
+                ->when($room, function ($query) use ($room) {
+                    return $query->whereHas('installation', function($q) use ($room) {
+                        $q->where('room', 'like', '%'.$room.'%');
+                    });
+                })
+                ->when($alarm, function ($query) {
+                    return $query->whereHas('alarm', function($q) {
+                        $q->where('position_change_alarm', '<>', '')
+                            ->orWhere('service_alarm_status', '<>', '')
+                            ->orWhere('sterilization_alarm', '<>', '')
+                            ->orWhere('filter_alarm', '<>', '')
+                            ->orWhere('water_shortage_alarm', '<>', '')
+                            ->orWhere('filter_anti_counterfeiting_alarm', '<>', '')
+                            ->orWhere('slave_mobile_alarm', '<>', '')
+                            ->orWhere('dehumidification_tank_full_water_alarm', '<>', '')
+                            ->orWhere('malfunction_code', '<>', '');
+                    });
+                })
+                ->paginate(10);
+
+        }
 
         $machineIds = array_map(function($machine){
             return $machine->device;
@@ -95,6 +102,8 @@ class MachineController extends Controller
             return view('admin.pages.machine.shoebox.index', compact('machines','machineStatus'));
         } else if (Machine::TYPE_TOILET_LID == $request->type) {
             return view('admin.pages.machine.toilet_lid.index', compact('machines','machineStatus'));
+        } else if (Machine::TYPE_POWER_SWITCH == $request->type) {
+            return view('admin.pages.machine.power_switch.index', compact('machines','machineStatus'));
         }
     }
 
