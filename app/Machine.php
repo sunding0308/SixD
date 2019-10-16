@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Machine extends Model
 {
     //type
+    const TYPE_POWER_SWITCH = 0;
     const TYPE_WATER = 1;
     const TYPE_VENDING = 2;
     const TYPE_OXYGEN = 3;
     const TYPE_WASHING = 4;
     const TYPE_SHOEBOX = 5;
     const TYPE_TOILET_LID = 6;
-    const TYPE_POWER_SWITCH = 7;
     const TYPE_RELENISHMENT = 8;
 
     //signal
