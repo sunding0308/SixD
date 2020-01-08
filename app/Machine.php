@@ -12,7 +12,7 @@ class Machine extends Model
     const TYPE_VENDING = 2;
     const TYPE_OXYGEN = 3;
     const TYPE_WASHING = 4;
-    const TYPE_SHOEBOX = 5;
+    const TYPE_SHOEBOX = 12;
     const TYPE_TOILET_LID = 6;
     const TYPE_RELENISHMENT = 8;
 
