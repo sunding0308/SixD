@@ -176,7 +176,7 @@ class MachineController extends Controller
         $filenames = Storage::files('public/' . $machine->device);
         foreach($filenames as $filename) {
             $fileCreationDate = Storage::lastModified($filename);
-            $arr[pathinfo($filename, PATHINFO_FILENAME)] = $fileCreationDate;
+            $arr[pathinfo($filename, PATHINFO_BASENAME)] = $fileCreationDate;
         }
         arsort($arr);
         $files = $this->paginate(collect($arr), 10);
