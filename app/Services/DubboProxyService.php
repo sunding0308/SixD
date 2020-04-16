@@ -9,6 +9,8 @@ class DubboProxyService
     const DUBBO_NORMAL_END_FLAG = 'elapsed: ';
     const DUBBO_NULL_RESULT_FLAG = "null\r\n";
     const DUBBO_HINT_FLAG = 'dubbo>';
+
+    const InfoService = 'com.sixdrops.outer.machinecloud.service.OuterMachineInfoService';
     /**
      * Zookeeper's instance
      * @var \Zookeeper
@@ -57,6 +59,20 @@ class DubboProxyService
         }
         return new self($service, $registry, $version);
     }
+
+    /**
+     * get OutMachineInfoService
+     * @param array $conf
+     * @return Proxy
+     */
+    public static function getInfoService($conf = [])
+    {
+        return self::getService(self::InfoService, [
+            'registry' => config('dubbo.registry'),
+            'version' => config('dubbo.version')
+        ]);
+    }
+
     /**
      * Invoke service's method
      * @param $name method's name

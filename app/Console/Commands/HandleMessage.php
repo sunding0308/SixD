@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Machine;
 use App\Message;
+use App\Services\DubboProxyService;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -50,6 +51,10 @@ class HandleMessage extends Command
                     case Machine::TYPE_VENDING:
                         Log::debug(self::LOG_TAG.'vending machine['.$message->machine->device.'] '. $message->body);
                         $this->vendingHandleMessage($message);
+                        break;
+                    case Machine::TYPE_SHOEBOX_V2:
+                        Log::debug(self::LOG_TAG.'shoe box['.$message->machine->device.'] '. $message->body);
+                        $this->shoeboxV2HandleMessage($message);
                         break;
                     default:
                         break;
@@ -145,4 +150,35 @@ class HandleMessage extends Command
         }
     }
 
+    private function shoeboxV2HandleMessage($message)
+    {
+        $service = DubboProxyService::getInfoService();
+        $machine = $message->machine;
+        $body = json_decode($message->body);
+        switch ($body->opt) {
+            case 1:
+                Log::debug(self::LOG_TAG.'startStop'.$body->value);
+                //start stop
+                $service->machineStart(
+                    (string)$machine->machine_id,
+                    (string)$body->value,
+                    (string)$body->m,
+                    (string)$body->t,
+                    (string)$body->appt);
+                break;
+            case 3:
+                Log::debug(self::LOG_TAG.'childlock '.$body->value);
+                //childlock
+                $service->machineLock((string)$machine->machine_id, (string)$body->value);
+                break;
+            case 4:
+                //sleep
+                Log::debug(self::LOG_TAG.'sleep '.$body->value);
+                //childlock
+                $service->machineDormancy((string)$machine->machine_id, (string)$body->value);
+                break;
+            default:
+                break;
+        }
+    }
 }
