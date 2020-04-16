@@ -156,7 +156,7 @@ class HandleMessage extends Command
         $machine = $message->machine;
         $body = json_decode($message->body);
         switch ($body->opt) {
-            case 1:
+            case 2:
                 Log::debug(self::LOG_TAG.'startStop'.$body->value);
                 //start stop
                 $service->machineStart(
