@@ -10,7 +10,7 @@ class DubboProxyService
     const DUBBO_NULL_RESULT_FLAG = "null\r\n";
     const DUBBO_HINT_FLAG = 'dubbo>';
 
-    const InfoService = 'com.sixdrops.outer.machinecloud.service.OuterMachineInfoService';
+    const InfoService = 'com.sixdrops.outer.maintenance.service.OuterMachineInfoService';
     /**
      * Zookeeper's instance
      * @var \Zookeeper
